@@ -1,0 +1,13 @@
+[project]
+name = "danish-meat-tax"
+version = "0.1.0"
+description = "Pipeline for estimating Danish livestock carbon tax announcement effects on grocery meat prices."
+requires-python = ">=3.10"
+dependencies = [
+  "matplotlib>=3.8",
+  "numpy>=1.26",
+  "pandas>=2.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
