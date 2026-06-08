@@ -35,3 +35,5 @@ Includes product columns above plus:
 | `log_price` | Natural log of price. |
 | `event_date` | Main event date, `2024-06-24`. |
 | `frequency` | `daily` or `weekly`. |
+
+The real `dagligepriser.dk` source stores many product objects with a nested `priceHistory` array. Processing expands each `priceHistory` entry into a separate row before writing `products.csv`.

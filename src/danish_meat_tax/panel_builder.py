@@ -46,6 +46,7 @@ def build_balanced_panel(
     event_date: str = "2024-06-24",
     frequency: str = "daily",
     min_units: int = 2,
+    require_complete_units: bool = False,
 ) -> PanelResult:
     event = pd.Timestamp(event_date)
     data = _aggregate(products, frequency, event)
@@ -59,10 +60,17 @@ def build_balanced_panel(
     selected_periods = set(pre[-window:] + post[:window])
     selected = data[data["period"].isin(selected_periods)].copy()
     required_count = 2 * window
-    complete_units = (
-        selected.groupby("unit_id")["period"].nunique().loc[lambda series: series == required_count].index
-    )
-    selected = selected[selected["unit_id"].isin(complete_units)].copy()
+    if require_complete_units:
+        valid_units = selected.groupby("unit_id")["period"].nunique().loc[lambda series: series == required_count].index
+    else:
+        unit_support = selected.assign(is_pre=selected["period"] < event_period, is_post=selected["period"] > event_period)
+        valid_units = (
+            unit_support.groupby("unit_id")
+            .agg(pre=("is_pre", "sum"), post=("is_post", "sum"))
+            .loc[lambda frame: (frame["pre"] > 0) & (frame["post"] > 0)]
+            .index
+        )
+    selected = selected[selected["unit_id"].isin(valid_units)].copy()
     if selected["unit_id"].nunique() < min_units:
         raise ValueError("Insufficient balanced units after applying symmetric window.")
     ordered_periods = sorted(pd.to_datetime(selected["period"].unique()))
@@ -82,6 +90,7 @@ def build_balanced_panel(
         "event_date": event.date().isoformat(),
         "balanced_periods_pre": window,
         "balanced_periods_post": window,
+        "require_complete_units": str(require_complete_units),
         "units": int(selected["unit_id"].nunique()),
         "rows": int(len(selected)),
         "treated_units": int(selected.loc[selected["treated"], "unit_id"].nunique()),
@@ -91,7 +100,7 @@ def build_balanced_panel(
 
 
 def write_panel(products_path: Path, panel_path: Path, diagnostics_path: Path, **kwargs: object) -> PanelResult:
-    products = pd.read_csv(products_path, parse_dates=["date"])
+    products = pd.read_csv(products_path, parse_dates=["date"], dtype={"product_id": str}, low_memory=False)
     result = build_balanced_panel(products, **kwargs)
     panel_path.parent.mkdir(parents=True, exist_ok=True)
     diagnostics_path.parent.mkdir(parents=True, exist_ok=True)

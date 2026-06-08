@@ -10,7 +10,7 @@ from danish_meat_tax.panel_builder import build_balanced_panel
 class PanelBuilderTest(unittest.TestCase):
     def test_balanced_panel_has_equal_pre_post_periods(self):
         products = normalize_records(_fixture_records())
-        result = build_balanced_panel(products, frequency="daily")
+        result = build_balanced_panel(products, frequency="daily", require_complete_units=True)
         self.assertEqual(result.diagnostics["balanced_periods_pre"], result.diagnostics["balanced_periods_post"])
         relative = set(result.panel["relative_time"].unique())
         self.assertNotIn(0, relative)
@@ -21,6 +21,12 @@ class PanelBuilderTest(unittest.TestCase):
         products = normalize_records(_fixture_records())
         result = build_balanced_panel(products, frequency="weekly")
         self.assertEqual(result.diagnostics["balanced_periods_pre"], result.diagnostics["balanced_periods_post"])
+
+    def test_unbalanced_units_can_be_retained_with_pre_and_post_support(self):
+        products = normalize_records(_fixture_records())
+        partial = products[~((products["product_id"].str.contains("milk")) & (products["date"].dt.day.isin([11, 12, 13])))]
+        result = build_balanced_panel(partial, frequency="daily", require_complete_units=False)
+        self.assertIn("Netto::netto_milk", set(result.panel["unit_id"]))
 
     def test_insufficient_coverage_errors(self):
         products = pd.DataFrame(

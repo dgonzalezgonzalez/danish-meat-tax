@@ -17,7 +17,9 @@ See `docs/policy/policy_summary.md` for source links and institutional details.
 
 ## Data
 
-The pipeline is designed around the `Herover/heissepreise` ecosystem and Danish grocery data from `dagligepriser.dk`. Raw downloaded files are cached under `data/raw/` and intentionally ignored by Git. A deterministic fixture mode is included so the whole pipeline and tests run offline.
+The pipeline is designed around the `Herover/heissepreise` ecosystem and Danish grocery data from `dagligepriser.dk`. Raw downloaded files are cached under `data/raw/` and intentionally ignored by Git. The canonical Danish source is large: a June 2026 probe of `latest-canonical.json` contained 211,028 products and 2,074,168 price-history rows before quality filters.
+
+The downloader preserves source product objects and the processing stage expands each `priceHistory` entry into one product-date price row. A deterministic fixture mode is included so the whole pipeline and tests run offline.
 
 ## Pipeline
 
@@ -31,6 +33,16 @@ Run the full offline fixture pipeline:
 
 ```bash
 $env:PYTHONPATH="src"; py -3 main.py all --fixture
+```
+
+Run against real Danish grocery data:
+
+```bash
+$env:PYTHONPATH="src"; py -3 main.py download
+$env:PYTHONPATH="src"; py -3 main.py process
+$env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly
+$env:PYTHONPATH="src"; py -3 main.py estimate
+$env:PYTHONPATH="src"; py -3 main.py outputs
 ```
 
 Run individual stages:
@@ -70,6 +82,8 @@ log(price_it) = beta * Treated_i * Post_t + unit FE_i + period FE_t + error_it
 ```
 
 The event-study model estimates treated relative-time effects and omits the pre-event period `-1` as reference. Standard errors are clustered by product-store unit.
+
+By default, the panel keeps the largest symmetric pre/post period window and retains units with at least one pre and one post observation. Use `--require-complete-units` for a stricter complete-unit panel; this is often too restrictive for large price-history data where recorded dates represent price observations or changes.
 
 ## Caveats
 

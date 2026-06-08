@@ -22,6 +22,11 @@ class PolicyTaxonomyTest(unittest.TestCase):
         self.assertFalse(classify_product("Torskefilet").treated)
         self.assertEqual(classify_product("Mystery product").treatment_group, "unknown")
 
+    def test_more_control_commodities_are_labeled(self):
+        self.assertEqual(classify_product("Letmælk 1 liter").commodity, "dairy")
+        self.assertEqual(classify_product("Rugbrød").commodity, "grains_bread")
+        self.assertEqual(classify_product("Bananer").commodity, "fruit_vegetables")
+
 
 if __name__ == "__main__":
     unittest.main()

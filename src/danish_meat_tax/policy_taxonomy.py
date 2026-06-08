@@ -20,8 +20,14 @@ GROUP_RULES: tuple[tuple[str, bool, str, str, tuple[str, ...]], ...] = (
     ("lamb_sheep_goat", True, "lamb_sheep_goat", "livestock_scope", ("lamb", "lam", "lamm", "lammekolle", "får", "faar", "sheep", "ged", "goat")),
     ("poultry", True, "poultry_other_livestock", "sensitivity", ("chicken", "kylling", "høne", "hoene", "turkey", "kalkun", "duck", "andebryst")),
     ("fish_seafood", False, "control_fish_seafood", "control", ("fish", "fisk", "salmon", "laks", "cod", "torsk", "shrimp", "rejer")),
+    ("eggs", False, "control_animal_products", "control", ("egg", "eggs", "æg", "aeg")),
+    ("dairy", False, "control_animal_products", "control", ("milk", "mælk", "maelk", "cheese", "ost", "yoghurt", "yogurt", "smør", "smoer", "butter")),
+    ("fruit_vegetables", False, "control_non_meat", "control", ("apple", "æble", "aeble", "banana", "banan", "tomat", "tomato", "potato", "kartoffel", "salat", "gulerod", "onion", "løg", "loeg")),
+    ("grains_bread", False, "control_non_meat", "control", ("bread", "brød", "broed", "rugbrød", "rugbroed", "pasta", "rice", "ris", "oats", "havre", "flour", "mel")),
+    ("fats_oils", False, "control_non_meat", "control", ("oil", "olie", "margarine")),
+    ("sweets_snacks", False, "control_non_meat", "control", ("chocolate", "chokolade", "chips", "slik", "cookie", "kiks")),
+    ("beverages", False, "control_non_meat", "control", ("coffee", "kaffe", "tea", "te", "juice", "soda", "cola", "vand", "water")),
     ("plant_protein", False, "control_non_meat", "control", ("tofu", "linser", "beans", "bønner", "boenner", "falafel")),
-    ("dairy", False, "control_non_meat", "control", ("milk", "mælk", "maelk", "cheese", "ost", "yoghurt")),
 )
 
 MIXED_TERMS = ("pizza", "lasagne", "gryderet", "ready meal", "færdigret", "faerdigret", "mix")

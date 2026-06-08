@@ -1,21 +1,22 @@
 from __future__ import annotations
 
+from datetime import date
 import json
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
+from .data_sources.heissepreise import extract_records
 from .policy_taxonomy import classify_product
 
 
 def load_raw_records(raw_path: Path) -> list[dict[str, Any]]:
     payload = json.loads(raw_path.read_text(encoding="utf-8"))
-    if isinstance(payload, dict) and isinstance(payload.get("records"), list):
-        return payload["records"]
-    if isinstance(payload, list):
-        return payload
-    raise ValueError(f"Unsupported raw data file shape: {raw_path}")
+    try:
+        return extract_records(payload)
+    except ValueError as exc:
+        raise ValueError(f"Unsupported raw data file shape: {raw_path}") from exc
 
 
 def _first(row: dict[str, Any], *names: str) -> Any:
@@ -27,6 +28,7 @@ def _first(row: dict[str, Any], *names: str) -> Any:
 
 def normalize_records(records: list[dict[str, Any]]) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
+    assignment_cache: dict[tuple[str, str], Any] = {}
     for index, row in enumerate(records):
         name = _first(row, "product_name", "name", "title", "label")
         price = _first(row, "price", "current_price", "amount", "unit_price")
@@ -40,18 +42,29 @@ def normalize_records(records: list[dict[str, Any]]) -> pd.DataFrame:
         except (TypeError, ValueError):
             price_float = float("nan")
             reason = "invalid_price"
-        parsed_date = pd.to_datetime(observed_date, errors="coerce").date()
-        if pd.isna(parsed_date):
+        if pd.notna(price_float) and price_float <= 0:
+            reason = "nonpositive_price" if not reason else f"{reason};nonpositive_price"
+        try:
+            parsed_date = date.fromisoformat(str(observed_date)[:10])
+        except (TypeError, ValueError):
+            parsed_date = None
+        if parsed_date is None:
             reason = "invalid_date" if not reason else f"{reason};invalid_date"
-        assignment = classify_product(str(name or ""), str(category or ""))
+        name_text = str(name or "")
+        category_text = str(category or "")
+        cache_key = (name_text, category_text)
+        assignment = assignment_cache.get(cache_key)
+        if assignment is None:
+            assignment = classify_product(name_text, category_text)
+            assignment_cache[cache_key] = assignment
         rows.append(
             {
                 "row_id": index,
-                "date": parsed_date.isoformat() if not pd.isna(parsed_date) else "",
+                "date": parsed_date.isoformat() if parsed_date is not None else "",
                 "store": str(store or "unknown"),
                 "product_id": str(product_id or f"row_{index}"),
-                "product_name": str(name or ""),
-                "category_raw": str(category or ""),
+                "product_name": name_text,
+                "category_raw": category_text,
                 "price": price_float,
                 "currency": str(_first(row, "currency") or "DKK"),
                 "unit": str(_first(row, "unit", "package_size") or ""),
@@ -64,7 +77,7 @@ def normalize_records(records: list[dict[str, Any]]) -> pd.DataFrame:
             }
         )
     frame = pd.DataFrame(rows)
-    frame = frame[(frame["quality_flag"] == "ok") & frame["price"].notna() & (frame["date"] != "")]
+    frame = frame[(frame["quality_flag"] == "ok") & frame["price"].notna() & (frame["price"] > 0) & (frame["date"] != "")]
     frame["unit_id"] = frame["store"] + "::" + frame["product_id"]
     frame["date"] = pd.to_datetime(frame["date"])
     return frame.sort_values(["unit_id", "date"]).reset_index(drop=True)

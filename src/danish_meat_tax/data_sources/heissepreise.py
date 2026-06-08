@@ -79,7 +79,7 @@ def download_json(raw_dir: Path, source_urls: tuple[str, ...] = DEFAULT_SOURCE_U
             with urlopen(url, timeout=timeout) as response:
                 data = response.read()
             payload = json.loads(data.decode("utf-8"))
-            records = extract_records(payload)
+            records = extract_source_items(payload)
             path = raw_dir / f"heissepreise_{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}.json"
             envelope = {
                 "source": url,
@@ -87,13 +87,13 @@ def download_json(raw_dir: Path, source_urls: tuple[str, ...] = DEFAULT_SOURCE_U
                 "records": records,
             }
             path.write_text(json.dumps(envelope, ensure_ascii=False, indent=2), encoding="utf-8")
-            return DownloadResult(path=path, source_url=url, record_count=len(records))
+            return DownloadResult(path=path, source_url=url, record_count=sum(len(row.get("priceHistory") or [None]) for row in records))
         except Exception as exc:  # noqa: BLE001 - preserve source-specific failure detail.
             errors.append(f"{url}: {exc}")
     raise RuntimeError("Could not download structured price data. Tried: " + " | ".join(errors))
 
 
-def extract_records(payload: Any) -> list[dict[str, Any]]:
+def extract_source_items(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
     if isinstance(payload, dict):
@@ -111,4 +111,34 @@ def extract_records(payload: Any) -> list[dict[str, Any]]:
                         flattened.append(item)
         if flattened:
             return flattened
+    raise ValueError("Unsupported price-data JSON shape")
+
+
+def extract_records(payload: Any) -> list[dict[str, Any]]:
+    def expanded(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            history = row.get("priceHistory")
+            base = {key: value for key, value in row.items() if key != "priceHistory"}
+            if isinstance(history, list) and history:
+                for entry in history:
+                    if not isinstance(entry, dict):
+                        continue
+                    item = dict(base)
+                    item["date"] = entry.get("date")
+                    item["price"] = entry.get("price", base.get("price"))
+                    item["quantity"] = entry.get("quantity", base.get("quantity"))
+                    item["unit"] = entry.get("unit", base.get("unit"))
+                    item["price_history_observation"] = True
+                    out.append(item)
+            else:
+                item = dict(base)
+                item["price_history_observation"] = False
+                out.append(item)
+        return out
+
+    if isinstance(payload, list):
+        return expanded([row for row in payload if isinstance(row, dict)])
+    if isinstance(payload, dict):
+        return expanded(extract_source_items(payload))
     raise ValueError("Unsupported price-data JSON shape")

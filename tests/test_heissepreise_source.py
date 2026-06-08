@@ -18,6 +18,24 @@ class HeissepreiseSourceTest(unittest.TestCase):
         records = extract_records(payload)
         self.assertEqual(records[0]["store"], "netto")
 
+    def test_extract_records_expands_price_history(self):
+        payload = [
+            {
+                "store": "netto",
+                "id": "1",
+                "name": "Hakket oksekød",
+                "price": 50,
+                "priceHistory": [
+                    {"date": "2024-06-20", "price": 45, "quantity": 1, "unit": "kg"},
+                    {"date": "2024-06-25", "price": 47, "quantity": 1, "unit": "kg"},
+                ],
+            }
+        ]
+        records = extract_records(payload)
+        self.assertEqual(len(records), 2)
+        self.assertEqual(records[0]["date"], "2024-06-20")
+        self.assertEqual(records[1]["price"], 47)
+
 
 if __name__ == "__main__":
     unittest.main()

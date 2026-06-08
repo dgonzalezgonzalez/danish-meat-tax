@@ -18,9 +18,11 @@ The event-study model replaces the single post indicator with relative-time inte
 
 The main treated groups are beef and pork. Lamb/sheep/goat products are coded as livestock-exposed because the policy is about livestock emissions, not only beef and pork retail products. Poultry is a sensitivity group. Fish, seafood, dairy, and non-meat foods are controls or robustness categories depending on the specification.
 
-## Balanced Window
+## Symmetric Window
 
 The panel builder selects the largest symmetric pre/post window around 2024-06-24 supported by the observed data. The event period itself is excluded so the number of pre and post periods is equal.
+
+By default, units are retained when they have at least one pre-announcement and one post-announcement observation inside that symmetric window. This keeps many more commodities and products from the large price-history source. A strict complete-unit panel is available with `--require-complete-units`, but it can drop nearly all real grocery products because historical price records are sparse rather than daily-complete.
 
 ## Inference
 

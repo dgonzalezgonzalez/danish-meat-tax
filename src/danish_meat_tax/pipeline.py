@@ -17,7 +17,7 @@ def _latest_raw_path(paths: PipelinePaths) -> Path:
     return candidates[0] if candidates else fixture_path
 
 
-def run_stage(stage: str, paths: PipelinePaths, fixture: bool, frequency: str) -> None:
+def run_stage(stage: str, paths: PipelinePaths, fixture: bool, frequency: str, require_complete_units: bool = False) -> None:
     paths.ensure()
     raw_path = _latest_raw_path(paths)
     products_path = paths.processed_dir / "products.csv"
@@ -41,6 +41,7 @@ def run_stage(stage: str, paths: PipelinePaths, fixture: bool, frequency: str) -
             diagnostics_path,
             event_date=EVENT_DATE,
             frequency=frequency,
+            require_complete_units=require_complete_units,
         )
         print(f"panel: {result.diagnostics['rows']} rows -> {panel_path}")
     if stage in {"estimate", "all"}:
@@ -61,9 +62,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, default=Path("."), help="Project root path.")
     parser.add_argument("--fixture", action="store_true", help="Use deterministic offline fixture price data.")
     parser.add_argument("--frequency", choices=["daily", "weekly"], default="daily", help="Panel aggregation frequency.")
+    parser.add_argument(
+        "--require-complete-units",
+        action="store_true",
+        help="Require each retained unit to appear in every selected pre/post period.",
+    )
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
-    run_stage(args.stage, PipelinePaths(args.root), fixture=args.fixture, frequency=args.frequency)
+    run_stage(
+        args.stage,
+        PipelinePaths(args.root),
+        fixture=args.fixture,
+        frequency=args.frequency,
+        require_complete_units=args.require_complete_units,
+    )
