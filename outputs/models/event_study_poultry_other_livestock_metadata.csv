@@ -1,0 +1,2 @@
+n_obs,n_units,n_periods,fixed_effects,cluster,treatment_group
+719346,54737,68,unit_id + period,unit_id,poultry_other_livestock
