@@ -32,6 +32,25 @@ def make_event_study_plot(event_study_csv: Path, output_path: Path, title: str =
     return output_path
 
 
+def make_group_event_study_plot(event_study_by_group_csv: Path, output_path: Path) -> Path:
+    data = pd.read_csv(event_study_by_group_csv).sort_values(["treatment_group", "relative_time"])
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.axhline(0, color="black", linewidth=0.8)
+    ax.axvline(0, color="firebrick", linestyle="--", linewidth=0.9)
+    for group, group_data in data.groupby("treatment_group"):
+        ax.plot(group_data["relative_time"], group_data["estimate"], marker="o", linewidth=1.2, markersize=3, label=group)
+    ax.set_title("Event-study heterogeneity by livestock product group")
+    ax.set_xlabel("Periods relative to 2024-06-24 announcement")
+    ax.set_ylabel("Log price effect")
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=200)
+    plt.close(fig)
+    return output_path
+
+
 def _format_coef(row: pd.Series) -> str:
     stars = ""
     if pd.notna(row.get("t_stat")):
@@ -87,11 +106,27 @@ def make_latex_table(ate_csv: Path, heterogeneity_csv: Path, metadata_csv: Path,
 
 
 def make_outputs(models_dir: Path, figures_dir: Path, tables_dir: Path) -> dict[str, Path]:
+    outputs: dict[str, Path] = {}
     event_plot = make_event_study_plot(models_dir / "event_study.csv", figures_dir / "event_study_overall.png")
+    outputs["event_study_plot"] = event_plot
+    by_group = models_dir / "event_study_by_group.csv"
+    if by_group.exists():
+        outputs["event_study_by_group_plot"] = make_group_event_study_plot(
+            by_group, figures_dir / "event_study_by_group.png"
+        )
+        for group in pd.read_csv(by_group, usecols=["treatment_group"])["treatment_group"].dropna().unique():
+            group_csv = models_dir / f"event_study_{group}.csv"
+            if group_csv.exists():
+                outputs[f"event_study_{group}_plot"] = make_event_study_plot(
+                    group_csv,
+                    figures_dir / f"event_study_{group}.png",
+                    title=f"Event-study: {group}",
+                )
     latex_table = make_latex_table(
         models_dir / "ate.csv",
         models_dir / "heterogeneity.csv",
         models_dir / "ate_metadata.csv",
         tables_dir / "ate_results.tex",
     )
-    return {"event_study_plot": event_plot, "ate_table": latex_table}
+    outputs["ate_table"] = latex_table
+    return outputs

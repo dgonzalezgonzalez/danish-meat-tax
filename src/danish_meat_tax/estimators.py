@@ -27,13 +27,12 @@ def _within_transform(values: np.ndarray, units: pd.Series, periods: pd.Series) 
 
 def _cluster_se(x: np.ndarray, residuals: np.ndarray, clusters: pd.Series) -> np.ndarray:
     xtx_inv = np.linalg.pinv(x.T @ x)
-    meat = np.zeros((x.shape[1], x.shape[1]))
-    for cluster in clusters.unique():
-        mask = clusters == cluster
-        score = x[mask.to_numpy()].T @ residuals[mask.to_numpy()]
-        meat += np.outer(score, score)
+    codes, uniques = pd.factorize(clusters, sort=False)
+    scores = np.zeros((len(uniques), x.shape[1]))
+    np.add.at(scores, codes, x * residuals[:, None])
+    meat = scores.T @ scores
     cov = xtx_inv @ meat @ xtx_inv
-    g = clusters.nunique()
+    g = len(uniques)
     n, k = x.shape
     if g > 1 and n > k:
         cov *= (g / (g - 1)) * ((n - 1) / (n - k))
@@ -109,15 +108,35 @@ def estimate_event_study(panel: pd.DataFrame, reference: int = -1) -> Regression
     return result
 
 
+def estimate_event_study_for_group(panel: pd.DataFrame, treatment_group: str, reference: int = -1) -> RegressionResult:
+    data = panel[(~panel["treated"]) | (panel["treatment_group"] == treatment_group)].copy()
+    data["treated"] = data["treatment_group"] == treatment_group
+    data["did"] = data["treated"].astype(int) * data["post"].astype(int)
+    result = estimate_event_study(data, reference=reference)
+    coefficients = result.coefficients.copy()
+    coefficients["treatment_group"] = treatment_group
+    return RegressionResult(
+        coefficients=coefficients,
+        metadata={**result.metadata, "treatment_group": treatment_group},
+    )
+
+
 def run_estimations(panel_path: Path, models_dir: Path) -> dict[str, RegressionResult]:
     models_dir.mkdir(parents=True, exist_ok=True)
-    panel = pd.read_csv(panel_path, parse_dates=["period"])
+    panel = pd.read_csv(panel_path, parse_dates=["period"], dtype={"product_id": str}, low_memory=False)
     results = {
         "ate": estimate_ate(panel),
         "heterogeneity": estimate_heterogeneity(panel),
         "event_study": estimate_event_study(panel),
     }
+    group_event_studies: list[pd.DataFrame] = []
+    for group in sorted(panel.loc[panel["treated"], "treatment_group"].dropna().unique()):
+        result = estimate_event_study_for_group(panel, group)
+        results[f"event_study_{group}"] = result
+        group_event_studies.append(result.coefficients)
     for name, result in results.items():
         result.coefficients.to_csv(models_dir / f"{name}.csv", index=False)
         pd.DataFrame([result.metadata]).to_csv(models_dir / f"{name}_metadata.csv", index=False)
+    if group_event_studies:
+        pd.concat(group_event_studies, ignore_index=True).to_csv(models_dir / "event_study_by_group.csv", index=False)
     return results
