@@ -118,11 +118,23 @@ def _latex_escape(value: object) -> str:
     return str(value).replace("_", "\\_")
 
 
+def _format_group_label(group: str) -> str:
+    labels = {
+        "beef": "Beef",
+        "dairy_cattle": "Dairy cattle",
+        "lamb_sheep_goat": "Lamb, sheep, goat",
+        "mixed_livestock": "Mixed livestock",
+        "pork": "Pork",
+    }
+    return labels.get(group, group.replace("_", " ").title())
+
+
 def _make_regression_table(
     columns: list[tuple[str, pd.Series, dict[str, object]]],
     output_path: Path,
     caption: str,
     notes: str,
+    label: str | None = None,
 ) -> Path:
     alignment = "l" + "c" * len(columns)
     header = " & ".join([""] + [label for label, _, _ in columns]) + " \\\\"
@@ -144,6 +156,9 @@ def _make_regression_table(
             "\\begin{table}[htbp]",
             "\\centering",
             f"\\caption{{{caption}}}",
+            f"\\label{{{label}}}" if label else "",
+            "\\footnotesize",
+            "\\setlength{\\tabcolsep}{3pt}",
             f"\\begin{{tabular}}{{{alignment}}}",
             "\\hline\\hline",
             header,
@@ -176,13 +191,13 @@ def make_did_latex_table(did_dir: Path, output_path: Path) -> Path:
         group = str(row["term"]).removesuffix(" x post")
         meta = _read_metadata(did_dir / "heterogeneity_metadata.csv")
         meta = {**meta, "pre_treated_average": row.get("pre_treated_average", np.nan)}
-        columns.append((_latex_escape(group.title().replace(" ", " ")), row, meta))
+        columns.append((_latex_escape(_format_group_label(group)), row, meta))
     notes = (
         "Outcome is log normalized price in DKK per kilogram or liter. All columns estimate two-way fixed effects "
         "with unit and period fixed effects. Standard errors, in parentheses, are clustered by unit. "
         "$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
     )
-    return _make_regression_table(columns, output_path, "DiD announcement effects", notes)
+    return _make_regression_table(columns, output_path, "DiD announcement effects", notes, label="tab:did")
 
 
 def make_synthetic_did_latex_table(sdid_dir: Path, output_path: Path) -> Path:
@@ -197,13 +212,19 @@ def make_synthetic_did_latex_table(sdid_dir: Path, output_path: Path) -> Path:
         group = stem.removeprefix("synthetic_did_")
         metadata_path = sdid_dir / f"synthetic_did_{group}_metadata.csv"
         if metadata_path.exists():
-            columns.append((_latex_escape(group.title().replace(" ", " ")), pd.read_csv(path).iloc[0], _read_metadata(metadata_path)))
+            columns.append((_latex_escape(_format_group_label(group)), pd.read_csv(path).iloc[0], _read_metadata(metadata_path)))
     notes = (
         "Synthetic DiD uses complete commodity-store units. Unit weights match the treated pre-period path; "
         "time weights match post-period donor averages. Standard errors, in parentheses, use a nonparametric bootstrap "
         "over complete treated and control units. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
     )
-    return _make_regression_table(columns, output_path, "Synthetic DiD announcement effects", notes)
+    return _make_regression_table(
+        columns,
+        output_path,
+        "Synthetic DiD announcement effects",
+        notes,
+        label="tab:sdid",
+    )
 
 
 def _beef_pre_price(panel_path: Path) -> float:
