@@ -27,7 +27,7 @@ As a log price effect at the observed pre-period beef price:
 = 0.0662.
 ```
 
-Main ATT comparison:
+Main average treatment effect on the treated (ATT) comparison:
 
 The DiD beef estimate compares beef product-store units with untreated food controls only. Other treated livestock commodities are excluded from the beef DiD regression rather than treated as controls. The SDiD beef robustness estimate applies the same focal-versus-untreated rule on complete commodity-store units.
 

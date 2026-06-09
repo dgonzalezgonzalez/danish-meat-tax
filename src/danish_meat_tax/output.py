@@ -143,6 +143,7 @@ def _make_regression_table(
     caption: str,
     notes: str,
     label: str | None = None,
+    include_r_squared: bool = True,
 ) -> Path:
     alignment = "l" + "c" * len(columns)
     header = " & ".join([""] + [label for label, _, _ in columns]) + " \\\\"
@@ -159,32 +160,36 @@ def _make_regression_table(
         r2 = meta.get("r_squared", np.nan)
         r2_values.append(f"{float(r2):.3f}" if pd.notna(r2) else "")
     r2_row = " & ".join(["$R^2$"] + r2_values) + " \\\\"
-    table = "\n".join(
+    rows = [
+        "\\begin{table}[htbp]",
+        "\\centering",
+        f"\\caption{{{caption}}}",
+        f"\\label{{{label}}}" if label else "",
+        "\\footnotesize",
+        "\\setlength{\\tabcolsep}{3pt}",
+        f"\\begin{{tabular}}{{{alignment}}}",
+        "\\hline\\hline",
+        header,
+        "\\hline",
+        coef_row,
+        se_row,
+        "\\hline",
+        obs_row,
+        unit_row,
+        period_row,
+        pre_row,
+    ]
+    if include_r_squared:
+        rows.append(r2_row)
+    rows.extend(
         [
-            "\\begin{table}[htbp]",
-            "\\centering",
-            f"\\caption{{{caption}}}",
-            f"\\label{{{label}}}" if label else "",
-            "\\footnotesize",
-            "\\setlength{\\tabcolsep}{3pt}",
-            f"\\begin{{tabular}}{{{alignment}}}",
-            "\\hline\\hline",
-            header,
-            "\\hline",
-            coef_row,
-            se_row,
-            "\\hline",
-            obs_row,
-            unit_row,
-            period_row,
-            pre_row,
-            r2_row,
             "\\hline\\hline",
             "\\end{tabular}",
             f"\\begin{{minipage}}{{0.96\\linewidth}}\\footnotesize Notes: {notes}\\end{{minipage}}",
             "\\end{table}",
         ]
     )
+    table = "\n".join(rows)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(table, encoding="utf-8")
     return output_path
@@ -234,6 +239,7 @@ def make_synthetic_did_latex_table(sdid_dir: Path, output_path: Path) -> Path:
         "Synthetic DiD announcement effects",
         notes,
         label="tab:sdid",
+        include_r_squared=False,
     )
 
 
@@ -367,7 +373,7 @@ As a log price effect at the observed pre-period beef price:
 = {reference_effect:.4f}.
 ```
 
-Main ATT comparison:
+Main average treatment effect on the treated (ATT) comparison:
 
 The DiD beef estimate compares beef product-store units with untreated food controls only. Other treated livestock commodities are excluded from the beef DiD regression rather than treated as controls. The SDiD beef robustness estimate applies the same focal-versus-untreated rule on complete commodity-store units.
 

@@ -185,7 +185,7 @@ SCC_{Nordhaus,2024}
 \widehat{SCC}.
 ```
 
-The output graph `outputs/figures/calibration/beef_att_policy_calibration.png` plots beef ATT point estimates and 95 percent confidence intervals for DiD and SDiD, with a horizontal reference line at the log price value corresponding to the carbon-price gap. The graph `outputs/figures/calibration/event_study_beef_policy_calibration.png` repeats the reference line for the beef DiD event study and compares it to the latest available post-period event-study estimate. The discussion file `docs/beef_carbon_price_calibration.md` reports the arithmetic, assumptions, reverse-engineered tax values, and interpretation.
+The output graph `outputs/figures/calibration/beef_att_policy_calibration.png` plots beef average treatment effect on the treated (ATT) point estimates and 95 percent confidence intervals for DiD and SDiD, with a horizontal reference line at the log price value corresponding to the carbon-price gap. The graph `outputs/figures/calibration/event_study_beef_policy_calibration.png` repeats the reference line for the beef DiD event study and compares it to the latest available post-period event-study estimate. The discussion file `docs/beef_carbon_price_calibration.md` reports the arithmetic, assumptions, reverse-engineered tax values, and interpretation.
 
 ## Output Structure
 
