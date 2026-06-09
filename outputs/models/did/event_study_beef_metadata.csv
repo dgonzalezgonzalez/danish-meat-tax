@@ -1,2 +1,2 @@
-n_obs,n_units,n_periods,fixed_effects,cluster,r_squared,pre_treated_average,treatment_group
-207369,16912,32,unit_id + period,unit_id,0.0009010550322943178,158.5362203535783,beef
+n_obs,n_units,n_periods,fixed_effects,cluster,r_squared,pre_treated_average,treatment_group,comparison_group
+207369,16912,32,unit_id + period,unit_id,0.0009010550322943178,158.5362203535783,beef,untreated_food_controls

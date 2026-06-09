@@ -61,12 +61,12 @@ The main DiD estimator is a two-way fixed-effects regression:
 
 Here `i` indexes the estimation unit, `t` indexes the panel period, `p` is normalized price, unit fixed effects absorb time-invariant product-store price levels, and period fixed effects absorb common food-price shocks.
 
-The subgroup DiD estimator replaces the single treatment interaction with treated-commodity interactions:
+The subgroup DiD estimator is estimated separately for each treated commodity. For a focal commodity \(g\), the estimation sample keeps only that treated commodity and untreated food controls; other treated livestock commodities are excluded from that column rather than used as controls:
 
 ```math
 \log(p_{it}) =
 \alpha_i + \lambda_t
-+ \sum_{g \in G} \beta_g
++ \beta_g
 \left(\mathbf{1}\{g_i=g\} \times \text{Post}_t\right)
 + \varepsilon_{it}.
 ```
@@ -82,6 +82,8 @@ The event-study estimator is:
 ```
 
 Relative period `-1` is the omitted reference period. Output event-study CSVs and plots explicitly include `t = -1` as a zero point estimate with no confidence interval, so figures show the reference period rather than silently skipping it.
+
+Subgroup event studies use the same focal-versus-untreated sample rule as subgroup DiD. For example, the beef event study compares beef product-store units with untreated food controls; pork, lamb/sheep/goat, mixed livestock, and dairy cattle are not used as beef controls.
 
 DiD standard errors are clustered by estimation unit. The reported confidence intervals use normal critical value 1.96.
 
@@ -198,7 +200,7 @@ Processed data and diagnostics:
 DiD outputs:
 
 - `outputs/models/did/ate.csv`: all-treated DiD estimate.
-- `outputs/models/did/heterogeneity.csv`: treated-commodity DiD estimates.
+- `outputs/models/did/heterogeneity.csv`: treated-commodity DiD estimates; each commodity is estimated separately against untreated food controls only.
 - `outputs/models/did/event_study.csv`: all-treated event-study estimates.
 - `outputs/models/did/event_study_<group>.csv`: subgroup event-study estimates.
 - `outputs/models/did/pretrend_summary.csv`: individual pre-period diagnostic summary.

@@ -29,9 +29,11 @@ As a log price effect at the observed pre-period beef price:
 
 Main ATT comparison:
 
+The DiD beef estimate compares beef product-store units with untreated food controls only. Other treated livestock commodities are excluded from the beef DiD regression rather than treated as controls. The SDiD beef robustness estimate applies the same focal-versus-untreated rule on complete commodity-store units.
+
 | Estimator | ATT | 95% CI | DKK/kg | USD/kg | Implied announcement value, USD/tCO2e | Required tax, USD/tCO2e | Required tax, DKK/tCO2e |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| DiD | 0.0547 | [0.0240, 0.0855] | 8.92 | 1.29 | 21.7 | 48.2 | 333 |
+| DiD | 0.0583 | [0.0275, 0.0892] | 9.52 | 1.38 | 23.2 | 46.8 | 322 |
 | SDiD | 0.1828 | [0.0013, 0.3643] | 31.80 | 4.61 | 77.4 | -7.5 | -51 |
 
 
@@ -41,7 +43,7 @@ The reference value is:
 \tau_{gap} = 0.0662.
 ```
 
-With the updated gap, this reference lies inside the DiD confidence interval and inside the SDiD confidence interval. Using the DiD ATT as the preferred estimate, the announcement effect is equivalent to USD 21.7/tCO2e, so the statutory tax that would exactly reach the inflation-adjusted Nordhaus benchmark is USD 48.2/tCO2e, or DKK 333/tCO2e. Under this internally consistent benchmark, the DiD ATT does not imply lowering the announced DKK 300/tCO2e gross tax; it implies a slightly higher tax. If one instead keeps the grown 2030 Nordhaus benchmark in 2010 USD and compares it directly with the nominal USD value of the Danish tax, the smaller nominal comparison would imply a tax of about USD 26.9/tCO2e.
+With the updated gap, this reference lies inside the DiD confidence interval and inside the SDiD confidence interval. Using the DiD ATT as the preferred estimate, the announcement effect is equivalent to USD 23.2/tCO2e, so the statutory tax that would exactly reach the inflation-adjusted Nordhaus benchmark is USD 46.8/tCO2e, or DKK 322/tCO2e. Under this internally consistent benchmark, the DiD ATT does not imply lowering the announced DKK 300/tCO2e gross tax; it implies a slightly higher tax. If one instead keeps the grown 2030 Nordhaus benchmark in 2010 USD and compares it directly with the nominal USD value of the Danish tax, the smaller nominal comparison would imply a tax of about USD 25.4/tCO2e.
 
 Latest event-study comparison:
 

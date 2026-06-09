@@ -27,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-Denmark announced in June 2024 that it would introduce a greenhouse-gas tax on livestock emissions, making the agreement one of the first major attempts to price agricultural emissions directly. This draft studies whether that announcement affected supermarket prices before the tax was implemented. Using Danish grocery price histories and a difference-in-differences design with product-store and period fixed effects, I find that beef prices increased by 5.5 percent after the announcement. Beef is the only treated meat category that both shows a positive price response and passes the individual pre-trend screen in the event-study specification. A synthetic difference-in-differences robustness check gives a larger but much less precise estimate because the method requires a complete commodity-store panel. I then use the estimated beef effect in a back-of-the-envelope carbon-price calibration. After growing the \citet{nordhaus2017} social cost of carbon from 2015 to 2030 and converting to 2024 dollars, the DiD announcement effect is equivalent to about USD 21.7/tCO2e. The implied log-price reference needed to close the remaining carbon-price gap lies inside the DiD confidence interval, so the estimates do not reject exact compensation at the 95 percent level. Point estimates nevertheless illustrate how the framework can fine-tune policy: under the DiD ATT, a statutory gross tax of about USD 48.2/tCO2e, or DKK 333/tCO2e, would exactly match the inflation-adjusted Nordhaus benchmark after accounting for announcement pass-through, while the latest event-study point estimate would imply lowering the beef tax if anticipatory effects keep increasing.
+Denmark announced in June 2024 that it would introduce a greenhouse-gas tax on livestock emissions, making the agreement one of the first major attempts to price agricultural emissions directly. This draft studies whether that announcement affected supermarket prices before the tax was implemented. Using Danish grocery price histories and a difference-in-differences (DiD) design with product-store and period fixed effects, I find that beef prices increased by 5.8 log points, or about 6.0 percent, after the announcement. Beef is the only treated meat category that both shows a positive price response and passes the individual pre-trend screen in the event-study specification. A synthetic difference-in-differences robustness check gives a larger but much less precise estimate because the method requires a complete commodity-store panel. I then use the estimated beef effect in a back-of-the-envelope carbon-price calibration. After growing the \citet{nordhaus2017} social cost of carbon from 2015 to 2030 and converting to 2024 dollars, the DiD announcement effect is equivalent to about USD 23.2/tCO2e. The implied log-price reference needed to close the remaining carbon-price gap lies inside the DiD confidence interval, so the estimates do not reject exact compensation at the 95 percent level. Point estimates nevertheless illustrate how the framework can fine-tune policy: under the DiD ATT, a statutory gross tax of about USD 46.8/tCO2e, or DKK 322/tCO2e, would exactly match the inflation-adjusted Nordhaus benchmark after accounting for announcement pass-through, while the latest event-study point estimate would imply lowering the beef tax if anticipatory effects keep increasing.
 \end{abstract}
 
 \section{Introduction}
@@ -36,9 +36,9 @@ Agricultural greenhouse-gas emissions remain among the hardest emissions to pric
 
 On June 24, 2024, the Danish government and the parties to the Green Tripartite announced an agreement for a ``green Denmark'' \citep{danishgovernment2024}. Public coverage emphasized that Denmark would become the first country to impose a carbon tax on livestock emissions. Institutionally, the policy is not a retail meat excise tax. It is an upstream agricultural greenhouse-gas tax, with implementation scheduled for later years and with deductions and transition mechanisms. Public attention focused especially on cattle and pigs, while the broader agreement also covers land-use and agricultural restructuring.
 
-The main empirical result is that beef prices increased after the announcement. In the preferred difference-in-differences specification, the estimated average treatment effect for beef is 0.0547 log points, with a standard error of 0.0157. Interpreted as a percentage price change, this is approximately 5.6 percent. The event-study evidence for beef shows no statistically significant individual pre-period coefficient at the 95 percent level, whereas the other treated meat categories fail the same pre-trend screen. For that reason, the main analysis focuses on beef.\footnote{The pipeline also estimates effects for pork, lamb/sheep/goat, mixed livestock products, dairy cattle, and aggregate treated products. These estimates are useful diagnostics and appendix material, but the pre-period evidence does not support treating them as the main causal estimates.}
+The main empirical result is that beef prices increased after the announcement. In the preferred difference-in-differences specification, the estimated average treatment effect for beef is 0.0583 log points, with a standard error of 0.0157. Interpreted as a percentage price change, this is approximately 6.0 percent. The event-study evidence for beef shows no statistically significant individual pre-period coefficient at the 95 percent level, whereas the other treated meat categories fail the same pre-trend screen. For that reason, the main analysis focuses on beef.\footnote{The pipeline also estimates effects for pork, lamb/sheep/goat, mixed livestock products, dairy cattle, and aggregate treated products. These estimates are useful diagnostics and appendix material, but the pre-period evidence does not support treating them as the main causal estimates.}
 
-The second contribution is a simple carbon-price calibration. \citet{nordhaus2017} reports a 2015 social cost of carbon of USD 31.2/tCO2 in 2010 dollars and a real growth rate of 3 percent per year through 2050. Growing that value to 2030 and converting it to 2024 dollars gives a benchmark of about USD 69.9/tCO2e. Denmark's announced gross tax of DKK 300/tCO2e is about USD 43.5/tCO2e at the 2024 average exchange rate, leaving an internally consistent gap of about USD 26.4/tCO2e. The DiD beef announcement effect is equivalent to about USD 21.7/tCO2e. Since the gap-implied log effect lies inside the estimated confidence interval, these data do not reject the hypothesis that announcement pass-through already compensates the gap at the 95 percent level. Point estimates are still policy-relevant: if policymakers wished the future statutory tax plus announcement-induced pass-through to exactly match the inflation-adjusted Nordhaus benchmark, the DiD ATT implies a statutory gross tax of about USD 48.2/tCO2e, or DKK 333/tCO2e. If anticipatory beef price effects continue to increase, as the event-study path suggests, the beef-specific tax may instead need to be lowered.
+The second contribution is a simple carbon-price calibration. \citet{nordhaus2017} reports a 2015 social cost of carbon of USD 31.2/tCO2 in 2010 dollars and a real growth rate of 3 percent per year through 2050. Growing that value to 2030 and converting it to 2024 dollars gives a benchmark of about USD 69.9/tCO2e. Denmark's announced gross tax of DKK 300/tCO2e is about USD 43.5/tCO2e at the 2024 average exchange rate, leaving an internally consistent gap of about USD 26.4/tCO2e. The DiD beef announcement effect is equivalent to about USD 23.2/tCO2e. Since the gap-implied log effect lies inside the estimated confidence interval, these data do not reject the hypothesis that announcement pass-through already compensates the gap at the 95 percent level. Point estimates are still policy-relevant: if policymakers wished the future statutory tax plus announcement-induced pass-through to exactly match the inflation-adjusted Nordhaus benchmark, the DiD ATT implies a statutory gross tax of about USD 46.8/tCO2e, or DKK 322/tCO2e. If anticipatory beef price effects continue to increase, as the event-study path suggests, the beef-specific tax may instead need to be lowered.
 
 The broader interpretation is that policy announcements may themselves be economically powerful instruments. The logic is close to the celebrated ``whatever it takes'' moment in monetary policy: a credible public commitment can shift expectations before the full policy instrument is deployed \citep{draghi2012}. That analogy is not exact, but it highlights the same mechanism. If firms and consumers react to credible future policy, some intended price and expectation effects may occur before the statutory instrument takes effect. That does not eliminate the need for policy; rather, it gives policymakers a reason to measure anticipatory pass-through and recalibrate future policy in light of observed market adjustment.
 
@@ -61,7 +61,7 @@ The preferred specification is a two-way fixed-effects difference-in-differences
 + \beta_g \left(\mathbf{1}\{g_i=\text{beef}\} \times \text{Post}_t\right)
 + \varepsilon_{it},
 \end{equation}
-where \(p_{it}\) is normalized price for product-store unit \(i\) in month \(t\), \(\alpha_i\) are unit fixed effects, and \(\lambda_t\) are month fixed effects. Standard errors are clustered by product-store unit. The identifying assumption is that, absent the announcement, beef prices would have followed the same time path as the control food products after accounting for product-store and period fixed effects.
+where \(p_{it}\) is normalized price for product-store unit \(i\) in month \(t\), \(\alpha_i\) are unit fixed effects, and \(\lambda_t\) are month fixed effects. For commodity-specific estimates, the sample contains the focal treated commodity and untreated food controls only; other treated livestock commodities are excluded from that commodity's regression. Standard errors are clustered by product-store unit. The identifying assumption is that, absent the announcement, beef prices would have followed the same time path as the control food products after accounting for product-store and period fixed effects.
 
 I assess this assumption with an event-study design:
 \begin{equation}
@@ -78,7 +78,7 @@ As a robustness check, I also estimate synthetic difference-in-differences \cite
 \section{Results}
 \label{sec:results}
 
-Table~\ref{tab:did} summarizes the main DiD estimates across treated categories. Beef is the central estimate for the paper: the coefficient is 0.0547 with a standard error of 0.0157, statistically significant at the 1 percent level. The implied price increase is \(\exp(0.0547)-1=5.6\) percent.
+Table~\ref{tab:did} summarizes the main DiD estimates across treated categories. Beef is the central estimate for the paper: the coefficient is 0.0583 with a standard error of 0.0157, statistically significant at the 1 percent level. The implied price increase is \(\exp(0.0583)-1=6.0\) percent.
 
 \input{../outputs/tables/did/did_results.tex}
 
@@ -123,7 +123,7 @@ SCC_{Nordhaus,2030}^{2024USD}
 \end{equation}
 The announced Danish gross tax is \(300/6.8953=43.5\) USD/tCO2e, so the benchmark gap is 26.4 USD/tCO2e.
 
-Figure~\ref{fig:calibration} compares the DiD and SDiD beef estimates to the log price increase needed to close that gap. The reference value lies inside both confidence intervals. Therefore, the data do not reject the hypothesis that the anticipatory beef price effect already compensates the tax gap at the 95 percent level. This is the main inferential takeaway. The reverse-engineered point estimate should be read as a policy-calibration exercise rather than as a statistically sharp recommendation: using the preferred DiD estimate, the announcement effect is equivalent to 21.7 USD/tCO2e, so the tax that exactly matches the inflation-adjusted Nordhaus benchmark is 48.2 USD/tCO2e, or DKK 333/tCO2e. This is slightly above, not below, the announced DKK 300/tCO2e gross tax.
+Figure~\ref{fig:calibration} compares the DiD and SDiD beef estimates to the log price increase needed to close that gap. The reference value lies inside both confidence intervals. Therefore, the data do not reject the hypothesis that the anticipatory beef price effect already compensates the tax gap at the 95 percent level. This is the main inferential takeaway. The reverse-engineered point estimate should be read as a policy-calibration exercise rather than as a statistically sharp recommendation: using the preferred DiD estimate, the announcement effect is equivalent to 23.2 USD/tCO2e, so the tax that exactly matches the inflation-adjusted Nordhaus benchmark is 46.8 USD/tCO2e, or DKK 322/tCO2e. This is slightly above, not below, the announced DKK 300/tCO2e gross tax.
 
 \begin{figure}[htbp]
 \centering
@@ -149,6 +149,41 @@ The evidence suggests that Denmark's livestock-tax announcement affected beef pr
 For policy design, the central lesson is not that announcements substitute for taxes. Rather, announcements can generate measurable market adjustment that should be incorporated into later calibration. Under the preferred DiD ATT, the announcement-induced beef price effect covers a large share of the gap between the announced Danish tax and the inflation-adjusted Nordhaus benchmark. Because the gap lies inside the ATT confidence interval, however, we cannot rule out exact compensation at the 95 percent level. Under the latest event-study point estimate, the announcement effect alone exceeds the benchmark, implying a nonnegative tax floor of zero. These two scenarios should be distinguished carefully: the ATT is the more stable summary for policy calibration, while the latest-period estimate is useful as a warning that anticipatory effects may grow over time.
 
 Several limitations remain. Product classification is deterministic and should receive manual review for mixed meat products. The analysis studies supermarket prices rather than farm-level emissions or producer incidence. Finally, the carbon-price calibration is an accounting exercise, not a structural model of pass-through. Even so, it illustrates a useful policy principle: credible announcements can be policy instruments in their own right, and observing the market response to an announcement can help policymakers adjust the eventual statutory instrument before implementation. This contribution is especially useful for commodity-specific policy design. In the current evidence, beef is the only product for which causal interpretation is supported by both an observed effect and acceptable pre-trend diagnostics; for other livestock commodities, a uniform tax may not generate the same retail-price pass-through.
+
+\begin{thebibliography}{99}
+
+\bibitem[Arkhangelsky et~al.(2021)]{arkhangelsky2021synthetic}
+Arkhangelsky, D., Athey, S., Hirshberg, D.~A., Imbens, G.~W., and Wager, S. (2021).
+\newblock Synthetic difference-in-differences.
+\newblock \emph{American Economic Review}, 111(12):4088--4118.
+
+\bibitem[Danish Government(2024)]{danishgovernment2024}
+Danish Government (2024).
+\newblock Regeringen og parterne i gron trepart indgar historisk aftale om et gront Danmark.
+\newblock \url{https://regeringen.dk/aktuelt/nyheder/2024/regeringen-og-parterne-i-groen-trepart-indgaar-historisk-aftale-om-et-groent-danmark/}.
+
+\bibitem[Draghi(2012)]{draghi2012}
+Draghi, M. (2012).
+\newblock Verbatim of the remarks made by Mario Draghi.
+\newblock European Central Bank.
+\newblock \url{https://www.ecb.europa.eu/press/key/date/2012/html/sp120726.en.html}.
+
+\bibitem[Nordhaus(2017)]{nordhaus2017}
+Nordhaus, W.~D. (2017).
+\newblock Revisiting the social cost of carbon.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 114(7):1518--1523.
+
+\bibitem[OECD(2025)]{oecd2025}
+OECD (2025).
+\newblock Measuring carbon footprints of agri-food products.
+\newblock OECD Publishing.
+
+\bibitem[Poore and Nemecek(2018)]{poore2018}
+Poore, J. and Nemecek, T. (2018).
+\newblock Reducing food's environmental impacts through producers and consumers.
+\newblock \emph{Science}, 360(6392):987--992.
+
+\end{thebibliography}
 
 \appendix
 
@@ -198,40 +233,5 @@ This appendix reports diagnostic outputs for the broader treated sample. These r
 \caption{Synthetic DiD beef trends}
 \label{fig:sdid_beef}
 \end{figure}
-
-\begin{thebibliography}{99}
-
-\bibitem[Arkhangelsky et~al.(2021)]{arkhangelsky2021synthetic}
-Arkhangelsky, D., Athey, S., Hirshberg, D.~A., Imbens, G.~W., and Wager, S. (2021).
-\newblock Synthetic difference-in-differences.
-\newblock \emph{American Economic Review}, 111(12):4088--4118.
-
-\bibitem[Danish Government(2024)]{danishgovernment2024}
-Danish Government (2024).
-\newblock Regeringen og parterne i gron trepart indgar historisk aftale om et gront Danmark.
-\newblock \url{https://regeringen.dk/aktuelt/nyheder/2024/regeringen-og-parterne-i-groen-trepart-indgaar-historisk-aftale-om-et-groent-danmark/}.
-
-\bibitem[Draghi(2012)]{draghi2012}
-Draghi, M. (2012).
-\newblock Verbatim of the remarks made by Mario Draghi.
-\newblock European Central Bank.
-\newblock \url{https://www.ecb.europa.eu/press/key/date/2012/html/sp120726.en.html}.
-
-\bibitem[Nordhaus(2017)]{nordhaus2017}
-Nordhaus, W.~D. (2017).
-\newblock Revisiting the social cost of carbon.
-\newblock \emph{Proceedings of the National Academy of Sciences}, 114(7):1518--1523.
-
-\bibitem[OECD(2025)]{oecd2025}
-OECD (2025).
-\newblock Measuring carbon footprints of agri-food products.
-\newblock OECD Publishing.
-
-\bibitem[Poore and Nemecek(2018)]{poore2018}
-Poore, J. and Nemecek, T. (2018).
-\newblock Reducing food's environmental impacts through producers and consumers.
-\newblock \emph{Science}, 360(6392):987--992.
-
-\end{thebibliography}
 
 \end{document}

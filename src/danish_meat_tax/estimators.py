@@ -123,21 +123,32 @@ def estimate_ate(panel: pd.DataFrame) -> RegressionResult:
 
 
 def estimate_heterogeneity(panel: pd.DataFrame) -> RegressionResult:
-    data = panel.copy()
-    columns: list[str] = []
-    labels: list[str] = []
-    for group in sorted(data.loc[data["treated"], "treatment_group"].dropna().unique()):
-        col = f"did_{group}"
-        data[col] = ((data["treatment_group"] == group) & data["post"]).astype(int)
-        columns.append(col)
-        labels.append(f"{group} x post")
-    result = _fit_twfe(data, columns, labels)
-    pre_averages = {
-        f"{group} x post": data.loc[(data["treatment_group"] == group) & ~data["post"].astype(bool), "price"].mean()
-        for group in sorted(data.loc[data["treated"], "treatment_group"].dropna().unique())
-    }
-    result.coefficients["pre_treated_average"] = result.coefficients["term"].map(pre_averages)
-    return result
+    rows: list[pd.DataFrame] = []
+    groups = sorted(panel.loc[panel["treated"], "treatment_group"].dropna().unique())
+    for group in groups:
+        data = panel[(~panel["treated"]) | (panel["treatment_group"] == group)].copy()
+        if data.loc[data["treatment_group"] == group, "unit_id"].nunique() < 2:
+            continue
+        data["treated"] = data["treatment_group"] == group
+        data["did"] = data["treated"].astype(int) * data["post"].astype(int)
+        result = _fit_twfe(data, ["did"], [f"{group} x post"])
+        coefficients = result.coefficients.copy()
+        coefficients["treatment_group"] = group
+        for key, value in result.metadata.items():
+            coefficients[key] = value
+        coefficients["comparison_group"] = "untreated_food_controls"
+        rows.append(coefficients)
+    if not rows:
+        raise ValueError("No treated commodity has enough units for heterogeneity estimation.")
+    coefficients = pd.concat(rows, ignore_index=True)
+    return RegressionResult(
+        coefficients=coefficients,
+        metadata={
+            "estimand": "separate treated-commodity DiD against untreated food controls",
+            "comparison_group": "untreated_food_controls",
+            "n_groups": int(len(coefficients)),
+        },
+    )
 
 
 def estimate_event_study(panel: pd.DataFrame, reference: int = -1) -> RegressionResult:
@@ -187,7 +198,11 @@ def estimate_event_study_for_group(panel: pd.DataFrame, treatment_group: str, re
     coefficients["treatment_group"] = treatment_group
     return RegressionResult(
         coefficients=coefficients,
-        metadata={**result.metadata, "treatment_group": treatment_group},
+        metadata={
+            **result.metadata,
+            "treatment_group": treatment_group,
+            "comparison_group": "untreated_food_controls",
+        },
     )
 
 
@@ -408,7 +423,11 @@ def estimate_synthetic_did_for_group(panel: pd.DataFrame, treatment_group: str) 
     coefficients["treatment_group"] = treatment_group
     return SyntheticDiDResult(
         coefficients=coefficients,
-        metadata={**result.metadata, "treatment_group": treatment_group},
+        metadata={
+            **result.metadata,
+            "treatment_group": treatment_group,
+            "comparison_group": "untreated_food_controls",
+        },
         trends=result.trends.assign(treatment_group=treatment_group),
         unit_weights=result.unit_weights.assign(treatment_group=treatment_group),
         time_weights=result.time_weights.assign(treatment_group=treatment_group),

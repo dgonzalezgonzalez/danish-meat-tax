@@ -14,6 +14,8 @@ log(normalized_price_it) = beta * Treated_i * Post_t + product-store FE_i + peri
 
 The event-study model replaces the single post indicator with relative-time interactions for treated units, omitting period `-1` as the reference.
 
+For treated-commodity DiD and treated-commodity event studies, each focal commodity is estimated against untreated food controls only. Other treated livestock commodities are excluded from that focal regression. For example, the beef DiD and beef event study compare beef with untreated food controls; pork is not used as a beef control.
+
 ## Treatment Groups
 
 The treated groups are products derived from livestock covered by the policy channel:
@@ -37,7 +39,7 @@ The event period itself is excluded from pre/post support. For weekly panels, pe
 
 ## Parallel Trends
 
-The output stage produces event-study plots, aggregate normalized-price trend plots, period-support diagnostics, and `pretrend_summary.csv`. Pre-period coefficients should be inspected before interpreting ATE estimates. If pretrends remain poor, the next robustness steps are to restrict to stable stores/commodities, validate against official food price indices, and consider matched food controls.
+The output stage produces event-study plots, aggregate normalized-price trend plots, period-support diagnostics, and `pretrend_summary.csv`. Subgroup pretrend diagnostics use the same focal-versus-untreated sample rule as subgroup DiD. Pre-period coefficients should be inspected before interpreting ATE estimates. If pretrends remain poor, the next robustness steps are to restrict to stable stores/commodities, validate against official food price indices, and consider matched food controls.
 
 ## Inference
 

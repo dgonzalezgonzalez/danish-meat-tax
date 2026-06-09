@@ -24,6 +24,11 @@ class EstimatorsTest(unittest.TestCase):
         self.assertIn("beef", terms)
         self.assertIn("pork", terms)
         self.assertIn("lamb_sheep_goat", terms)
+        self.assertTrue((result.coefficients["comparison_group"] == "untreated_food_controls").all())
+        self.assertLess(
+            result.coefficients.loc[result.coefficients["term"] == "beef x post", "n_obs"].iloc[0],
+            len(self.panel),
+        )
 
     def test_event_study_includes_reference_period_as_zero(self):
         result = estimate_event_study(self.panel)

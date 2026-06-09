@@ -1,2 +1,2 @@
-n_obs,n_units,n_periods,fixed_effects,cluster,r_squared,pre_treated_average,treatment_group
-203630,16525,32,unit_id + period,unit_id,0.0015340818003093393,861.9325912609245,lamb_sheep_goat
+n_obs,n_units,n_periods,fixed_effects,cluster,r_squared,pre_treated_average,treatment_group,comparison_group
+203630,16525,32,unit_id + period,unit_id,0.0015340818003093393,861.9325912609245,lamb_sheep_goat,untreated_food_controls

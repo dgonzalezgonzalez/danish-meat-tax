@@ -114,6 +114,14 @@ def _read_metadata(path: Path) -> dict[str, object]:
     return pd.read_csv(path).iloc[0].to_dict()
 
 
+def _metadata_from_row(row: pd.Series, fallback: dict[str, object]) -> dict[str, object]:
+    metadata = dict(fallback)
+    for key in ("n_obs", "n_units", "n_periods", "fixed_effects", "cluster", "r_squared", "pre_treated_average"):
+        if key in row and pd.notna(row[key]):
+            metadata[key] = row[key]
+    return metadata
+
+
 def _latex_escape(value: object) -> str:
     return str(value).replace("_", "\\_")
 
@@ -187,14 +195,16 @@ def make_did_latex_table(did_dir: Path, output_path: Path) -> Path:
     ate_meta = _read_metadata(did_dir / "ate_metadata.csv")
     heterogeneity = pd.read_csv(did_dir / "heterogeneity.csv")
     columns: list[tuple[str, pd.Series, dict[str, object]]] = [("All treated", ate, ate_meta)]
+    heterogeneity_meta = _read_metadata(did_dir / "heterogeneity_metadata.csv")
     for _, row in heterogeneity.iterrows():
         group = str(row["term"]).removesuffix(" x post")
-        meta = _read_metadata(did_dir / "heterogeneity_metadata.csv")
-        meta = {**meta, "pre_treated_average": row.get("pre_treated_average", np.nan)}
+        meta = _metadata_from_row(row, heterogeneity_meta)
         columns.append((_latex_escape(_format_group_label(group)), row, meta))
     notes = (
-        "Outcome is log normalized price in DKK per kilogram or liter. All columns estimate two-way fixed effects "
-        "with unit and period fixed effects. Standard errors, in parentheses, are clustered by unit. "
+        "Outcome is log normalized price in DKK per kilogram or liter. The all-treated column compares all treated "
+        "livestock-exposed commodities with untreated food controls. Each commodity column is estimated separately "
+        "against untreated food controls only. All columns include unit and period fixed effects. Standard errors, "
+        "in parentheses, are clustered by unit. "
         "$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$."
     )
     return _make_regression_table(columns, output_path, "DiD announcement effects", notes, label="tab:did")
@@ -358,6 +368,8 @@ As a log price effect at the observed pre-period beef price:
 ```
 
 Main ATT comparison:
+
+The DiD beef estimate compares beef product-store units with untreated food controls only. Other treated livestock commodities are excluded from the beef DiD regression rather than treated as controls. The SDiD beef robustness estimate applies the same focal-versus-untreated rule on complete commodity-store units.
 
 | Estimator | ATT | 95% CI | DKK/kg | USD/kg | Implied announcement value, USD/tCO2e | Required tax, USD/tCO2e | Required tax, DKK/tCO2e |
 |---|---:|---:|---:|---:|---:|---:|---:|

@@ -1,2 +1,2 @@
-n_obs,n_units,n_treated_units,n_control_units,n_periods,n_pre_periods,n_post_periods,pre_gap_adjustment,bootstrap_reps,bootstrap_seed,inference,unit_level,pre_treated_average,treatment_group
-352,11,2,9,32,8,24,0.0035898894450511884,25,20240624,nonparametric bootstrap over complete treated and control units,commodity_store_complete,102.17330629788385,pork
+n_obs,n_units,n_treated_units,n_control_units,n_periods,n_pre_periods,n_post_periods,pre_gap_adjustment,bootstrap_reps,bootstrap_seed,inference,unit_level,pre_treated_average,treatment_group,comparison_group
+352,11,2,9,32,8,24,0.0035898894450511884,25,20240624,nonparametric bootstrap over complete treated and control units,commodity_store_complete,102.17330629788385,pork,untreated_food_controls
