@@ -40,7 +40,7 @@ Run against real Danish grocery data:
 ```bash
 $env:PYTHONPATH="src"; py -3 main.py download
 $env:PYTHONPATH="src"; py -3 main.py process
-$env:PYTHONPATH="src"; py -3 main.py panel --frequency monthly --unit-level commodity_store --min-pre-periods 1 --min-post-periods 1
+$env:PYTHONPATH="src"; py -3 main.py panel --frequency monthly --unit-level product_store --min-pre-periods 1 --min-post-periods 1
 $env:PYTHONPATH="src"; py -3 main.py estimate
 $env:PYTHONPATH="src"; py -3 main.py outputs
 ```
@@ -50,7 +50,6 @@ Useful real-data options:
 ```bash
 $env:PYTHONPATH="src"; py -3 main.py download --refresh
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --symmetric-window
-$env:PYTHONPATH="src"; py -3 main.py panel --frequency quarterly
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --unit-level product_store
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --dairy-as-control
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --include-unknown --include-non-food
@@ -83,10 +82,12 @@ $env:PYTHONPATH="src"; py -3 -m unittest discover -s tests
 - `outputs/models/event_study.csv`: event-study coefficients.
 - `outputs/models/pretrend_summary.csv`: pre-period event-study diagnostic summary.
 - `outputs/models/aggregate_trends.csv`: aggregate normalized price trends.
-- `outputs/figures/event_study_overall.png`: event-study plot.
+- `outputs/figures/event_study_overall.png`: overall event-study plot.
 - `outputs/figures/aggregate_trends.png`: aggregate treated/control food-price trend plot.
 - `outputs/tables/ate_results.tex`: LaTeX result table.
-- `outputs/models_quarterly/`, `outputs/figures_quarterly/`, and `outputs/tables_quarterly/`: quarterly robustness run from the same refreshed source data.
+- `outputs/models/synthetic_did.csv`: synthetic DiD estimate.
+- `outputs/figures/synthetic_did_trends.png`: treated and synthetic-control time series.
+- `outputs/tables/synthetic_did_results.tex`: synthetic DiD LaTeX result table.
 
 Large raw and processed data files are ignored by Git. Selected model, figure, table, and diagnostic artifacts are committed for review.
 
@@ -98,9 +99,9 @@ The main model estimates log prices with product-store fixed effects and period 
 log(normalized_price_it) = beta * Treated_i * Post_t + unit FE_i + period FE_t + error_it
 ```
 
-The event-study model estimates treated relative-time effects and omits the pre-event period `-1` as reference. Standard errors are clustered by product-store unit. Monthly aggregation is the current main specification because it keeps the full post-announcement horizon while reducing weekly noise; weekly and quarterly panels are available as robustness frequencies.
+The event-study model estimates treated relative-time effects and omits the pre-event period `-1` as reference. Standard errors are clustered by product-store unit. Monthly aggregation is the current main specification because it keeps the full post-announcement horizon while reducing weekly noise; daily and weekly panels are available as robustness frequencies.
 
-By default, the econometric unit is `commodity_store`: each commodity within each supermarket chain. This matches the commodity-level research design while retaining store variation. Use `--unit-level product_store` for the larger product-store panel or `--unit-level commodity` for a smaller all-store commodity panel. The panel keeps all available pre/post periods after food-only and normalized-price filters, retaining units with at least one pre and one post observation. Use `--symmetric-window` for the older equal-period design and `--require-complete-units` for a stricter complete-unit panel; both can be too restrictive for large price-history data where records are sparse rather than daily-complete.
+By default, the econometric unit is `product_store`, which keeps the largest food cross-section available after normalization and treatment/control classification. Use `--unit-level commodity_store` for a smaller commodity-chain panel or `--unit-level commodity` for an all-store commodity panel. The panel keeps all available pre/post periods after food-only and normalized-price filters, retaining units with at least one pre and one post observation. Use `--symmetric-window` for the older equal-period design and `--require-complete-units` for a stricter complete-unit panel; both can be too restrictive for large price-history data where records are sparse rather than daily-complete.
 
 ## Caveats
 

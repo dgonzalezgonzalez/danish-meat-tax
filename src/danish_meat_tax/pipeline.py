@@ -35,7 +35,7 @@ def run_stage(
     max_post_periods: int | None = None,
     symmetric_window: bool = False,
     raw_path_override: Path | None = None,
-    unit_level: str = "commodity_store",
+    unit_level: str = "product_store",
 ) -> None:
     paths.ensure()
     raw_path = raw_path_override or _latest_raw_path(paths)
@@ -123,7 +123,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--unit-level",
         choices=["product_store", "commodity_store", "commodity"],
-        default="commodity_store",
+        default="product_store",
         help="Panel unit level for econometric estimation.",
     )
     parser.add_argument("--raw-path", type=Path, help="Process a specific raw JSON file instead of latest cached file.")

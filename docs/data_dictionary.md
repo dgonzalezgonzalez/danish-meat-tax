@@ -56,3 +56,8 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/diagnostics/panel_period_support.csv` | Units/rows by relative period and treated status. |
 | `outputs/models/pretrend_summary.csv` | Pre-event event-study coefficient diagnostics. |
 | `outputs/models/aggregate_trends.csv` | Aggregate normalized price trends by treatment/control series. |
+| `outputs/models/synthetic_did.csv` | Synthetic DiD ATE estimate. |
+| `outputs/models/synthetic_did_trends.csv` | Treated and synthetic-control time series. |
+| `outputs/models/synthetic_did_unit_weights.csv` | Donor unit weights used by the synthetic control. |
+| `outputs/models/synthetic_did_time_weights.csv` | Pre-period weights used by synthetic DiD. |
+| `outputs/tables/synthetic_did_results.tex` | Synthetic DiD LaTeX result table. |

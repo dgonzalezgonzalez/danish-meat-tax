@@ -6,10 +6,10 @@ Did the 2024-06-24 announcement of Denmark's livestock carbon tax change superma
 
 ## Identification
 
-The main design is a two-way fixed effects difference-in-differences model on a commodity-store panel of identified food items:
+The main design is a two-way fixed effects difference-in-differences model on a product-store panel of identified food items:
 
 ```text
-log(normalized_price_it) = beta * Treated_i * Post_t + commodity-store FE_i + period FE_t + error_it
+log(normalized_price_it) = beta * Treated_i * Post_t + product-store FE_i + period FE_t + error_it
 ```
 
 The event-study model replaces the single post indicator with relative-time interactions for treated units, omitting period `-1` as the reference.
@@ -31,7 +31,7 @@ The source package price is preserved, but the model outcome uses normalized pri
 
 ## Event Window
 
-The default panel keeps all available pre/post periods after filters, allowing more post periods than pre periods when the data support it. The default unit level is `commodity_store`, meaning each commodity within each supermarket chain. `product_store` and all-store `commodity` panels are available as robustness options. Units are retained when they satisfy minimum pre/post observation support. The older equal-period design is available with `--symmetric-window`, and a strict complete-unit panel is available with `--require-complete-units`.
+The default panel keeps all available pre/post periods after filters, allowing more post periods than pre periods when the data support it. The default unit level is `product_store`, which maximizes cross-sectional food-product support. `commodity_store` and all-store `commodity` panels are available as robustness options. Units are retained when they satisfy minimum pre/post observation support. The older equal-period design is available with `--symmetric-window`, and a strict complete-unit panel is available with `--require-complete-units`.
 
 The event period itself is excluded from pre/post support. For weekly panels, periods are calendar weeks beginning Monday; the event week begins on 2024-06-24. Monthly and quarterly panels are also supported. Monthly aggregation is useful for this project because the expected announcement response may arrive several months after 2024-06-24, while weekly point estimates can be noisy.
 
@@ -42,6 +42,10 @@ The output stage produces event-study plots, aggregate normalized-price trend pl
 ## Inference
 
 The included estimator residualizes outcomes and treatment variables by product-store and period fixed effects, then computes cluster-robust standard errors by `unit_id`. For final paper-grade inference, consider validating with `fixest` in R or `statsmodels`/`linearmodels` in Python when those dependencies are available.
+
+## Synthetic DiD
+
+The synthetic DiD robustness output uses complete commodity-store units because the product-store panel is too sparse to form a stable balanced donor matrix. Unit weights match the pre-announcement treated path, time weights match post-period donor averages, and inference uses placebo reassignment over complete control units. The plot reports treated mean log prices and the intercept-adjusted synthetic-control time series.
 
 ## Limitations
 

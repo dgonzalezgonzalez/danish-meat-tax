@@ -1,2 +1,2 @@
 n_obs,n_units,n_periods,fixed_effects,cluster,treatment_group
-2378,80,32,unit_id + period,unit_id,pork
+220563,17850,32,unit_id + period,unit_id,pork

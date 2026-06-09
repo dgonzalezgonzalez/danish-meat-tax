@@ -1,2 +1,2 @@
 frequency,event_date,balanced_periods_pre,balanced_periods_post,symmetric_window,require_complete_units,food_only,exclude_unknown,include_dairy_as_treated,unit_level,min_pre_periods,min_post_periods,units,rows,treated_units,control_units,commodities,stores
-monthly,2024-06-24,8,24,False,False,True,True,True,commodity_store,1,1,112,3337,40,72,14,8
+monthly,2024-06-24,8,24,False,False,True,True,True,product_store,1,1,22780,287480,6460,16320,15,8

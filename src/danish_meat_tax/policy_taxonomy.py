@@ -18,18 +18,19 @@ class TreatmentAssignment:
 
 GROUP_RULES: tuple[tuple[str, bool, str, str, str, tuple[str, ...]], ...] = (
     ("beef", True, "beef", "core", "treated_livestock_meat", ("beef", "okse", "oksekoed", "kvaeg", "kalv", "kalve", "veal", "entrecote", "roastbeef")),
-    ("pork", True, "pork", "core", "treated_livestock_meat", ("pork", "svin", "gris", "flaesk", "bacon", "skinke", "kamsteg", "medister")),
+    ("pork", True, "pork", "core", "treated_livestock_meat", ("pork", "svin", "gris", "flaesk", "bacon", "skinke", "kamsteg", "medister", "kotelet", "koteletter", "ribbensteg", "ribbenssteg", "leverpostej", "poelse", "poelser", "polse", "polser", "duroc")),
     ("lamb_sheep_goat", True, "lamb_sheep_goat", "livestock_scope", "treated_livestock_meat", ("lamb", "lam", "lamm", "lammekolle", "faar", "sheep", "ged", "goat")),
-    ("dairy", True, "dairy_cattle", "livestock_scope", "treated_livestock_dairy", ("milk", "maelk", "cheese", "ost", "yoghurt", "yogurt", "smoer", "butter", "flode", "cream", "skyr")),
+    ("dairy", True, "dairy_cattle", "livestock_scope", "treated_livestock_dairy", ("milk", "maelk", "cheese", "ost", "yoghurt", "yogurt", "smoer", "butter", "flode", "cream", "skyr", "philadelphia", "danablu", "mozzarella", "parmesan", "cheddar")),
     ("poultry", False, "control_poultry", "control", "control_food", ("chicken", "kylling", "hoene", "turkey", "kalkun", "duck", "andebryst")),
-    ("fish_seafood", False, "control_fish_seafood", "control", "control_food", ("fish", "fisk", "salmon", "laks", "cod", "torsk", "shrimp", "rejer", "tun")),
+    ("fish_seafood", False, "control_fish_seafood", "control", "control_food", ("fish", "fisk", "salmon", "laks", "cod", "torsk", "shrimp", "rejer", "tun", "sej", "moerksej", "fiskefilet")),
     ("eggs", False, "control_animal_products", "control", "control_food", ("egg", "eggs", "aeg")),
-    ("fruit_vegetables", False, "control_non_meat", "control", "control_food", ("apple", "aeble", "banana", "banan", "tomat", "tomato", "potato", "kartoffel", "salat", "gulerod", "onion", "loeg", "agurk", "peberfrugt", "frugt", "groent")),
-    ("grains_bread", False, "control_non_meat", "control", "control_food", ("bread", "broed", "rugbroed", "pasta", "rice", "ris", "oats", "havre", "flour", "mel", "bolle", "boller", "kage")),
+    ("fruit_vegetables", False, "control_non_meat", "control", "control_food", ("apple", "aeble", "banana", "banan", "tomat", "tomato", "potato", "kartoffel", "salat", "gulerod", "onion", "loeg", "agurk", "peberfrugt", "frugt", "groent", "jordbaer", "abrikos", "vindruer", "champignon", "svampe", "mynte", "salvie", "estragon", "kastanje")),
+    ("grains_bread", False, "control_non_meat", "control", "control_food", ("bread", "broed", "rugbroed", "pasta", "rice", "ris", "oats", "havre", "flour", "mel", "hvedemel", "speltmel", "pofiber", "bolle", "boller", "kage", "noodle", "nudler", "soba")),
     ("fats_oils", False, "control_non_meat", "control", "control_food", ("oil", "olie", "margarine")),
-    ("sweets_snacks", False, "control_non_meat", "control", "control_food", ("chocolate", "chokolade", "chips", "slik", "cookie", "kiks", "is")),
-    ("beverages", False, "control_non_meat", "control", "control_food", ("coffee", "kaffe", "tea", "te", "juice", "soda", "cola", "vand", "water", "saft")),
-    ("plant_protein", False, "control_non_meat", "control", "control_food", ("tofu", "linser", "beans", "boenner", "falafel", "kikarter")),
+    ("sweets_snacks", False, "control_non_meat", "control", "control_food", ("chocolate", "chokolade", "chips", "slik", "cookie", "kiks", "is", "popcorn", "donut", "ferrero", "rocher", "karamel")),
+    ("beverages", False, "control_non_meat", "control", "control_food", ("coffee", "kaffe", "espresso", "tea", "te", "juice", "soda", "cola", "vand", "water", "saft", "vin", "wine", "prosecco", "chardonnay", "cabernet", "merlot", "oel", "beer", "bryg", "energidrik", "red bull", "dram")),
+    ("plant_protein", False, "control_non_meat", "control", "control_food", ("tofu", "linser", "beans", "boenner", "falafel", "kikarter", "plantebaseret", "vegan", "naturli", "fungi")),
+    ("pantry_condiments", False, "control_non_meat", "control", "control_food", ("pesto", "dressing", "salt", "kokosmel", "ajvar", "ginger", "ingefaer", "teriyaki", "marmelade", "marm", "syltet", "pickled", "sauce", "sovs", "krydderi")),
 )
 
 MIXED_TERMS = ("pizza", "lasagne", "gryderet", "ready meal", "faerdigret", "mix", "sandwich")
@@ -52,6 +53,17 @@ NON_FOOD_TERMS = (
     "bodylotion",
     "plaster",
     "vitamin",
+    "blink",
+    "spinner",
+    "forfang",
+    "duftlys",
+    "skaerm",
+    "eyeliner",
+    "neglelak",
+    "airfryer",
+    "elkedel",
+    "flaske",
+    "maskinrens",
 )
 
 

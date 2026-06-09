@@ -1,7 +1,7 @@
 import unittest
 
 from danish_meat_tax.data_sources.heissepreise import _fixture_records
-from danish_meat_tax.estimators import estimate_ate, estimate_event_study, estimate_heterogeneity
+from danish_meat_tax.estimators import estimate_ate, estimate_event_study, estimate_heterogeneity, estimate_synthetic_did
 from danish_meat_tax.normalize_products import normalize_records
 from danish_meat_tax.panel_builder import build_balanced_panel
 
@@ -28,6 +28,13 @@ class EstimatorsTest(unittest.TestCase):
     def test_event_study_omits_reference_period(self):
         result = estimate_event_study(self.panel)
         self.assertNotIn(-1, set(result.coefficients["relative_time"]))
+
+    def test_synthetic_did_returns_trends_and_weights(self):
+        result = estimate_synthetic_did(self.panel)
+        self.assertIn("synthetic DiD", set(result.coefficients["term"]))
+        self.assertGreater(len(result.trends), 0)
+        self.assertAlmostEqual(result.unit_weights["weight"].sum(), 1.0, places=6)
+        self.assertAlmostEqual(result.time_weights["weight"].sum(), 1.0, places=6)
 
 
 if __name__ == "__main__":

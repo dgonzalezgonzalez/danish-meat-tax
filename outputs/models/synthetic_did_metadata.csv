@@ -1,0 +1,2 @@
+n_obs,n_units,n_treated_units,n_control_units,n_periods,n_pre_periods,n_post_periods,pre_gap_adjustment,placebo_reps,inference,unit_level
+512,16,7,9,32,8,24,-0.023117584546670532,200,placebo reassignment over complete control units,commodity_store_complete
