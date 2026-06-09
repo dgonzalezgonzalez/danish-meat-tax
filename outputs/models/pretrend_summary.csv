@@ -1,0 +1,7 @@
+specification,n_pre_coefficients,mean_abs_pre_estimate,max_abs_pre_estimate,max_abs_pre_t,passes_individual_pretrend_screen,diagnostic
+overall,7,0.1993027531065863,0.38312615124779204,3.4785155018144214,False,inspect_joint_pretrend
+beef,7,0.18910199226097404,0.38350796641594287,3.189273466695703,False,inspect_joint_pretrend
+dairy_cattle,7,0.11998336041375698,0.2505376602351834,2.023574717345246,False,inspect_joint_pretrend
+lamb_sheep_goat,7,0.4121683080847913,0.8529224607901129,2.8001873004970603,False,inspect_joint_pretrend
+mixed_livestock,7,0.19646020153605823,0.41638543471993195,3.7732816638139686,False,inspect_joint_pretrend
+pork,7,0.3836195849120618,0.5433663365293331,3.6605656608494943,False,inspect_joint_pretrend

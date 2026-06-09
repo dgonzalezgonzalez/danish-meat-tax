@@ -51,6 +51,25 @@ def make_group_event_study_plot(event_study_by_group_csv: Path, output_path: Pat
     return output_path
 
 
+def make_aggregate_trends_plot(aggregate_trends_csv: Path, output_path: Path) -> Path:
+    data = pd.read_csv(aggregate_trends_csv, parse_dates=["period"]).sort_values(["series", "period"])
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.axvline(pd.Timestamp("2024-06-24"), color="firebrick", linestyle="--", linewidth=0.9)
+    for series, group_data in data.groupby("series"):
+        ax.plot(group_data["period"], group_data["mean_log_price"], linewidth=1.2, label=series)
+    ax.set_title("Aggregate normalized food-price trends")
+    ax.set_xlabel("Period")
+    ax.set_ylabel("Mean log normalized price")
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend(fontsize=8)
+    fig.autofmt_xdate()
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=200)
+    plt.close(fig)
+    return output_path
+
+
 def _format_coef(row: pd.Series) -> str:
     stars = ""
     if pd.notna(row.get("t_stat")):
@@ -77,8 +96,8 @@ def make_latex_table(ate_csv: Path, heterogeneity_csv: Path, metadata_csv: Path,
             )
     note = (
         "Unit and period fixed effects included. Standard errors clustered by unit_id. "
-        "Outcome is log price. Event date is 2024-06-24. "
-        "Estimates use the balanced symmetric panel."
+        "Outcome is log normalized food price. Event date is 2024-06-24. "
+        "Main sample excludes non-food and unknown products."
     )
     table = "\n".join(
         [
@@ -122,6 +141,12 @@ def make_outputs(models_dir: Path, figures_dir: Path, tables_dir: Path) -> dict[
                     figures_dir / f"event_study_{group}.png",
                     title=f"Event-study: {group}",
                 )
+    trends = models_dir / "aggregate_trends.csv"
+    if trends.exists():
+        outputs["aggregate_trends_plot"] = make_aggregate_trends_plot(
+            trends,
+            figures_dir / "aggregate_trends.png",
+        )
     latex_table = make_latex_table(
         models_dir / "ate.csv",
         models_dir / "heterogeneity.csv",

@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\caption{Announcement effects on Danish grocery meat prices}
+\begin{tabular}{lcccc}
+\hline
+Specification & Estimate & Std. error & p-value & 95\% CI \\
+\hline
+Overall: treated x post & 0.2548 & (0.1596) & 0.1103 & [-0.0579, 0.5675] \\
+Heterogeneity: beef x post & 0.3875* & (0.2062) & 0.0602 & [-0.0167, 0.7918] \\
+Heterogeneity: dairy_cattle x post & 0.1452 & (0.1602) & 0.3646 & [-0.1687, 0.4592] \\
+Heterogeneity: lamb_sheep_goat x post & -0.4894 & (0.3382) & 0.1479 & [-1.1523, 0.1736] \\
+Heterogeneity: mixed_livestock x post & 0.9492** & (0.4441) & 0.0325 & [0.0789, 1.8195] \\
+Heterogeneity: pork x post & 0.2323 & (0.1573) & 0.1398 & [-0.0760, 0.5407] \\
+\hline
+Observations & \multicolumn{4}{c}{1102} \\
+Units & \multicolumn{4}{c}{112} \\
+Fixed effects & \multicolumn{4}{c}{unit_id + period} \\
+\hline
+\end{tabular}
+\begin{minipage}{0.9\linewidth}\footnotesize Notes: Unit and period fixed effects included. Standard errors clustered by unit_id. Outcome is log normalized food price. Event date is 2024-06-24. Main sample excludes non-food and unknown products.\end{minipage}
+\end{table}
