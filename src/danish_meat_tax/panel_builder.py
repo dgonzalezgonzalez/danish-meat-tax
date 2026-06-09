@@ -16,6 +16,12 @@ class PanelResult:
 def _relative_time(period: pd.Timestamp, event_period: pd.Timestamp, frequency: str) -> int:
     if frequency == "weekly":
         return int((period - event_period).days // 7)
+    if frequency == "monthly":
+        return (period.year - event_period.year) * 12 + period.month - event_period.month
+    if frequency == "quarterly":
+        period_quarter = period.year * 4 + (period.quarter - 1)
+        event_quarter = event_period.year * 4 + (event_period.quarter - 1)
+        return period_quarter - event_quarter
     return int((period - event_period).days)
 
 
@@ -55,11 +61,17 @@ def _aggregate(frame: pd.DataFrame, frequency: str, event_date: pd.Timestamp) ->
     if frequency == "weekly":
         data["period"] = data["date"].dt.to_period("W-SUN").dt.start_time
         data["event_period"] = event_date.to_period("W-SUN").start_time
+    elif frequency == "monthly":
+        data["period"] = data["date"].dt.to_period("M").dt.start_time
+        data["event_period"] = event_date.to_period("M").start_time
+    elif frequency == "quarterly":
+        data["period"] = data["date"].dt.to_period("Q").dt.start_time
+        data["event_period"] = event_date.to_period("Q").start_time
     elif frequency == "daily":
         data["period"] = data["date"]
         data["event_period"] = event_date
     else:
-        raise ValueError("frequency must be daily or weekly")
+        raise ValueError("frequency must be daily, weekly, monthly, or quarterly")
     grouped = (
         data.groupby(["unit_id", "period"], as_index=False)
         .agg(

@@ -36,14 +36,14 @@ Includes product columns above plus:
 
 | Column | Meaning |
 |---|---|
-| `period` | Daily or weekly panel period. |
+| `period` | Daily, weekly, monthly, or quarterly panel period. |
 | `event_period` | Period containing the 2024-06-24 announcement. |
 | `relative_time` | Period index relative to event; event period is excluded in balanced panels. |
 | `post` | Indicator for periods after announcement. |
 | `did` | `treated x post`. |
 | `log_price` | Natural log of normalized price. |
 | `event_date` | Main event date, `2024-06-24`. |
-| `frequency` | `daily` or `weekly`. |
+| `frequency` | `daily`, `weekly`, `monthly`, or `quarterly`. |
 
 The real `dagligepriser.dk` source stores many product objects with a nested `priceHistory` array. Processing expands each `priceHistory` entry into a separate row before writing `products.csv`. The main panel excludes `non_food`, `unknown`, and rows without usable normalized prices.
 

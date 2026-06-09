@@ -33,7 +33,7 @@ The source package price is preserved, but the model outcome uses normalized pri
 
 The default panel keeps all available pre/post periods after filters, allowing more post periods than pre periods when the data support it. The default unit level is `commodity_store`, meaning each commodity within each supermarket chain. `product_store` and all-store `commodity` panels are available as robustness options. Units are retained when they satisfy minimum pre/post observation support. The older equal-period design is available with `--symmetric-window`, and a strict complete-unit panel is available with `--require-complete-units`.
 
-The event period itself is excluded from pre/post support. For weekly panels, periods are calendar weeks beginning Monday; the event week begins on 2024-06-24.
+The event period itself is excluded from pre/post support. For weekly panels, periods are calendar weeks beginning Monday; the event week begins on 2024-06-24. Monthly and quarterly panels are also supported. Monthly aggregation is useful for this project because the expected announcement response may arrive several months after 2024-06-24, while weekly point estimates can be noisy.
 
 ## Parallel Trends
 

@@ -17,7 +17,7 @@ See `docs/policy/policy_summary.md` for source links and institutional details.
 
 ## Data
 
-The pipeline is designed around the `Herover/heissepreise` ecosystem and Danish grocery data from `dagligepriser.dk`. Raw downloaded files are cached under `data/raw/` and intentionally ignored by Git. A cache manifest prevents repeated full downloads unless `--refresh` is passed or the cache is stale. The canonical Danish source is large: a June 2026 probe of `latest-canonical.json` contained 211,028 products and 2,074,168 price-history rows before quality filters.
+The pipeline is designed around the `Herover/heissepreise` ecosystem and Danish grocery data from `dagligepriser.dk`. Raw downloaded files are cached under `data/raw/` and intentionally ignored by Git. A cache manifest prevents repeated full downloads unless `--refresh` is passed or the cache is stale. The canonical Danish source is large: a 2026-06-09 pull of `latest-canonical.json` contained about 2.07 million price-history rows before quality filters.
 
 The downloader preserves source product objects and the processing stage expands each `priceHistory` entry into one product-date price row. Processing also assigns food/treatment taxonomy fields and normalizes prices to DKK/kg or DKK/liter when source quantity and unit information permit. A deterministic fixture mode is included so the whole pipeline and tests run offline.
 
@@ -40,7 +40,7 @@ Run against real Danish grocery data:
 ```bash
 $env:PYTHONPATH="src"; py -3 main.py download
 $env:PYTHONPATH="src"; py -3 main.py process
-$env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --unit-level commodity_store --min-pre-periods 1 --min-post-periods 1
+$env:PYTHONPATH="src"; py -3 main.py panel --frequency monthly --unit-level commodity_store --min-pre-periods 1 --min-post-periods 1
 $env:PYTHONPATH="src"; py -3 main.py estimate
 $env:PYTHONPATH="src"; py -3 main.py outputs
 ```
@@ -50,6 +50,7 @@ Useful real-data options:
 ```bash
 $env:PYTHONPATH="src"; py -3 main.py download --refresh
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --symmetric-window
+$env:PYTHONPATH="src"; py -3 main.py panel --frequency quarterly
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --unit-level product_store
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --dairy-as-control
 $env:PYTHONPATH="src"; py -3 main.py panel --frequency weekly --include-unknown --include-non-food
@@ -85,8 +86,9 @@ $env:PYTHONPATH="src"; py -3 -m unittest discover -s tests
 - `outputs/figures/event_study_overall.png`: event-study plot.
 - `outputs/figures/aggregate_trends.png`: aggregate treated/control food-price trend plot.
 - `outputs/tables/ate_results.tex`: LaTeX result table.
+- `outputs/models_quarterly/`, `outputs/figures_quarterly/`, and `outputs/tables_quarterly/`: quarterly robustness run from the same refreshed source data.
 
-Generated data and outputs are ignored by Git except placeholder directories.
+Large raw and processed data files are ignored by Git. Selected model, figure, table, and diagnostic artifacts are committed for review.
 
 ## Econometric Specification
 
@@ -96,7 +98,7 @@ The main model estimates log prices with product-store fixed effects and period 
 log(normalized_price_it) = beta * Treated_i * Post_t + unit FE_i + period FE_t + error_it
 ```
 
-The event-study model estimates treated relative-time effects and omits the pre-event period `-1` as reference. Standard errors are clustered by product-store unit.
+The event-study model estimates treated relative-time effects and omits the pre-event period `-1` as reference. Standard errors are clustered by product-store unit. Monthly aggregation is the current main specification because it keeps the full post-announcement horizon while reducing weekly noise; weekly and quarterly panels are available as robustness frequencies.
 
 By default, the econometric unit is `commodity_store`: each commodity within each supermarket chain. This matches the commodity-level research design while retaining store variation. Use `--unit-level product_store` for the larger product-store panel or `--unit-level commodity` for a smaller all-store commodity panel. The panel keeps all available pre/post periods after food-only and normalized-price filters, retaining units with at least one pre and one post observation. Use `--symmetric-window` for the older equal-period design and `--require-complete-units` for a stricter complete-unit panel; both can be too restrictive for large price-history data where records are sparse rather than daily-complete.
 

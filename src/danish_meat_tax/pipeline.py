@@ -93,7 +93,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--root", type=Path, default=Path("."), help="Project root path.")
     parser.add_argument("--fixture", action="store_true", help="Use deterministic offline fixture price data.")
-    parser.add_argument("--frequency", choices=["daily", "weekly"], default="daily", help="Panel aggregation frequency.")
+    parser.add_argument(
+        "--frequency",
+        choices=["daily", "weekly", "monthly", "quarterly"],
+        default="daily",
+        help="Panel aggregation frequency.",
+    )
     parser.add_argument(
         "--require-complete-units",
         action="store_true",

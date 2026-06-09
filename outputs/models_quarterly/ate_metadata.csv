@@ -1,0 +1,2 @@
+n_obs,n_units,n_periods,fixed_effects,cluster
+1102,112,10,unit_id + period,unit_id

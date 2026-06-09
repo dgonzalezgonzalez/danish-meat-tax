@@ -22,6 +22,25 @@ class PanelBuilderTest(unittest.TestCase):
         result = build_balanced_panel(products, frequency="weekly")
         self.assertEqual(result.diagnostics["balanced_periods_pre"], result.diagnostics["balanced_periods_post"])
 
+    def test_monthly_and_quarterly_panel_frequencies(self):
+        products = normalize_records(_fixture_records())
+        expanded = pd.concat(
+            [
+                products.assign(date=products["date"] - pd.DateOffset(months=4)),
+                products.assign(date=products["date"] - pd.DateOffset(months=1)),
+                products,
+                products.assign(date=products["date"] + pd.DateOffset(months=1)),
+                products.assign(date=products["date"] + pd.DateOffset(months=4)),
+            ],
+            ignore_index=True,
+        )
+        monthly = build_balanced_panel(expanded, frequency="monthly")
+        quarterly = build_balanced_panel(expanded, frequency="quarterly")
+        self.assertEqual(monthly.diagnostics["frequency"], "monthly")
+        self.assertEqual(quarterly.diagnostics["frequency"], "quarterly")
+        self.assertIn(-1, set(monthly.panel["relative_time"]))
+        self.assertIn(1, set(monthly.panel["relative_time"]))
+
     def test_unbalanced_units_can_be_retained_with_pre_and_post_support(self):
         products = normalize_records(_fixture_records())
         partial = products[~((products["product_id"].str.contains("milk")) & (products["date"].dt.day.isin([11, 12, 13])))]
