@@ -1,0 +1,2 @@
+n_obs,n_units,n_periods,fixed_effects,cluster,r_squared,pre_treated_average,treatment_group
+206215,16706,32,unit_id + period,unit_id,0.0005644729883793609,135.86419243931616,mixed_livestock

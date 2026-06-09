@@ -1,0 +1,10 @@
+unit_id,weight,treatment_group
+nemlig::poultry,0.18868447833944196,mixed_livestock
+nemlig::sweets_snacks,0.18207366230715025,mixed_livestock
+rema1000::beverages,0.0716113397236571,mixed_livestock
+rema1000::fish_seafood,0.15957004422205337,mixed_livestock
+rema1000::fruit_vegetables,0.024423681587254047,mixed_livestock
+rema1000::grains_bread,0.0,mixed_livestock
+rema1000::pantry_condiments,0.12063780566096682,mixed_livestock
+rema1000::poultry,0.1344761077349025,mixed_livestock
+rema1000::sweets_snacks,0.11852288042457408,mixed_livestock

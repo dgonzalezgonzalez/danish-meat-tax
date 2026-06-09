@@ -1,2 +1,0 @@
-n_obs,n_units,n_periods,fixed_effects,cluster,treatment_group
-203630,16525,32,unit_id + period,unit_id,lamb_sheep_goat

@@ -1,0 +1,10 @@
+unit_id,weight,treatment_group
+nemlig::poultry,0.02216512496311991,pork
+nemlig::sweets_snacks,0.2748156508171716,pork
+rema1000::beverages,0.005130132111916043,pork
+rema1000::fish_seafood,0.15510523817749497,pork
+rema1000::fruit_vegetables,0.06530139329909733,pork
+rema1000::grains_bread,0.0229128906975345,pork
+rema1000::pantry_condiments,0.11845048111716522,pork
+rema1000::poultry,0.22248783693409468,pork
+rema1000::sweets_snacks,0.11363125188240573,pork

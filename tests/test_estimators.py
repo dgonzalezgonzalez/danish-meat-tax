@@ -25,9 +25,11 @@ class EstimatorsTest(unittest.TestCase):
         self.assertIn("pork", terms)
         self.assertIn("lamb_sheep_goat", terms)
 
-    def test_event_study_omits_reference_period(self):
+    def test_event_study_includes_reference_period_as_zero(self):
         result = estimate_event_study(self.panel)
-        self.assertNotIn(-1, set(result.coefficients["relative_time"]))
+        reference = result.coefficients[result.coefficients["relative_time"] == -1].iloc[0]
+        self.assertEqual(reference["estimate"], 0.0)
+        self.assertTrue(reference[["std_error", "conf_low", "conf_high"]].isna().all())
 
     def test_synthetic_did_returns_trends_and_weights(self):
         result = estimate_synthetic_did(self.panel)

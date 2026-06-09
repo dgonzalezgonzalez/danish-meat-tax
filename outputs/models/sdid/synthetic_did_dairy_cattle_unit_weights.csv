@@ -1,0 +1,10 @@
+unit_id,weight,treatment_group
+nemlig::poultry,0.1170294908561817,dairy_cattle
+nemlig::sweets_snacks,0.1574440457769336,dairy_cattle
+rema1000::beverages,0.0,dairy_cattle
+rema1000::fish_seafood,0.21702976691193435,dairy_cattle
+rema1000::fruit_vegetables,0.06878613240301987,dairy_cattle
+rema1000::grains_bread,0.08260329970748918,dairy_cattle
+rema1000::pantry_condiments,0.11639152771326675,dairy_cattle
+rema1000::poultry,0.10839801707040701,dairy_cattle
+rema1000::sweets_snacks,0.13231771956076757,dairy_cattle

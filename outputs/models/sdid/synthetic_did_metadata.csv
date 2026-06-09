@@ -1,0 +1,2 @@
+n_obs,n_units,n_treated_units,n_control_units,n_periods,n_pre_periods,n_post_periods,pre_gap_adjustment,bootstrap_reps,bootstrap_seed,inference,unit_level,pre_treated_average
+512,16,7,9,32,8,24,-0.023117584546670532,25,20240624,nonparametric bootstrap over complete treated and control units,commodity_store_complete,123.2120567455147

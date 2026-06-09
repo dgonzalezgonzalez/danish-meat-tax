@@ -1,2 +1,0 @@
-n_obs,n_units,n_periods,fixed_effects,cluster,treatment_group
-207369,16912,32,unit_id + period,unit_id,beef

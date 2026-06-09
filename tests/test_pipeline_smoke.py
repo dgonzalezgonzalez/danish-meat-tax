@@ -16,9 +16,9 @@ class PipelineSmokeTest(unittest.TestCase):
         paths = PipelinePaths(Path.cwd() / "tmp_tests" / "pipeline")
         run_stage("all", paths, fixture=True, frequency="daily")
         self.assertTrue((paths.processed_dir / "commodity_panel.csv").exists())
-        self.assertTrue((paths.models_dir / "ate.csv").exists())
-        self.assertTrue((paths.figures_dir / "event_study_overall.png").exists())
-        self.assertTrue((paths.tables_dir / "ate_results.tex").exists())
+        self.assertTrue((paths.models_dir / "did" / "ate.csv").exists())
+        self.assertTrue((paths.figures_dir / "did" / "event_study_overall.png").exists())
+        self.assertTrue((paths.tables_dir / "did" / "did_results.tex").exists())
 
 
 if __name__ == "__main__":

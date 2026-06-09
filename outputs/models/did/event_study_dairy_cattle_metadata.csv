@@ -1,0 +1,2 @@
+n_obs,n_units,n_periods,fixed_effects,cluster,r_squared,pre_treated_average,treatment_group
+252903,20067,32,unit_id + period,unit_id,0.003920176292389277,279.49900924747845,dairy_cattle

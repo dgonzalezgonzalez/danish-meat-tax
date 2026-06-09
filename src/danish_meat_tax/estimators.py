@@ -89,6 +89,10 @@ def _fit_twfe(panel: pd.DataFrame, columns: list[str], labels: list[str]) -> Reg
     beta = np.linalg.pinv(x_resid.T @ x_resid) @ (x_resid.T @ y_resid)
     residuals = y_resid - x_resid @ beta
     se = _cluster_se(x_resid, residuals, data["unit_id"])
+    ss_resid = float(residuals.T @ residuals)
+    ss_total = float(((y_resid - y_resid.mean()) ** 2).sum())
+    r_squared = 1 - ss_resid / ss_total if ss_total > 0 else np.nan
+    pre_treated_average = data.loc[data["treated"].astype(bool) & ~data["post"].astype(bool), "price"].mean()
     out = pd.DataFrame(
         {
             "term": kept_labels,
@@ -108,6 +112,8 @@ def _fit_twfe(panel: pd.DataFrame, columns: list[str], labels: list[str]) -> Reg
             "n_periods": int(data["period"].nunique()),
             "fixed_effects": "unit_id + period",
             "cluster": "unit_id",
+            "r_squared": float(r_squared),
+            "pre_treated_average": float(pre_treated_average) if pd.notna(pre_treated_average) else np.nan,
         },
     )
 
@@ -125,7 +131,13 @@ def estimate_heterogeneity(panel: pd.DataFrame) -> RegressionResult:
         data[col] = ((data["treatment_group"] == group) & data["post"]).astype(int)
         columns.append(col)
         labels.append(f"{group} x post")
-    return _fit_twfe(data, columns, labels)
+    result = _fit_twfe(data, columns, labels)
+    pre_averages = {
+        f"{group} x post": data.loc[(data["treatment_group"] == group) & ~data["post"].astype(bool), "price"].mean()
+        for group in sorted(data.loc[data["treated"], "treatment_group"].dropna().unique())
+    }
+    result.coefficients["pre_treated_average"] = result.coefficients["term"].map(pre_averages)
+    return result
 
 
 def estimate_event_study(panel: pd.DataFrame, reference: int = -1) -> RegressionResult:
@@ -141,7 +153,27 @@ def estimate_event_study(panel: pd.DataFrame, reference: int = -1) -> Regression
     result = _fit_twfe(data, columns, labels)
     result.coefficients["relative_time"] = result.coefficients["term"].astype(int)
     result.coefficients["pre_period"] = result.coefficients["relative_time"] < 0
-    return result
+    reference_row = pd.DataFrame(
+        [
+            {
+                "term": str(reference),
+                "estimate": 0.0,
+                "std_error": np.nan,
+                "conf_low": np.nan,
+                "conf_high": np.nan,
+                "t_stat": np.nan,
+                "p_value": np.nan,
+                "relative_time": int(reference),
+                "pre_period": True,
+            }
+        ]
+    )
+    coefficients = (
+        pd.concat([result.coefficients, reference_row], ignore_index=True)
+        .sort_values("relative_time")
+        .reset_index(drop=True)
+    )
+    return RegressionResult(coefficients=coefficients, metadata=result.metadata)
 
 
 def estimate_event_study_for_group(panel: pd.DataFrame, treatment_group: str, reference: int = -1) -> RegressionResult:
@@ -224,7 +256,32 @@ def _commodity_store_panel(panel: pd.DataFrame) -> pd.DataFrame:
     return grouped
 
 
-def _synthetic_did_core(data: pd.DataFrame, placebo_seed: int = 20240624, placebo_reps: int = 200) -> SyntheticDiDResult:
+def _bootstrap_sdid_estimates(
+    balanced: pd.DataFrame,
+    treated_units: list[str],
+    control_units: list[str],
+    seed: int,
+    reps: int,
+) -> list[float]:
+    rng = np.random.default_rng(seed)
+    estimates: list[float] = []
+    for rep in range(reps):
+        sampled_units: list[pd.DataFrame] = []
+        for arm, units in (("treated", treated_units), ("control", control_units)):
+            draws = rng.choice(units, size=len(units), replace=True)
+            for draw_index, unit in enumerate(draws):
+                copy = balanced[balanced["unit_id"] == unit].copy()
+                copy["unit_id"] = f"{arm}_boot{rep}_{draw_index}::{unit}"
+                sampled_units.append(copy)
+        boot = pd.concat(sampled_units, ignore_index=True)
+        try:
+            estimates.append(_synthetic_did_point(boot))
+        except ValueError:
+            continue
+    return estimates
+
+
+def _synthetic_did_core(data: pd.DataFrame, bootstrap_seed: int = 20240624, bootstrap_reps: int = 25) -> SyntheticDiDResult:
     panel = _commodity_store_panel(data)
     period_count = panel["period"].nunique()
     support = panel.groupby("unit_id")["period"].nunique()
@@ -260,20 +317,8 @@ def _synthetic_did_core(data: pd.DataFrame, placebo_seed: int = 20240624, placeb
     pre_gap = float(time_weights @ (treated_pre - synth_pre))
     estimate = float(treated_post.mean() - synth_post.mean() - pre_gap)
 
-    rng = np.random.default_rng(placebo_seed)
-    placebo_estimates: list[float] = []
-    placebo_treated_count = max(1, min(len(treated_units), len(control_units) // 2))
-    if len(control_units) - placebo_treated_count >= 2:
-        for _ in range(placebo_reps):
-            placebo_treated = list(rng.choice(control_units, size=placebo_treated_count, replace=False))
-            placebo_controls = [unit for unit in control_units if unit not in placebo_treated]
-            subset = balanced[balanced["unit_id"].isin(placebo_treated + placebo_controls)].copy()
-            subset["treated"] = subset["unit_id"].isin(placebo_treated)
-            try:
-                placebo_estimates.append(_synthetic_did_point(subset))
-            except ValueError:
-                continue
-    std_error = float(np.std(placebo_estimates, ddof=1)) if len(placebo_estimates) > 1 else np.nan
+    bootstrap_estimates = _bootstrap_sdid_estimates(balanced, treated_units, control_units, bootstrap_seed, bootstrap_reps)
+    std_error = float(np.std(bootstrap_estimates, ddof=1)) if len(bootstrap_estimates) > 1 else np.nan
     t_stat = estimate / std_error if std_error and not np.isnan(std_error) else np.nan
     p_value = erfc(abs(float(t_stat)) / sqrt(2)) if pd.notna(t_stat) else np.nan
     coefficients = pd.DataFrame(
@@ -312,9 +357,11 @@ def _synthetic_did_core(data: pd.DataFrame, placebo_seed: int = 20240624, placeb
             "n_pre_periods": int(len(pre_periods)),
             "n_post_periods": int(len(post_periods)),
             "pre_gap_adjustment": pre_gap,
-            "placebo_reps": int(len(placebo_estimates)),
-            "inference": "placebo reassignment over complete control units",
+            "bootstrap_reps": int(len(bootstrap_estimates)),
+            "bootstrap_seed": int(bootstrap_seed),
+            "inference": "nonparametric bootstrap over complete treated and control units",
             "unit_level": "commodity_store_complete",
+            "pre_treated_average": float(balanced.loc[balanced["treated"].astype(bool) & balanced["period"].isin(pre_periods), "price"].mean()),
         },
         trends=trends,
         unit_weights=pd.DataFrame({"unit_id": control_units, "weight": unit_weights}),
@@ -352,6 +399,22 @@ def estimate_synthetic_did(panel: pd.DataFrame) -> SyntheticDiDResult:
     return _synthetic_did_core(panel)
 
 
+def estimate_synthetic_did_for_group(panel: pd.DataFrame, treatment_group: str) -> SyntheticDiDResult:
+    data = panel[(~panel["treated"]) | (panel["treatment_group"] == treatment_group)].copy()
+    data["treated"] = data["treatment_group"] == treatment_group
+    data["did"] = data["treated"].astype(int) * data["post"].astype(int)
+    result = _synthetic_did_core(data)
+    coefficients = result.coefficients.copy()
+    coefficients["treatment_group"] = treatment_group
+    return SyntheticDiDResult(
+        coefficients=coefficients,
+        metadata={**result.metadata, "treatment_group": treatment_group},
+        trends=result.trends.assign(treatment_group=treatment_group),
+        unit_weights=result.unit_weights.assign(treatment_group=treatment_group),
+        time_weights=result.time_weights.assign(treatment_group=treatment_group),
+    )
+
+
 def _clear_generated_model_outputs(models_dir: Path) -> None:
     patterns = (
         "ate*.csv",
@@ -369,7 +432,13 @@ def _clear_generated_model_outputs(models_dir: Path) -> None:
 
 def run_estimations(panel_path: Path, models_dir: Path) -> dict[str, RegressionResult]:
     models_dir.mkdir(parents=True, exist_ok=True)
+    did_dir = models_dir / "did"
+    sdid_dir = models_dir / "sdid"
+    did_dir.mkdir(parents=True, exist_ok=True)
+    sdid_dir.mkdir(parents=True, exist_ok=True)
     _clear_generated_model_outputs(models_dir)
+    _clear_generated_model_outputs(did_dir)
+    _clear_generated_model_outputs(sdid_dir)
     panel = pd.read_csv(panel_path, parse_dates=["period"], dtype={"product_id": str}, low_memory=False)
     results = {
         "ate": estimate_ate(panel),
@@ -385,26 +454,40 @@ def run_estimations(panel_path: Path, models_dir: Path) -> dict[str, RegressionR
             continue
         results[f"event_study_{group}"] = result
     for name, result in results.items():
-        result.coefficients.to_csv(models_dir / f"{name}.csv", index=False)
-        pd.DataFrame([result.metadata]).to_csv(models_dir / f"{name}_metadata.csv", index=False)
+        result.coefficients.to_csv(did_dir / f"{name}.csv", index=False)
+        pd.DataFrame([result.metadata]).to_csv(did_dir / f"{name}_metadata.csv", index=False)
     try:
         sdid = estimate_synthetic_did(panel)
     except ValueError as exc:
-        pd.DataFrame([{"reason": str(exc)}]).to_csv(models_dir / "synthetic_did_skipped.csv", index=False)
+        pd.DataFrame([{"specification": "overall", "reason": str(exc)}]).to_csv(sdid_dir / "synthetic_did_skipped.csv", index=False)
     else:
-        sdid.coefficients.to_csv(models_dir / "synthetic_did.csv", index=False)
-        pd.DataFrame([sdid.metadata]).to_csv(models_dir / "synthetic_did_metadata.csv", index=False)
-        sdid.trends.to_csv(models_dir / "synthetic_did_trends.csv", index=False)
-        sdid.unit_weights.to_csv(models_dir / "synthetic_did_unit_weights.csv", index=False)
-        sdid.time_weights.to_csv(models_dir / "synthetic_did_time_weights.csv", index=False)
+        sdid.coefficients.to_csv(sdid_dir / "synthetic_did.csv", index=False)
+        pd.DataFrame([sdid.metadata]).to_csv(sdid_dir / "synthetic_did_metadata.csv", index=False)
+        sdid.trends.to_csv(sdid_dir / "synthetic_did_trends.csv", index=False)
+        sdid.unit_weights.to_csv(sdid_dir / "synthetic_did_unit_weights.csv", index=False)
+        sdid.time_weights.to_csv(sdid_dir / "synthetic_did_time_weights.csv", index=False)
+    skipped_sdid_groups: list[dict[str, str]] = []
+    for group in sorted(panel.loc[panel["treated"], "treatment_group"].dropna().unique()):
+        try:
+            sdid_group = estimate_synthetic_did_for_group(panel, group)
+        except ValueError as exc:
+            skipped_sdid_groups.append({"treatment_group": group, "reason": str(exc)})
+            continue
+        sdid_group.coefficients.to_csv(sdid_dir / f"synthetic_did_{group}.csv", index=False)
+        pd.DataFrame([sdid_group.metadata]).to_csv(sdid_dir / f"synthetic_did_{group}_metadata.csv", index=False)
+        sdid_group.trends.to_csv(sdid_dir / f"synthetic_did_{group}_trends.csv", index=False)
+        sdid_group.unit_weights.to_csv(sdid_dir / f"synthetic_did_{group}_unit_weights.csv", index=False)
+        sdid_group.time_weights.to_csv(sdid_dir / f"synthetic_did_{group}_time_weights.csv", index=False)
     if skipped_groups:
-        pd.DataFrame(skipped_groups).to_csv(models_dir / "skipped_event_study_groups.csv", index=False)
+        pd.DataFrame(skipped_groups).to_csv(did_dir / "skipped_event_study_groups.csv", index=False)
+    if skipped_sdid_groups:
+        pd.DataFrame(skipped_sdid_groups).to_csv(sdid_dir / "skipped_sdid_groups.csv", index=False)
     summaries = [make_pretrend_summary(results["event_study"].coefficients, "overall")]
     summaries.extend(
         make_pretrend_summary(result.coefficients, name.replace("event_study_", ""))
         for name, result in results.items()
         if name.startswith("event_study_")
     )
-    pd.concat(summaries, ignore_index=True).to_csv(models_dir / "pretrend_summary.csv", index=False)
-    make_aggregate_trends(panel).to_csv(models_dir / "aggregate_trends.csv", index=False)
+    pd.concat(summaries, ignore_index=True).to_csv(did_dir / "pretrend_summary.csv", index=False)
+    make_aggregate_trends(panel).to_csv(did_dir / "aggregate_trends.csv", index=False)
     return results

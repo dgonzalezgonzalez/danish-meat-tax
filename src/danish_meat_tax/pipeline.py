@@ -80,7 +80,7 @@ def run_stage(
         results = run_estimations(panel_path, paths.models_dir)
         print("estimate: " + ", ".join(results.keys()) + f" -> {paths.models_dir}")
     if stage in {"outputs", "all"}:
-        outputs = make_outputs(paths.models_dir, paths.figures_dir, paths.tables_dir)
+        outputs = make_outputs(paths.models_dir, paths.figures_dir, paths.tables_dir, panel_path=panel_path)
         print("outputs: " + ", ".join(str(path) for path in outputs.values()))
 
 

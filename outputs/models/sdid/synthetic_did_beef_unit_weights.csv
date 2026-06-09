@@ -1,0 +1,10 @@
+unit_id,weight,treatment_group
+nemlig::poultry,0.22424170115584913,beef
+nemlig::sweets_snacks,0.34769497894612456,beef
+rema1000::beverages,0.03698260012695843,beef
+rema1000::fish_seafood,0.36563115758480247,beef
+rema1000::fruit_vegetables,0.012504376685423481,beef
+rema1000::grains_bread,0.0,beef
+rema1000::pantry_condiments,0.0,beef
+rema1000::poultry,0.0,beef
+rema1000::sweets_snacks,0.01294518550084198,beef
