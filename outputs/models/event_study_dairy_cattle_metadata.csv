@@ -1,2 +1,2 @@
 n_obs,n_units,n_periods,fixed_effects,cluster,treatment_group
-9022,80,132,unit_id + period,unit_id,beef
+9050,80,132,unit_id + period,unit_id,dairy_cattle

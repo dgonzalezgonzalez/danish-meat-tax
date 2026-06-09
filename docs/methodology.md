@@ -6,23 +6,38 @@ Did the 2024-06-24 announcement of Denmark's livestock carbon tax change superma
 
 ## Identification
 
-The main design is a two-way fixed effects difference-in-differences model on a balanced product-store panel:
+The main design is a two-way fixed effects difference-in-differences model on a commodity-store panel of identified food items:
 
 ```text
-log(price_it) = beta * Treated_i * Post_t + product-store FE_i + period FE_t + error_it
+log(normalized_price_it) = beta * Treated_i * Post_t + commodity-store FE_i + period FE_t + error_it
 ```
 
 The event-study model replaces the single post indicator with relative-time interactions for treated units, omitting period `-1` as the reference.
 
 ## Treatment Groups
 
-The main treated groups are beef and pork. Lamb/sheep/goat products are coded as livestock-exposed because the policy is about livestock emissions, not only beef and pork retail products. Poultry is a sensitivity group. Fish, seafood, dairy, and non-meat foods are controls or robustness categories depending on the specification.
+The treated groups are products derived from livestock covered by the policy channel:
 
-## Symmetric Window
+- Beef/veal.
+- Pork.
+- Lamb/sheep/goat.
+- Dairy, coded separately as `dairy_cattle` because dairy-cattle emissions are covered by the livestock-emissions policy channel even though retail dairy is not meat.
 
-The panel builder selects the largest symmetric pre/post window around 2024-06-24 supported by the observed data. The event period itself is excluded so the number of pre and post periods is equal.
+Food controls are identified non-treated food categories: poultry, fish/seafood, eggs, fruit/vegetables, grains/bread, fats/oils, sweets/snacks, beverages, and plant proteins. `unknown` and non-food products are excluded from the main econometric sample.
 
-By default, units are retained when they have at least one pre-announcement and one post-announcement observation inside that symmetric window. This keeps many more commodities and products from the large price-history source. A strict complete-unit panel is available with `--require-complete-units`, but it can drop nearly all real grocery products because historical price records are sparse rather than daily-complete.
+## Price Normalization
+
+The source package price is preserved, but the model outcome uses normalized prices. Grams and kilograms convert to DKK/kg; milliliters, centiliters, and liters convert to DKK/liter. Rows without parseable physical units are excluded from the main panel and counted in diagnostics.
+
+## Event Window
+
+The default panel keeps all available pre/post periods after filters, allowing more post periods than pre periods when the data support it. The default unit level is `commodity_store`, meaning each commodity within each supermarket chain. `product_store` and all-store `commodity` panels are available as robustness options. Units are retained when they satisfy minimum pre/post observation support. The older equal-period design is available with `--symmetric-window`, and a strict complete-unit panel is available with `--require-complete-units`.
+
+The event period itself is excluded from pre/post support. For weekly panels, periods are calendar weeks beginning Monday; the event week begins on 2024-06-24.
+
+## Parallel Trends
+
+The output stage produces event-study plots, aggregate normalized-price trend plots, period-support diagnostics, and `pretrend_summary.csv`. Pre-period coefficients should be inspected before interpreting ATE estimates. If pretrends remain poor, the next robustness steps are to restrict to stable stores/commodities, validate against official food price indices, and consider matched food controls.
 
 ## Inference
 

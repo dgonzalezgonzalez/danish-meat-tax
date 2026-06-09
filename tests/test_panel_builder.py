@@ -25,7 +25,7 @@ class PanelBuilderTest(unittest.TestCase):
     def test_unbalanced_units_can_be_retained_with_pre_and_post_support(self):
         products = normalize_records(_fixture_records())
         partial = products[~((products["product_id"].str.contains("milk")) & (products["date"].dt.day.isin([11, 12, 13])))]
-        result = build_balanced_panel(partial, frequency="daily", require_complete_units=False)
+        result = build_balanced_panel(partial, frequency="daily", require_complete_units=False, unit_level="product_store")
         self.assertIn("Netto::netto_milk", set(result.panel["unit_id"]))
 
     def test_insufficient_coverage_errors(self):

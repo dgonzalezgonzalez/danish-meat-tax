@@ -13,6 +13,42 @@ class PanelResult:
     diagnostics: dict[str, int | str]
 
 
+def _relative_time(period: pd.Timestamp, event_period: pd.Timestamp, frequency: str) -> int:
+    if frequency == "weekly":
+        return int((period - event_period).days // 7)
+    return int((period - event_period).days)
+
+
+def _filter_analysis_sample(
+    frame: pd.DataFrame,
+    food_only: bool,
+    exclude_unknown: bool,
+    include_dairy_as_treated: bool,
+) -> pd.DataFrame:
+    data = frame.copy()
+    if "food_status" not in data:
+        data["food_status"] = "food"
+    if "analysis_role" not in data:
+        data["analysis_role"] = np.where(data["treated"].astype(bool), "treated_livestock_meat", "control_food")
+    if "normalization_status" not in data:
+        data["normalization_status"] = "ok"
+    if "normalized_price" not in data:
+        data["normalized_price"] = data["price"]
+    if "normalized_price_unit" not in data:
+        data["normalized_price_unit"] = "raw_price"
+    if food_only:
+        data = data[data["food_status"] == "food"].copy()
+    if exclude_unknown:
+        data = data[(data["commodity"] != "unknown") & (data["treatment_group"] != "unknown")].copy()
+    data = data[(data["normalization_status"] == "ok") & data["normalized_price"].notna() & (data["normalized_price"] > 0)].copy()
+    if not include_dairy_as_treated:
+        dairy = data["treatment_group"] == "dairy_cattle"
+        data.loc[dairy, "treated"] = False
+        data.loc[dairy, "treatment_group"] = "control_animal_products"
+        data.loc[dairy, "analysis_role"] = "control_food"
+    return data
+
+
 def _aggregate(frame: pd.DataFrame, frequency: str, event_date: pd.Timestamp) -> pd.DataFrame:
     data = frame.copy()
     data["date"] = pd.to_datetime(data["date"])
@@ -27,7 +63,8 @@ def _aggregate(frame: pd.DataFrame, frequency: str, event_date: pd.Timestamp) ->
     grouped = (
         data.groupby(["unit_id", "period"], as_index=False)
         .agg(
-            price=("price", "mean"),
+            price=("normalized_price", "mean"),
+            raw_price=("price", "mean"),
             store=("store", "first"),
             product_id=("product_id", "first"),
             product_name=("product_name", "first"),
@@ -35,9 +72,47 @@ def _aggregate(frame: pd.DataFrame, frequency: str, event_date: pd.Timestamp) ->
             treated=("treated", "first"),
             treatment_group=("treatment_group", "first"),
             policy_confidence=("policy_confidence", "first"),
+            food_status=("food_status", "first"),
+            analysis_role=("analysis_role", "first"),
+            normalized_price_unit=("normalized_price_unit", "first"),
             event_period=("event_period", "first"),
         )
     )
+    return grouped
+
+
+def _aggregate_unit_level(data: pd.DataFrame, unit_level: str) -> pd.DataFrame:
+    if unit_level == "product_store":
+        return data
+    if unit_level == "commodity_store":
+        keys = ["store", "commodity", "treatment_group", "period"]
+    elif unit_level == "commodity":
+        data = data.copy()
+        data["store"] = "all_stores"
+        keys = ["commodity", "treatment_group", "period"]
+    else:
+        raise ValueError("unit_level must be product_store, commodity_store, or commodity")
+    grouped = (
+        data.groupby(keys, as_index=False)
+        .agg(
+            price=("price", "mean"),
+            raw_price=("raw_price", "mean"),
+            treated=("treated", "first"),
+            product_id=("commodity", "first"),
+            product_name=("commodity", "first"),
+            policy_confidence=("policy_confidence", "first"),
+            food_status=("food_status", "first"),
+            analysis_role=("analysis_role", "first"),
+            normalized_price_unit=("normalized_price_unit", "first"),
+            event_period=("event_period", "first"),
+            source_units=("unit_id", "nunique"),
+        )
+    )
+    if unit_level == "commodity_store":
+        grouped["unit_id"] = grouped["store"].astype(str) + "::" + grouped["commodity"].astype(str)
+    else:
+        grouped["unit_id"] = grouped["commodity"].astype(str)
+        grouped["store"] = "all_stores"
     return grouped
 
 
@@ -47,19 +122,38 @@ def build_balanced_panel(
     frequency: str = "daily",
     min_units: int = 2,
     require_complete_units: bool = False,
+    food_only: bool = True,
+    exclude_unknown: bool = True,
+    include_dairy_as_treated: bool = True,
+    min_pre_periods: int = 1,
+    min_post_periods: int = 1,
+    max_pre_periods: int | None = None,
+    max_post_periods: int | None = None,
+    symmetric_window: bool = False,
+    unit_level: str = "commodity_store",
 ) -> PanelResult:
     event = pd.Timestamp(event_date)
-    data = _aggregate(products, frequency, event)
+    filtered = _filter_analysis_sample(products, food_only, exclude_unknown, include_dairy_as_treated)
+    data = _aggregate_unit_level(_aggregate(filtered, frequency, event), unit_level)
+    if data.empty:
+        raise ValueError("No food/control treatment sample remains after filters.")
     periods = sorted(pd.to_datetime(data["period"].unique()))
     event_period = pd.Timestamp(data["event_period"].iloc[0])
     pre = [period for period in periods if period < event_period]
     post = [period for period in periods if period > event_period]
-    window = min(len(pre), len(post))
-    if window == 0:
+    if len(pre) < min_pre_periods or len(post) < min_post_periods:
         raise ValueError("Insufficient data coverage: need at least one pre and one post period.")
-    selected_periods = set(pre[-window:] + post[:window])
+    if symmetric_window:
+        window = min(len(pre), len(post))
+        selected_pre = pre[-window:]
+        selected_post = post[:window]
+    else:
+        selected_pre = pre[-max_pre_periods:] if max_pre_periods else pre
+        selected_post = post[:max_post_periods] if max_post_periods else post
+        window = min(len(selected_pre), len(selected_post))
+    selected_periods = set(selected_pre + selected_post)
     selected = data[data["period"].isin(selected_periods)].copy()
-    required_count = 2 * window
+    required_count = len(selected_periods)
     if require_complete_units:
         valid_units = selected.groupby("unit_id")["period"].nunique().loc[lambda series: series == required_count].index
     else:
@@ -67,18 +161,17 @@ def build_balanced_panel(
         valid_units = (
             unit_support.groupby("unit_id")
             .agg(pre=("is_pre", "sum"), post=("is_post", "sum"))
-            .loc[lambda frame: (frame["pre"] > 0) & (frame["post"] > 0)]
+            .loc[lambda frame: (frame["pre"] >= min_pre_periods) & (frame["post"] >= min_post_periods)]
             .index
         )
     selected = selected[selected["unit_id"].isin(valid_units)].copy()
     if selected["unit_id"].nunique() < min_units:
         raise ValueError("Insufficient balanced units after applying symmetric window.")
-    ordered_periods = sorted(pd.to_datetime(selected["period"].unique()))
-    period_to_relative = {
-        period: index - window if index < window else index - window + 1
-        for index, period in enumerate(ordered_periods)
-    }
-    selected["relative_time"] = selected["period"].map(period_to_relative).astype(int)
+    if not selected["treated"].astype(bool).any():
+        raise ValueError("No treated food units remain after filters.")
+    if selected["treated"].astype(bool).all():
+        raise ValueError("No control food units remain after filters.")
+    selected["relative_time"] = selected["period"].map(lambda value: _relative_time(pd.Timestamp(value), event_period, frequency)).astype(int)
     selected["post"] = selected["relative_time"] > 0
     selected["treated"] = selected["treated"].astype(bool)
     selected["did"] = selected["treated"].astype(int) * selected["post"].astype(int)
@@ -88,13 +181,22 @@ def build_balanced_panel(
     diagnostics = {
         "frequency": frequency,
         "event_date": event.date().isoformat(),
-        "balanced_periods_pre": window,
-        "balanced_periods_post": window,
+        "balanced_periods_pre": len(selected_pre),
+        "balanced_periods_post": len(selected_post),
+        "symmetric_window": str(symmetric_window),
         "require_complete_units": str(require_complete_units),
+        "food_only": str(food_only),
+        "exclude_unknown": str(exclude_unknown),
+        "include_dairy_as_treated": str(include_dairy_as_treated),
+        "unit_level": unit_level,
+        "min_pre_periods": int(min_pre_periods),
+        "min_post_periods": int(min_post_periods),
         "units": int(selected["unit_id"].nunique()),
         "rows": int(len(selected)),
         "treated_units": int(selected.loc[selected["treated"], "unit_id"].nunique()),
         "control_units": int(selected.loc[~selected["treated"], "unit_id"].nunique()),
+        "commodities": int(selected["commodity"].nunique()),
+        "stores": int(selected["store"].nunique()),
     }
     return PanelResult(selected.sort_values(["unit_id", "period"]).reset_index(drop=True), diagnostics)
 
@@ -106,4 +208,13 @@ def write_panel(products_path: Path, panel_path: Path, diagnostics_path: Path, *
     diagnostics_path.parent.mkdir(parents=True, exist_ok=True)
     result.panel.to_csv(panel_path, index=False)
     pd.DataFrame([result.diagnostics]).to_csv(diagnostics_path, index=False)
+    diagnostics_dir = diagnostics_path.parent
+    result.panel.groupby(["commodity", "treatment_group", "treated"], as_index=False).agg(
+        units=("unit_id", "nunique"),
+        rows=("unit_id", "size"),
+    ).to_csv(diagnostics_dir / "panel_commodity_counts.csv", index=False)
+    result.panel.groupby(["relative_time", "treated"], as_index=False).agg(
+        units=("unit_id", "nunique"),
+        rows=("unit_id", "size"),
+    ).to_csv(diagnostics_dir / "panel_period_support.csv", index=False)
     return result

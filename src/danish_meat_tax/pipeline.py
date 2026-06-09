@@ -17,17 +17,40 @@ def _latest_raw_path(paths: PipelinePaths) -> Path:
     return candidates[0] if candidates else fixture_path
 
 
-def run_stage(stage: str, paths: PipelinePaths, fixture: bool, frequency: str, require_complete_units: bool = False) -> None:
+def run_stage(
+    stage: str,
+    paths: PipelinePaths,
+    fixture: bool,
+    frequency: str,
+    require_complete_units: bool = False,
+    refresh: bool = False,
+    source_url: str | None = None,
+    max_age_days: int | None = None,
+    food_only: bool = True,
+    exclude_unknown: bool = True,
+    include_dairy_as_treated: bool = True,
+    min_pre_periods: int = 1,
+    min_post_periods: int = 1,
+    max_pre_periods: int | None = None,
+    max_post_periods: int | None = None,
+    symmetric_window: bool = False,
+    raw_path_override: Path | None = None,
+    unit_level: str = "commodity_store",
+) -> None:
     paths.ensure()
-    raw_path = _latest_raw_path(paths)
+    raw_path = raw_path_override or _latest_raw_path(paths)
     products_path = paths.processed_dir / "products.csv"
     panel_path = paths.processed_dir / "commodity_panel.csv"
     diagnostics_path = paths.diagnostics_dir / "panel_balance.csv"
 
     if stage in {"download", "all"}:
-        result = write_fixture(paths.raw_dir) if fixture else download_json(paths.raw_dir)
+        download_kwargs = {"refresh": refresh, "max_age_days": max_age_days}
+        if source_url:
+            download_kwargs["source_urls"] = (source_url,)
+        result = write_fixture(paths.raw_dir) if fixture else download_json(paths.raw_dir, **download_kwargs)
         raw_path = result.path
-        print(f"download: {result.record_count} records -> {result.path}")
+        cache_note = " cached" if result.cached else ""
+        print(f"download{cache_note}: {result.record_count} records -> {result.path}")
     if stage in {"process", "all"}:
         raw_path = raw_path if raw_path.exists() else _latest_raw_path(paths)
         if not raw_path.exists():
@@ -42,6 +65,15 @@ def run_stage(stage: str, paths: PipelinePaths, fixture: bool, frequency: str, r
             event_date=EVENT_DATE,
             frequency=frequency,
             require_complete_units=require_complete_units,
+            food_only=food_only,
+            exclude_unknown=exclude_unknown,
+            include_dairy_as_treated=include_dairy_as_treated,
+            min_pre_periods=min_pre_periods,
+            min_post_periods=min_post_periods,
+            max_pre_periods=max_pre_periods,
+            max_post_periods=max_post_periods,
+            symmetric_window=symmetric_window,
+            unit_level=unit_level,
         )
         print(f"panel: {result.diagnostics['rows']} rows -> {panel_path}")
     if stage in {"estimate", "all"}:
@@ -67,6 +99,30 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Require each retained unit to appear in every selected pre/post period.",
     )
+    parser.add_argument("--refresh", action="store_true", help="Force raw data download even when cache exists.")
+    parser.add_argument("--source-url", help="Override source URL for real data download.")
+    parser.add_argument("--max-age-days", type=int, help="Refresh cache when manifest is older than this many days.")
+    parser.add_argument("--include-non-food", dest="food_only", action="store_false", help="Keep non-food products in panel.")
+    parser.add_argument("--include-unknown", dest="exclude_unknown", action="store_false", help="Keep unknown commodity products in panel.")
+    parser.add_argument(
+        "--dairy-as-control",
+        dest="include_dairy_as_treated",
+        action="store_false",
+        help="Treat dairy as food control instead of livestock-exposed treatment.",
+    )
+    parser.add_argument("--min-pre-periods", type=int, default=1, help="Minimum pre-event periods required per unit.")
+    parser.add_argument("--min-post-periods", type=int, default=1, help="Minimum post-event periods required per unit.")
+    parser.add_argument("--max-pre-periods", type=int, help="Cap retained pre-event periods.")
+    parser.add_argument("--max-post-periods", type=int, help="Cap retained post-event periods.")
+    parser.add_argument("--symmetric-window", action="store_true", help="Use largest equal pre/post period window.")
+    parser.add_argument(
+        "--unit-level",
+        choices=["product_store", "commodity_store", "commodity"],
+        default="commodity_store",
+        help="Panel unit level for econometric estimation.",
+    )
+    parser.add_argument("--raw-path", type=Path, help="Process a specific raw JSON file instead of latest cached file.")
+    parser.set_defaults(food_only=True, exclude_unknown=True, include_dairy_as_treated=True)
     return parser
 
 
@@ -78,4 +134,17 @@ def main() -> None:
         fixture=args.fixture,
         frequency=args.frequency,
         require_complete_units=args.require_complete_units,
+        refresh=args.refresh,
+        source_url=args.source_url,
+        max_age_days=args.max_age_days,
+        food_only=args.food_only,
+        exclude_unknown=args.exclude_unknown,
+        include_dairy_as_treated=args.include_dairy_as_treated,
+        min_pre_periods=args.min_pre_periods,
+        min_post_periods=args.min_post_periods,
+        max_pre_periods=args.max_pre_periods,
+        max_post_periods=args.max_post_periods,
+        symmetric_window=args.symmetric_window,
+        raw_path_override=args.raw_path,
+        unit_level=args.unit_level,
     )

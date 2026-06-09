@@ -5,17 +5,17 @@
 \hline
 Specification & Estimate & Std. error & p-value & 95\% CI \\
 \hline
-Overall: treated x post & -0.0474*** & (0.0036) & 0.0000 & [-0.0546, -0.0403] \\
-Heterogeneity: beef x post & -0.0422*** & (0.0086) & 0.0000 & [-0.0592, -0.0253] \\
-Heterogeneity: lamb_sheep_goat x post & -0.0239** & (0.0100) & 0.0167 & [-0.0434, -0.0043] \\
-Heterogeneity: mixed_livestock x post & -0.0448*** & (0.0123) & 0.0003 & [-0.0688, -0.0208] \\
-Heterogeneity: pork x post & -0.0719*** & (0.0086) & 0.0000 & [-0.0887, -0.0550] \\
-Heterogeneity: poultry_other_livestock x post & -0.0419*** & (0.0053) & 0.0000 & [-0.0522, -0.0316] \\
+Overall: treated x post & 0.1492 & (0.0980) & 0.1280 & [-0.0429, 0.3412] \\
+Heterogeneity: beef x post & 0.2214*** & (0.0600) & 0.0002 & [0.1039, 0.3389] \\
+Heterogeneity: dairy_cattle x post & 0.1019* & (0.0526) & 0.0529 & [-0.0013, 0.2050] \\
+Heterogeneity: lamb_sheep_goat x post & -0.3021 & (0.3761) & 0.4218 & [-1.0393, 0.4350] \\
+Heterogeneity: mixed_livestock x post & 0.5432* & (0.2947) & 0.0653 & [-0.0344, 1.1208] \\
+Heterogeneity: pork x post & 0.1055* & (0.0553) & 0.0563 & [-0.0028, 0.2139] \\
 \hline
-Observations & \multicolumn{4}{c}{748057} \\
-Units & \multicolumn{4}{c}{56556} \\
+Observations & \multicolumn{4}{c}{12719} \\
+Units & \multicolumn{4}{c}{112} \\
 Fixed effects & \multicolumn{4}{c}{unit_id + period} \\
 \hline
 \end{tabular}
-\begin{minipage}{0.9\linewidth}\footnotesize Notes: Unit and period fixed effects included. Standard errors clustered by unit_id. Outcome is log price. Event date is 2024-06-24. Estimates use the balanced symmetric panel.\end{minipage}
+\begin{minipage}{0.9\linewidth}\footnotesize Notes: Unit and period fixed effects included. Standard errors clustered by unit_id. Outcome is log normalized food price. Event date is 2024-06-24. Main sample excludes non-food and unknown products.\end{minipage}
 \end{table}

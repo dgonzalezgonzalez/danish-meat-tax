@@ -94,22 +94,24 @@ def estimate_heterogeneity(panel: pd.DataFrame) -> RegressionResult:
 
 def estimate_event_study(panel: pd.DataFrame, reference: int = -1) -> RegressionResult:
     data = panel.copy()
-    columns: list[str] = []
-    labels: list[str] = []
-    for rel in sorted(data["relative_time"].unique()):
-        if rel == reference:
-            continue
-        col = f"event_{rel}"
-        data[col] = ((data["relative_time"] == rel) & data["treated"]).astype(int)
-        columns.append(col)
-        labels.append(str(rel))
+    rel_values = [rel for rel in sorted(data["relative_time"].unique()) if rel != reference]
+    columns = [f"event_{rel}" for rel in rel_values]
+    labels = [str(rel) for rel in rel_values]
+    event_columns = {
+        col: ((data["relative_time"] == rel) & data["treated"]).astype(int)
+        for col, rel in zip(columns, rel_values)
+    }
+    data = pd.concat([data, pd.DataFrame(event_columns, index=data.index)], axis=1)
     result = _fit_twfe(data, columns, labels)
     result.coefficients["relative_time"] = result.coefficients["term"].astype(int)
+    result.coefficients["pre_period"] = result.coefficients["relative_time"] < 0
     return result
 
 
 def estimate_event_study_for_group(panel: pd.DataFrame, treatment_group: str, reference: int = -1) -> RegressionResult:
     data = panel[(~panel["treated"]) | (panel["treatment_group"] == treatment_group)].copy()
+    if data.loc[data["treatment_group"] == treatment_group, "unit_id"].nunique() < 2:
+        raise ValueError(f"Too few treated units for {treatment_group}.")
     data["treated"] = data["treatment_group"] == treatment_group
     data["did"] = data["treated"].astype(int) * data["post"].astype(int)
     result = estimate_event_study(data, reference=reference)
@@ -118,6 +120,52 @@ def estimate_event_study_for_group(panel: pd.DataFrame, treatment_group: str, re
     return RegressionResult(
         coefficients=coefficients,
         metadata={**result.metadata, "treatment_group": treatment_group},
+    )
+
+
+def make_pretrend_summary(event_study: pd.DataFrame, label: str) -> pd.DataFrame:
+    pre = event_study[(event_study["relative_time"] < 0) & (event_study["relative_time"] != -1)].copy()
+    if pre.empty:
+        return pd.DataFrame(
+            [
+                {
+                    "specification": label,
+                    "n_pre_coefficients": 0,
+                    "mean_abs_pre_estimate": np.nan,
+                    "max_abs_pre_estimate": np.nan,
+                    "max_abs_pre_t": np.nan,
+                    "passes_individual_pretrend_screen": False,
+                    "diagnostic": "no_pre_coefficients",
+                }
+            ]
+        )
+    max_abs_t = float(pre["t_stat"].abs().max())
+    return pd.DataFrame(
+        [
+            {
+                "specification": label,
+                "n_pre_coefficients": int(len(pre)),
+                "mean_abs_pre_estimate": float(pre["estimate"].abs().mean()),
+                "max_abs_pre_estimate": float(pre["estimate"].abs().max()),
+                "max_abs_pre_t": max_abs_t,
+                "passes_individual_pretrend_screen": max_abs_t < 1.96,
+                "diagnostic": "inspect_joint_pretrend",
+            }
+        ]
+    )
+
+
+def make_aggregate_trends(panel: pd.DataFrame) -> pd.DataFrame:
+    data = panel.copy()
+    data["series"] = np.where(data["treated"].astype(bool), data["treatment_group"], "control_food")
+    return (
+        data.groupby(["period", "relative_time", "series"], as_index=False)
+        .agg(
+            mean_log_price=("log_price", "mean"),
+            mean_price=("price", "mean"),
+            units=("unit_id", "nunique"),
+        )
+        .sort_values(["series", "period"])
     )
 
 
@@ -130,8 +178,13 @@ def run_estimations(panel_path: Path, models_dir: Path) -> dict[str, RegressionR
         "event_study": estimate_event_study(panel),
     }
     group_event_studies: list[pd.DataFrame] = []
+    skipped_groups: list[dict[str, str]] = []
     for group in sorted(panel.loc[panel["treated"], "treatment_group"].dropna().unique()):
-        result = estimate_event_study_for_group(panel, group)
+        try:
+            result = estimate_event_study_for_group(panel, group)
+        except ValueError as exc:
+            skipped_groups.append({"treatment_group": group, "reason": str(exc)})
+            continue
         results[f"event_study_{group}"] = result
         group_event_studies.append(result.coefficients)
     for name, result in results.items():
@@ -139,4 +192,14 @@ def run_estimations(panel_path: Path, models_dir: Path) -> dict[str, RegressionR
         pd.DataFrame([result.metadata]).to_csv(models_dir / f"{name}_metadata.csv", index=False)
     if group_event_studies:
         pd.concat(group_event_studies, ignore_index=True).to_csv(models_dir / "event_study_by_group.csv", index=False)
+    if skipped_groups:
+        pd.DataFrame(skipped_groups).to_csv(models_dir / "skipped_event_study_groups.csv", index=False)
+    summaries = [make_pretrend_summary(results["event_study"].coefficients, "overall")]
+    summaries.extend(
+        make_pretrend_summary(result.coefficients, name.replace("event_study_", ""))
+        for name, result in results.items()
+        if name.startswith("event_study_")
+    )
+    pd.concat(summaries, ignore_index=True).to_csv(models_dir / "pretrend_summary.csv", index=False)
+    make_aggregate_trends(panel).to_csv(models_dir / "aggregate_trends.csv", index=False)
     return results
