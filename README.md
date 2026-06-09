@@ -114,21 +114,33 @@ SDiD is estimated for all treated commodities jointly and for each treated meat 
 
 The main interpretive exercise focuses on beef because it is the treated meat commodity with an observed DiD effect and acceptable pre-trend diagnostics.
 
-The question: Denmark's announced livestock tax was about USD 43/tCO2e, while the Nordhaus (2017) 2030 benchmark is about USD 48.3/tCO2e. Would the estimated beef price increase cover the additional USD 4.7/tCO2e gap?
+The question: Denmark's announced gross livestock tax was DKK 300/tCO2e, or about USD 43.5/tCO2e at the 2024 average exchange rate. Nordhaus (2017) reports the SCC as USD 31.2/tCO2e for 2015 in 2010 USD and states that the SCC grows at 3 percent per year in real terms through 2050. Growing that value to 2030 and then converting to 2024 USD gives a benchmark of about USD 70/tCO2e, so the internally consistent gap is about USD 26/tCO2e rather than the earlier nominal USD 4.7/tCO2e comparison.
 
 Assumptions:
 
 - Social cost benchmark: Nordhaus (2017), `https://doi.org/10.1073/pnas.1609244114`.
+- Inflation conversion: annual-average U.S. CPI-U, 2010 to 2024.
 - Beef carbon intensity: 59.6 kg CO2e/kg product, using the OECD (2025) agri-food carbon-footprint report's Poore and Nemecek (2018) beef-herd benchmark.
 - Exchange rate: 6.8953 DKK/USD, the 2024 average USD/DKK rate used for this accounting conversion.
 - Average pre-intervention beef price: computed directly from the estimation panel over pre-event beef observations.
+
+The updated carbon-price gap is:
+
+```math
+\Delta SCC
+=
+31.2 \times (1.03)^{2030-2015}
+\times \frac{313.689}{218.056}
+-
+\frac{300}{6.8953}.
+```
 
 The additional beef price equivalent of the carbon-price gap is:
 
 ```math
 \Delta p_{USD/kg}
 =
-\frac{4.7 \times 59.6}{1000}.
+\frac{\Delta SCC \times 59.6}{1000}.
 ```
 
 Converted to DKK/kg:
@@ -161,7 +173,17 @@ The reverse-engineered carbon price implied by an estimated beef log effect is:
 }{59.6}.
 ```
 
-The output graph `outputs/figures/sdid/beef_att_policy_calibration.png` plots beef ATT point estimates and 95 percent confidence intervals for DiD and SDiD, with a horizontal reference line at `tau_gap`. The graph `outputs/figures/sdid/event_study_beef_policy_calibration.png` repeats the reference line for the beef DiD event study and compares it to the latest available post-period event-study estimate. The discussion file `docs/beef_carbon_price_calibration.md` reports the arithmetic, assumptions, reverse-engineered tax values, and interpretation.
+The statutory tax that would exactly reach the inflation-adjusted Nordhaus benchmark after accounting for an estimated announcement effect is:
+
+```math
+Tax^*
+=
+SCC_{Nordhaus,2024}
+-
+\widehat{SCC}.
+```
+
+The output graph `outputs/figures/calibration/beef_att_policy_calibration.png` plots beef ATT point estimates and 95 percent confidence intervals for DiD and SDiD, with a horizontal reference line at the log price value corresponding to the carbon-price gap. The graph `outputs/figures/calibration/event_study_beef_policy_calibration.png` repeats the reference line for the beef DiD event study and compares it to the latest available post-period event-study estimate. The discussion file `docs/beef_carbon_price_calibration.md` reports the arithmetic, assumptions, reverse-engineered tax values, and interpretation.
 
 ## Output Structure
 
@@ -195,12 +217,15 @@ SDiD outputs:
 - `outputs/models/sdid/synthetic_did_*_unit_weights.csv`: donor weights.
 - `outputs/models/sdid/synthetic_did_*_time_weights.csv`: pre-period weights.
 - `outputs/models/sdid/skipped_sdid_groups.csv`: subgroups skipped because support is insufficient.
-- `outputs/models/sdid/beef_policy_calibration.csv`: beef carbon-price calibration estimates.
 - `outputs/figures/sdid/synthetic_did_trends.png`: all-treated SDiD trend plot.
 - `outputs/figures/sdid/synthetic_did_<group>_trends.png`: subgroup SDiD trend plots.
-- `outputs/figures/sdid/beef_att_policy_calibration.png`: beef ATT vs carbon-price-gap reference.
-- `outputs/figures/sdid/event_study_beef_policy_calibration.png`: beef event study vs carbon-price-gap reference.
 - `outputs/tables/sdid/synthetic_did_results.tex`: publication-style SDiD table.
+
+Calibration outputs:
+
+- `outputs/models/calibration/beef_policy_calibration.csv`: beef carbon-price calibration estimates.
+- `outputs/figures/calibration/beef_att_policy_calibration.png`: beef ATT vs carbon-price-gap reference.
+- `outputs/figures/calibration/event_study_beef_policy_calibration.png`: beef event study vs carbon-price-gap reference.
 
 All graph titles are intentionally omitted; captions should be supplied in paper, slides, or figure notes.
 

@@ -9,10 +9,14 @@ import pandas as pd
 
 
 BEEF_CO2E_KG_PER_KG = 59.6
-CARBON_PRICE_GAP_USD_PER_TCO2E = 4.7
-NORDHAUS_2030_USD_PER_TCO2E = 48.3
-DANISH_TAX_USD_PER_TCO2E = 43.0
+NORDHAUS_2015_USD_2010_PER_TCO2E = 31.2
+NORDHAUS_REAL_GROWTH_RATE = 0.03
+NORDHAUS_TARGET_YEAR = 2030
+NORDHAUS_BASE_YEAR = 2015
+DANISH_TAX_DKK_PER_TCO2E = 300.0
 USD_DKK_2024_AVERAGE = 6.8953
+US_CPI_2010_AVERAGE = 218.056
+US_CPI_2024_AVERAGE = 313.689
 
 
 def _yerr(data: pd.DataFrame) -> list[np.ndarray]:
@@ -32,7 +36,7 @@ def make_event_study_plot(
     ax.axhline(0, color="black", linewidth=0.8)
     ax.axvline(0, color="firebrick", linestyle="--", linewidth=0.9)
     if reference_effect is not None:
-        ax.axhline(reference_effect, color="#2f7d32", linestyle=":", linewidth=1.2, label="USD 4.7/tCO2e gap")
+        ax.axhline(reference_effect, color="#2f7d32", linestyle=":", linewidth=1.2, label="Carbon-price gap")
     ax.errorbar(
         data["relative_time"],
         data["estimate"],
@@ -42,9 +46,6 @@ def make_event_study_plot(
         ecolor="#6f8fb3",
         capsize=3,
     )
-    ref = data[data["std_error"].isna()]
-    if not ref.empty:
-        ax.scatter(ref["relative_time"], ref["estimate"], marker="D", color="black", s=25, zorder=3)
     ax.set_xlabel("Periods relative to 2024-06-24 announcement")
     ax.set_ylabel("Log price effect")
     ax.grid(axis="y", alpha=0.25)
@@ -211,8 +212,25 @@ def _beef_pre_price(panel_path: Path) -> float:
     return float(beef_pre["price"].mean())
 
 
+def _nordhaus_2030_usd_2010_per_tco2e() -> float:
+    years = NORDHAUS_TARGET_YEAR - NORDHAUS_BASE_YEAR
+    return NORDHAUS_2015_USD_2010_PER_TCO2E * ((1 + NORDHAUS_REAL_GROWTH_RATE) ** years)
+
+
+def _nordhaus_2030_usd_2024_per_tco2e() -> float:
+    return _nordhaus_2030_usd_2010_per_tco2e() * US_CPI_2024_AVERAGE / US_CPI_2010_AVERAGE
+
+
+def _danish_tax_usd_per_tco2e() -> float:
+    return DANISH_TAX_DKK_PER_TCO2E / USD_DKK_2024_AVERAGE
+
+
+def _carbon_price_gap_usd_per_tco2e() -> float:
+    return _nordhaus_2030_usd_2024_per_tco2e() - _danish_tax_usd_per_tco2e()
+
+
 def _gap_effect_log(pre_price_dkk: float) -> float:
-    gap_usd_per_kg = CARBON_PRICE_GAP_USD_PER_TCO2E * BEEF_CO2E_KG_PER_KG / 1000
+    gap_usd_per_kg = _carbon_price_gap_usd_per_tco2e() * BEEF_CO2E_KG_PER_KG / 1000
     gap_dkk_per_kg = gap_usd_per_kg * USD_DKK_2024_AVERAGE
     return float(np.log((pre_price_dkk + gap_dkk_per_kg) / pre_price_dkk))
 
@@ -244,13 +262,20 @@ def make_beef_policy_calibration(
     estimates["effect_dkk_per_kg"] = estimates["estimate"].map(lambda value: _effect_money(value, pre_price)[0])
     estimates["effect_usd_per_kg"] = estimates["estimate"].map(lambda value: _effect_money(value, pre_price)[1])
     estimates["implied_tax_usd_tco2e"] = estimates["effect_usd_per_kg"] * 1000 / BEEF_CO2E_KG_PER_KG
-    estimates_path = sdid_dir / "beef_policy_calibration.csv"
+    nordhaus_2030_usd_2010 = _nordhaus_2030_usd_2010_per_tco2e()
+    nordhaus_2024 = _nordhaus_2030_usd_2024_per_tco2e()
+    danish_tax_usd = _danish_tax_usd_per_tco2e()
+    gap_usd_tco2e = _carbon_price_gap_usd_per_tco2e()
+    estimates["required_tax_usd_tco2e"] = nordhaus_2024 - estimates["implied_tax_usd_tco2e"]
+    estimates["required_tax_dkk_tco2e"] = estimates["required_tax_usd_tco2e"] * USD_DKK_2024_AVERAGE
+    estimates_path = sdid_dir.parent / "calibration" / "beef_policy_calibration.csv"
+    estimates_path.parent.mkdir(parents=True, exist_ok=True)
     estimates.to_csv(estimates_path, index=False)
 
     figures_dir.mkdir(parents=True, exist_ok=True)
     att_path = figures_dir / "beef_att_policy_calibration.png"
-    fig, ax = plt.subplots(figsize=(6.5, 4.2))
-    x = np.arange(len(estimates))
+    fig, ax = plt.subplots(figsize=(5.4, 4.2))
+    x = np.array([-0.18, 0.18])
     ax.errorbar(
         x,
         estimates["estimate"],
@@ -260,9 +285,10 @@ def make_beef_policy_calibration(
         ecolor="#6f8fb3",
         capsize=4,
     )
-    ax.axhline(reference_effect, color="#2f7d32", linestyle=":", linewidth=1.3, label="USD 4.7/tCO2e gap")
+    ax.axhline(reference_effect, color="#2f7d32", linestyle=":", linewidth=1.3, label="Carbon-price gap")
     ax.axhline(0, color="black", linewidth=0.8)
     ax.set_xticks(x, estimates["estimator"])
+    ax.set_xlim(-0.55, 0.55)
     ax.set_ylabel("Log price effect")
     ax.grid(axis="y", alpha=0.25)
     ax.legend(fontsize=8)
@@ -277,13 +303,18 @@ def make_beef_policy_calibration(
     latest = event[event["relative_time"] > 0].sort_values("relative_time").iloc[-1]
     latest_dkk, latest_usd = _effect_money(float(latest["estimate"]), pre_price)
     latest_tax = latest_usd * 1000 / BEEF_CO2E_KG_PER_KG
+    latest_required_tax = nordhaus_2024 - latest_tax
+    latest_required_tax_dkk = latest_required_tax * USD_DKK_2024_AVERAGE
     gap_dkk, gap_usd = _effect_money(reference_effect, pre_price)
+    cpi_factor = US_CPI_2024_AVERAGE / US_CPI_2010_AVERAGE
     discussion = f"""# Beef Carbon-Price Calibration
 
-This back-of-the-envelope exercise asks whether the estimated beef announcement price effect would cover the USD {CARBON_PRICE_GAP_USD_PER_TCO2E:.1f}/tCO2e gap between the announced Danish livestock tax (USD {DANISH_TAX_USD_PER_TCO2E:.1f}/tCO2e) and the Nordhaus (2017) 2030 social cost of carbon benchmark (USD {NORDHAUS_2030_USD_PER_TCO2E:.1f}/tCO2e).
+This back-of-the-envelope exercise asks whether the estimated beef announcement price effect would cover the gap between the announced Danish livestock tax and the Nordhaus (2017) 2030 social cost of carbon benchmark. The earlier USD 4.7/tCO2e gap compares nominal USD values. With the internally consistent conversion used here, the gap is USD {gap_usd_tco2e:.1f}/tCO2e: Nordhaus reports USD {NORDHAUS_2015_USD_2010_PER_TCO2E:.1f}/tCO2e for 2015 in 2010 USD and states that the SCC grows at {100 * NORDHAUS_REAL_GROWTH_RATE:.0f}% per year in real terms, so the benchmark is first grown to 2030 and then converted to 2024 USD. The Danish tax is converted from DKK to USD with the 2024 average exchange rate.
 
 Assumptions:
 
+- Nordhaus benchmark: USD {NORDHAUS_2015_USD_2010_PER_TCO2E:.1f}/tCO2e for 2015 in 2010 USD, grown at {100 * NORDHAUS_REAL_GROWTH_RATE:.0f}% per year to USD {nordhaus_2030_usd_2010:.1f}/tCO2e in 2030, then converted to USD {nordhaus_2024:.1f}/tCO2e after multiplying by the CPI factor {cpi_factor:.4f}.
+- Announced Danish tax: DKK {DANISH_TAX_DKK_PER_TCO2E:.0f}/tCO2e, or USD {danish_tax_usd:.1f}/tCO2e at the 2024 average exchange rate.
 - Beef carbon intensity: {BEEF_CO2E_KG_PER_KG:.1f} kg CO2e/kg product, from the OECD (2025) agri-food carbon-footprint report's Poore and Nemecek (2018) beef-herd benchmark.
 - Exchange rate: {USD_DKK_2024_AVERAGE:.4f} DKK/USD, the 2024 average USD/DKK rate.
 - Average pre-intervention beef price in the estimation panel: {pre_price:.2f} DKK/kg, or {pre_price / USD_DKK_2024_AVERAGE:.2f} USD/kg.
@@ -292,7 +323,7 @@ The additional price needed to close the carbon-price gap is:
 
 ```math
 \\Delta p =
-\\frac{{4.7 \\times {BEEF_CO2E_KG_PER_KG:.1f}}}{{1000}}
+\\frac{{{gap_usd_tco2e:.4f} \\times {BEEF_CO2E_KG_PER_KG:.1f}}}{{1000}}
 = {gap_usd:.4f}\\;\\text{{USD/kg}}
 = {gap_dkk:.4f}\\;\\text{{DKK/kg}}.
 ```
@@ -307,19 +338,26 @@ As a log price effect at the observed pre-period beef price:
 
 Main ATT comparison:
 
-| Estimator | ATT | 95% CI | DKK/kg | USD/kg | Implied USD/tCO2e |
-|---|---:|---:|---:|---:|---:|
+| Estimator | ATT | 95% CI | DKK/kg | USD/kg | Implied announcement value, USD/tCO2e | Required tax, USD/tCO2e | Required tax, DKK/tCO2e |
+|---|---:|---:|---:|---:|---:|---:|---:|
 """
     for _, row in estimates.iterrows():
         discussion += (
             f"| {row['estimator']} | {row['estimate']:.4f} | "
             f"[{row['conf_low']:.4f}, {row['conf_high']:.4f}] | "
             f"{row['effect_dkk_per_kg']:.2f} | {row['effect_usd_per_kg']:.2f} | "
-            f"{row['implied_tax_usd_tco2e']:.1f} |\n"
+            f"{row['implied_tax_usd_tco2e']:.1f} | {row['required_tax_usd_tco2e']:.1f} | "
+            f"{row['required_tax_dkk_tco2e']:.0f} |\n"
         )
     discussion += f"""
 
-The reference value, {reference_effect:.4f}, lies below the reported DiD and SDiD confidence intervals if both interval lower bounds exceed it. In that case the observed announcement price increase is larger than the increment needed to bridge USD {CARBON_PRICE_GAP_USD_PER_TCO2E:.1f}/tCO2e. Reverse-engineering from the point estimates implies a carbon price above the Nordhaus benchmark, so the announcement pass-through would be too high under these assumptions.
+The reference value is:
+
+```math
+\\tau_{{gap}} = {reference_effect:.4f}.
+```
+
+With the updated gap, this reference lies inside the DiD confidence interval and inside the SDiD confidence interval. Using the DiD ATT as the preferred estimate, the announcement effect is equivalent to USD {float(estimates.loc[estimates['estimator'] == 'DiD', 'implied_tax_usd_tco2e'].iloc[0]):.1f}/tCO2e, so the statutory tax that would exactly reach the inflation-adjusted Nordhaus benchmark is USD {float(estimates.loc[estimates['estimator'] == 'DiD', 'required_tax_usd_tco2e'].iloc[0]):.1f}/tCO2e, or DKK {float(estimates.loc[estimates['estimator'] == 'DiD', 'required_tax_dkk_tco2e'].iloc[0]):.0f}/tCO2e. Under this internally consistent benchmark, the DiD ATT does not imply lowering the announced DKK {DANISH_TAX_DKK_PER_TCO2E:.0f}/tCO2e gross tax; it implies a slightly higher tax. If one instead keeps the grown 2030 Nordhaus benchmark in 2010 USD and compares it directly with the nominal USD value of the Danish tax, the smaller nominal comparison would imply a tax of about USD {nordhaus_2030_usd_2010 - float(estimates.loc[estimates['estimator'] == 'DiD', 'implied_tax_usd_tco2e'].iloc[0]):.1f}/tCO2e.
 
 Latest event-study comparison:
 
@@ -327,11 +365,12 @@ Latest event-study comparison:
 - Latest DiD event-study estimate: {float(latest['estimate']):.4f}, with 95% CI [{float(latest['conf_low']):.4f}, {float(latest['conf_high']):.4f}].
 - Latest-period implied price increase: {latest_dkk:.2f} DKK/kg, or {latest_usd:.2f} USD/kg.
 - Latest-period reverse-engineered carbon price: {latest_tax:.1f} USD/tCO2e.
+- Latest-period required statutory tax to match Nordhaus exactly: {latest_required_tax:.1f} USD/tCO2e, or {latest_required_tax_dkk:.0f} DKK/tCO2e. Because this is negative, the literal latest-period calculation says the announcement effect alone exceeds the inflation-adjusted Nordhaus benchmark; with a nonnegative tax constraint, the implied statutory tax would be zero.
 
 Figures:
 
-- `outputs/figures/sdid/beef_att_policy_calibration.png`
-- `outputs/figures/sdid/event_study_beef_policy_calibration.png`
+- `outputs/figures/calibration/beef_att_policy_calibration.png`
+- `outputs/figures/calibration/event_study_beef_policy_calibration.png`
 """
     discussion_path.parent.mkdir(parents=True, exist_ok=True)
     discussion_path.write_text(discussion, encoding="utf-8")
@@ -349,9 +388,10 @@ def make_outputs(models_dir: Path, figures_dir: Path, tables_dir: Path, panel_pa
     sdid_dir = models_dir / "sdid"
     did_figures = figures_dir / "did"
     sdid_figures = figures_dir / "sdid"
+    calibration_figures = figures_dir / "calibration"
     did_tables = tables_dir / "did"
     sdid_tables = tables_dir / "sdid"
-    for directory in (did_figures, sdid_figures):
+    for directory in (did_figures, sdid_figures, calibration_figures):
         directory.mkdir(parents=True, exist_ok=True)
         _clear_figures(directory)
     outputs: dict[str, Path] = {}
@@ -383,7 +423,7 @@ def make_outputs(models_dir: Path, figures_dir: Path, tables_dir: Path, panel_pa
                 resolved_panel,
                 did_dir,
                 sdid_dir,
-                sdid_figures,
+                calibration_figures,
                 models_dir.parent.parent / "docs" / "beef_carbon_price_calibration.md",
             )
         )
