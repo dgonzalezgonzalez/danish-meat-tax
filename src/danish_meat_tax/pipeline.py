@@ -5,10 +5,10 @@ from pathlib import Path
 
 from .config import EVENT_DATE, PipelinePaths
 from .data_sources.heissepreise import download_json, write_fixture
-from .estimators import run_estimations
+from .data_sources.statbank import download_pris01
 from .normalize_products import build_processed_products
-from .output import make_outputs
 from .panel_builder import write_panel
+from .stata_runner import prepare_micro_panel, run_stata
 
 
 def _latest_raw_path(paths: PipelinePaths) -> Path:
@@ -41,6 +41,7 @@ def run_stage(
     raw_path = raw_path_override or _latest_raw_path(paths)
     products_path = paths.processed_dir / "products.csv"
     panel_path = paths.processed_dir / "commodity_panel.csv"
+    stata_panel_path = paths.processed_dir / "commodity_panel_stata.dta"
     diagnostics_path = paths.diagnostics_dir / "panel_balance.csv"
 
     if stage in {"download", "all"}:
@@ -51,6 +52,10 @@ def run_stage(
         raw_path = result.path
         cache_note = " cached" if result.cached else ""
         print(f"download{cache_note}: {result.record_count} records -> {result.path}")
+        if not fixture:
+            official = download_pris01(paths.raw_dir, refresh=refresh)
+            official_note = " cached" if official.cached else ""
+            print(f"download official CPI{official_note}: {official.data}")
     if stage in {"process", "all"}:
         raw_path = raw_path if raw_path.exists() else _latest_raw_path(paths)
         if not raw_path.exists():
@@ -77,11 +82,19 @@ def run_stage(
         )
         print(f"panel: {result.diagnostics['rows']} rows -> {panel_path}")
     if stage in {"estimate", "all"}:
-        results = run_estimations(panel_path, paths.models_dir)
-        print("estimate: " + ", ".join(results.keys()) + f" -> {paths.models_dir}")
+        prepare_micro_panel(panel_path, stata_panel_path)
+        if fixture:
+            print(f"estimate skipped for fixture: Stata input contract -> {stata_panel_path}")
+        else:
+            run_stata(paths.root.resolve(), Path("scripts/stata/microdata_analysis.do"))
+            run_stata(paths.root.resolve(), Path("scripts/stata/aggregate_analysis.do"))
+            print(f"estimate: Stata DiD, SC, and SDiD -> {paths.models_dir / 'stata'}")
     if stage in {"outputs", "all"}:
-        outputs = make_outputs(paths.models_dir, paths.figures_dir, paths.tables_dir, panel_path=panel_path)
-        print("outputs: " + ", ".join(str(path) for path in outputs.values()))
+        if fixture:
+            print("outputs skipped for fixture: analytical publication outputs require real data")
+        else:
+            run_stata(paths.root.resolve(), Path("scripts/stata/scc_meta_analysis.do"))
+            print(f"outputs: Stata figures and calibration -> {paths.figures_dir / 'stata'}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -96,7 +109,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--frequency",
         choices=["daily", "weekly", "monthly", "quarterly"],
-        default="daily",
+        default="monthly",
         help="Panel aggregation frequency.",
     )
     parser.add_argument(

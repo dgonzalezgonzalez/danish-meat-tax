@@ -1,246 +1,93 @@
-# Danish Meat Tax Announcement Price Effects
+# Danish Beef-Tax Announcement Effects
 
-This repository estimates whether Denmark's 2024-06-24 announcement of a livestock carbon tax changed Danish supermarket prices for meat products. The current main sample uses Danish grocery price histories from `dagligepriser.dk`, normalized to DKK per kilogram or liter where source quantities permit.
+This repository studies whether Denmark's 24 June 2024 livestock-emissions tax announcement changed beef prices. It triangulates scraped grocery product--store prices with Statistics Denmark's official PRIS01 CPI series.
 
-## Policy And Treatment Definition
+All analytical estimation is in Stata. Python is limited to downloading, product classification, price normalization, panel construction, conversion to Stata format, and orchestration.
 
-Denmark's Green Tripartite agreement was announced on 2024-06-24. The announced policy is an upstream livestock-emissions carbon tax, not a retail meat tax. Treatment coding follows the policy channel:
+## Current design
 
-- `beef`, `pork`, `lamb_sheep_goat`, and `mixed_livestock` are treated meat commodities.
-- `dairy_cattle` is treated by default because dairy-cattle emissions are inside the livestock channel.
-- fish, seafood, plant foods, and other non-meat foods are controls.
-- unknown commodities are excluded from the main sample.
-- non-food products are excluded from the main sample.
+- Outcome: log normalized product price in the scraped panel; log CPI in official data.
+- Focus: beef only.
+- Scraped window: November 2023--September 2025, excluding June 2024 and limiting post-treatment support to relative month 15.
+- Official window: April 2023--September 2025, exactly 15 pre and 15 post months.
+- Disease cutoff: October 2025 onward is excluded because the Danish Veterinary and Food Administration dates the recent bovine viral diarrhoea outbreak from October 2025.
+- Beef controls exclude pork, lamb/goat/sheep, mixed or processed meat, dairy, and other livestock-exposed categories.
+- Estimators: product--store DiD, official lags-only DiD with Newey--West lag 2, official synthetic control, and official synthetic DiD.
+- SCC benchmark: equal-paper-weight synthesis of ten eligible preferred estimates, with reported source ranges propagated in a hierarchical paper bootstrap.
 
-Use `--dairy-as-control` for a dairy-as-control sensitivity sample, `--include-unknown` to retain unknown commodities, and `--include-non-food` to retain non-food products.
+## Requirements
 
-## Data Pipeline
+- Python 3.10+
+- Stata 19 or StataNow 19
+- Stata packages `synth`, `sdid`, and `estout`
 
-Install dependencies:
+Install Python dependencies:
 
-```bash
+```powershell
 py -3 -m pip install -r requirements.txt
 ```
 
-Run the full offline fixture pipeline:
+Install missing Stata packages once:
 
-```bash
-$env:PYTHONPATH="src"; py -3 main.py all --fixture
+```powershell
+& 'C:\Program Files\StataNow19\StataMP-64.exe' /e do scripts\install_stata_dependencies.do
 ```
 
-Run the current real-data workflow:
+If Stata is installed elsewhere, set `$env:STATA_EXE` to the executable path.
 
-```bash
-$env:PYTHONPATH="src"; py -3 main.py download
-$env:PYTHONPATH="src"; py -3 main.py process
-$env:PYTHONPATH="src"; py -3 main.py panel --frequency monthly --unit-level product_store --min-pre-periods 1 --min-post-periods 1
-$env:PYTHONPATH="src"; py -3 main.py estimate
-$env:PYTHONPATH="src"; py -3 main.py outputs
+## Reproduce the analysis
+
+Run from the repository root:
+
+```powershell
+$env:PYTHONPATH='src'
+py -3 main.py download
+py -3 main.py process
+py -3 main.py panel --frequency monthly
+py -3 main.py estimate
+py -3 main.py outputs
 ```
 
-Methodological defaults:
+Or run all stages:
 
-- Frequency: monthly.
-- Event date: 2024-06-24; for monthly panels the event period is June 2024.
-- Estimation unit: `product_store`.
-- Panel inclusion: units need at least one pre-event and one post-event observation.
-- Outcome: log normalized price.
-- Price normalization: source prices are converted to DKK/kg or DKK/liter when quantity parsing succeeds; rows with failed normalization are excluded.
-- Raw and large processed data are ignored by Git; selected model, figure, table, and diagnostic outputs are committed.
-
-## Econometric Specification
-
-The main DiD estimator is a two-way fixed-effects regression:
-
-```math
-\log(p_{it}) =
-\alpha_i + \lambda_t
-+ \beta \left(\text{Treated}_i \times \text{Post}_t\right)
-+ \varepsilon_{it}.
+```powershell
+$env:PYTHONPATH='src'; py -3 main.py all --frequency monthly
 ```
 
-Here `i` indexes the estimation unit, `t` indexes the panel period, `p` is normalized price, unit fixed effects absorb time-invariant product-store price levels, and period fixed effects absorb common food-price shocks.
+The Stata master file can also be run directly after preprocessing:
 
-The subgroup DiD estimator is estimated separately for each treated commodity. For a focal commodity \(g\), the estimation sample keeps only that treated commodity and untreated food controls; other treated livestock commodities are excluded from that column rather than used as controls:
-
-```math
-\log(p_{it}) =
-\alpha_i + \lambda_t
-+ \beta_g
-\left(\mathbf{1}\{g_i=g\} \times \text{Post}_t\right)
-+ \varepsilon_{it}.
+```powershell
+& 'C:\Program Files\StataNow19\StataMP-64.exe' /e do scripts\stata\master.do
 ```
 
-The event-study estimator is:
+The offline fixture validates ingestion, classification, panel construction, and the Stata input contract without fabricating publication estimates:
 
-```math
-\log(p_{it}) =
-\alpha_i + \lambda_t
-+ \sum_{\tau \neq -1} \delta_{\tau}
-\left(\text{Treated}_i \times \mathbf{1}\{\text{RelativeTime}_t=\tau\}\right)
-+ \varepsilon_{it}.
+```powershell
+$env:PYTHONPATH='src'; py -3 main.py all --fixture --frequency daily
 ```
 
-Relative period `-1` is the omitted reference period. Output event-study CSVs and plots explicitly include `t = -1` as a zero point estimate with no confidence interval, so figures show the reference period rather than silently skipping it.
+## Main artifacts
 
-Subgroup event studies use the same focal-versus-untreated sample rule as subgroup DiD. For example, the beef event study compares beef product-store units with untreated food controls; pork, lamb/sheep/goat, mixed livestock, and dairy cattle are not used as beef controls.
+- `paper/main.tex` and `paper/main.pdf`: publication source and compiled paper.
+- `scripts/stata/microdata_analysis.do`: scraped-data DiD, event study, descriptives, and micro SDiD appendix series.
+- `scripts/stata/aggregate_analysis.do`: official CPI DiD, event study, SC, SDiD, and space placebos.
+- `scripts/stata/scc_meta_analysis.do`: SCC harmonization, hierarchical pooling, forest plot, and policy calibration.
+- `data/reference/scc_literature_estimates.csv`: source-level SCC inventory and eligibility decisions.
+- `outputs/models/stata/`: machine-readable Stata estimates and figure data.
+- `outputs/figures/stata/`: publication figures generated by Stata.
 
-DiD standard errors are clustered by estimation unit. The reported confidence intervals use normal critical value 1.96.
+Raw and large processed data are ignored by Git. Selected publication figures, machine-readable result summaries, and the paper PDF are committed.
 
-## Synthetic DiD
+## Product classification
 
-Synthetic DiD is estimated on complete `commodity_store` units because the weighting step requires a rectangular panel. The estimator:
+Classification uses normalized product name and source-category text. Danish characters and common encoding variants are transliterated. Short keywords require word boundaries. Beef keywords include English and Danish terms such as `beef`, `okse`, `oksekoed`, `kvaeg`, `kalv`, `veal`, `entrecote`, and `roastbeef`.
 
-- averages treated complete units;
-- chooses donor unit weights on the simplex to match the treated pre-period path;
-- chooses time weights on the simplex to weight pre-period imbalance;
-- estimates the post-period treated-synthetic gap net of the weighted pre-period gap.
-
-The SDiD estimand is:
-
-```math
-\hat{\tau}_{SDID}
-=
-\frac{1}{T_1}\sum_{t \in \mathcal{T}_1}
-\left(\bar{Y}_{1t} - \sum_{j \in \mathcal{C}} \hat{w}_j Y_{jt}\right)
--
-\sum_{t \in \mathcal{T}_0} \hat{\lambda}_t
-\left(\bar{Y}_{1t} - \sum_{j \in \mathcal{C}} \hat{w}_j Y_{jt}\right).
-```
-
-SDiD standard errors are computed by a nonparametric bootstrap over complete treated and control units, with replacement within treatment arm. The code uses a fixed seed (`20240624`) and records the realized bootstrap count in metadata. Current committed outputs use 25 bootstrap replications to keep the full repository pipeline reproducible in ordinary local runs.
-
-SDiD is estimated for all treated commodities jointly and for each treated meat subgroup when the complete-unit donor support is sufficient. In the current run, `lamb_sheep_goat` is skipped for SDiD because complete-unit support is insufficient; the skip reason is stored in `outputs/models/sdid/skipped_sdid_groups.csv`.
-
-## Beef Carbon-Price Calibration
-
-The main interpretive exercise focuses on beef because it is the treated meat commodity with an observed DiD effect and acceptable pre-trend diagnostics.
-
-The question: Denmark's announced gross livestock tax was DKK 300/tCO2e, or about USD 43.5/tCO2e at the 2024 average exchange rate. Nordhaus (2017) reports the SCC as USD 31.2/tCO2e for 2015 in 2010 USD and states that the SCC grows at 3 percent per year in real terms through 2050. Growing that value to 2030 and then converting to 2024 USD gives a benchmark of about USD 70/tCO2e, so the internally consistent gap is about USD 26/tCO2e rather than the earlier nominal USD 4.7/tCO2e comparison.
-
-Assumptions:
-
-- Social cost benchmark: Nordhaus (2017), `https://doi.org/10.1073/pnas.1609244114`.
-- Inflation conversion: annual-average U.S. CPI-U, 2010 to 2024.
-- Beef carbon intensity: 59.6 kg CO2e/kg product, using the OECD (2025) agri-food carbon-footprint report's Poore and Nemecek (2018) beef-herd benchmark.
-- Exchange rate: 6.8953 DKK/USD, the 2024 average USD/DKK rate used for this accounting conversion.
-- Average pre-intervention beef price: computed directly from the estimation panel over pre-event beef observations.
-
-The updated carbon-price gap is:
-
-```math
-\Delta SCC
-=
-31.2 \times (1.03)^{2030-2015}
-\times \frac{313.689}{218.056}
--
-\frac{300}{6.8953}.
-```
-
-The additional beef price equivalent of the carbon-price gap is:
-
-```math
-\Delta p_{USD/kg}
-=
-\frac{\Delta SCC \times 59.6}{1000}.
-```
-
-Converted to DKK/kg:
-
-```math
-\Delta p_{DKK/kg}
-=
-\Delta p_{USD/kg} \times 6.8953.
-```
-
-Converted to a log price effect at the observed pre-period beef price:
-
-```math
-\tau_{gap}
-=
-\log\left(
-\frac{\bar{p}_{pre} + \Delta p_{DKK/kg}}
-{\bar{p}_{pre}}
-\right).
-```
-
-The reverse-engineered carbon price implied by an estimated beef log effect is:
-
-```math
-\widehat{SCC}
-=
-\frac{
-\left[\bar{p}_{pre}\left(\exp(\hat{\tau})-1\right)/6.8953\right]
-\times 1000
-}{59.6}.
-```
-
-The statutory tax that would exactly reach the inflation-adjusted Nordhaus benchmark after accounting for an estimated announcement effect is:
-
-```math
-Tax^*
-=
-SCC_{Nordhaus,2024}
--
-\widehat{SCC}.
-```
-
-The output graph `outputs/figures/calibration/beef_att_policy_calibration.png` plots beef average treatment effect on the treated (ATT) point estimates and 95 percent confidence intervals for DiD and SDiD, with a horizontal reference line at the log price value corresponding to the carbon-price gap. The graph `outputs/figures/calibration/event_study_beef_policy_calibration.png` repeats the reference line for the beef DiD event study and compares it to the latest available post-period event-study estimate. The discussion file `docs/beef_carbon_price_calibration.md` reports the arithmetic, assumptions, reverse-engineered tax values, and interpretation.
-
-## Output Structure
-
-Processed data and diagnostics:
-
-- `data/processed/products.csv`: normalized product-price records.
-- `data/processed/commodity_panel.csv`: model-ready panel.
-- `outputs/diagnostics/panel_balance.csv`: panel-level sample settings and counts.
-- `outputs/diagnostics/panel_commodity_counts.csv`: commodity and treatment support.
-- `outputs/diagnostics/panel_period_support.csv`: period-by-treatment support.
-
-DiD outputs:
-
-- `outputs/models/did/ate.csv`: all-treated DiD estimate.
-- `outputs/models/did/heterogeneity.csv`: treated-commodity DiD estimates; each commodity is estimated separately against untreated food controls only.
-- `outputs/models/did/event_study.csv`: all-treated event-study estimates.
-- `outputs/models/did/event_study_<group>.csv`: subgroup event-study estimates.
-- `outputs/models/did/pretrend_summary.csv`: individual pre-period diagnostic summary.
-- `outputs/models/did/aggregate_trends.csv`: aggregate normalized price trends.
-- `outputs/figures/did/event_study_overall.png`: all-treated event-study plot.
-- `outputs/figures/did/event_study_<group>.png`: subgroup event-study plots.
-- `outputs/figures/did/aggregate_trends.png`: treated/control aggregate trends.
-- `outputs/tables/did/did_results.tex`: publication-style DiD table.
-
-SDiD outputs:
-
-- `outputs/models/sdid/synthetic_did.csv`: all-treated SDiD estimate.
-- `outputs/models/sdid/synthetic_did_<group>.csv`: subgroup SDiD estimates.
-- `outputs/models/sdid/synthetic_did_*_metadata.csv`: sample and inference metadata.
-- `outputs/models/sdid/synthetic_did_*_trends.csv`: treated and synthetic paths.
-- `outputs/models/sdid/synthetic_did_*_unit_weights.csv`: donor weights.
-- `outputs/models/sdid/synthetic_did_*_time_weights.csv`: pre-period weights.
-- `outputs/models/sdid/skipped_sdid_groups.csv`: subgroups skipped because support is insufficient.
-- `outputs/figures/sdid/synthetic_did_trends.png`: all-treated SDiD trend plot.
-- `outputs/figures/sdid/synthetic_did_<group>_trends.png`: subgroup SDiD trend plots.
-- `outputs/tables/sdid/synthetic_did_results.tex`: publication-style SDiD table.
-
-Calibration outputs:
-
-- `outputs/models/calibration/beef_policy_calibration.csv`: beef carbon-price calibration estimates.
-- `outputs/figures/calibration/beef_att_policy_calibration.png`: beef ATT vs carbon-price-gap reference.
-- `outputs/figures/calibration/event_study_beef_policy_calibration.png`: beef event study vs carbon-price-gap reference.
-
-All graph titles are intentionally omitted; captions should be supplied in paper, slides, or figure notes.
+Controls are classified food products in poultry, fish/seafood, eggs, fruit/vegetables, grains/bread, plant oils, sweets/snacks, beverages, plant proteins, and pantry goods. Other livestock categories and ambiguous mixed foods are excluded from beef's control group. Non-food and unmatched products are excluded. Unit normalization accepts kg, g, litre, ml, and cl from structured fields or product-name parsing; per-piece and unsupported units are dropped.
 
 ## Tests
 
-Run:
-
-```bash
-$env:PYTHONPATH="src"; py -3 -m unittest discover -s tests
+```powershell
+$env:PYTHONPATH='src'; py -3 -m unittest discover -s tests
 ```
 
-The test suite covers taxonomy, data-source fixtures, panel construction, estimator outputs, split output directories, LaTeX table generation, and smoke tests for the full fixture pipeline.
-
-## Caveats
-
-These are announcement effects, not realized statutory tax effects. The analysis uses supermarket price histories and deterministic commodity classification; mixed products and edge-case product names should receive manual review before paper submission. The beef carbon-price calibration is a transparent back-of-the-envelope accounting exercise, not a structural pass-through model.
+Tests cover the taxonomy, normalization and panel rules, source fixtures, Stata input conversion, the 15-by-15 official window, the 15-month scraped post cutoff, and ownership of all estimators by Stata.

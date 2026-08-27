@@ -54,10 +54,10 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/diagnostics/panel_balance.csv` | Main panel dimensions and filter settings. |
 | `outputs/diagnostics/panel_commodity_counts.csv` | Units/rows by commodity, treatment group, and treated status. |
 | `outputs/diagnostics/panel_period_support.csv` | Units/rows by relative period and treated status. |
-| `outputs/models/pretrend_summary.csv` | Pre-event event-study coefficient diagnostics. |
-| `outputs/models/aggregate_trends.csv` | Aggregate normalized price trends by treatment/control series. |
-| `outputs/models/synthetic_did.csv` | Synthetic DiD ATE estimate. |
-| `outputs/models/synthetic_did_trends.csv` | Treated and synthetic-control time series. |
-| `outputs/models/synthetic_did_unit_weights.csv` | Donor unit weights used by the synthetic control. |
-| `outputs/models/synthetic_did_time_weights.csv` | Pre-period weights used by synthetic DiD. |
-| `outputs/tables/synthetic_did_results.tex` | Synthetic DiD LaTeX result table. |
+| `outputs/models/stata/micro_estimates.csv` | Scraped-data DiD and SDiD summaries. |
+| `outputs/models/stata/aggregate_estimates.csv` | Official DiD, SC, and SDiD summaries. |
+| `outputs/models/stata/micro_event_study.csv` | Scraped-data beef event-study coefficients. |
+| `outputs/models/stata/aggregate_event_study.csv` | Official beef event-study coefficients. |
+| `outputs/models/stata/aggregate_sc_placebos.csv` | Space-placebo RMSPE ratios for SC inference. |
+| `outputs/models/stata/scc_meta_summary.csv` | Pooled SCC and implied price-gap interval. |
+| `outputs/models/stata/beef_policy_calibration.csv` | Four ATT estimates and SCC calibration band. |

@@ -1,0 +1,2 @@
+n_papers,mean,ci_low,ci_high,median,min,max,log_price_gap,log_price_gap_low,log_price_gap_high,inference
+10,157.959910881686,77.21911182403565,363.3975967407229,109.739404435207,43.36714285714285,599.8840343764905,.2598103572731465,.083777291461514,.603891111255493,hierarchical paper bootstrap with source-range variation

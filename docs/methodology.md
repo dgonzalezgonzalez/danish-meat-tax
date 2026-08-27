@@ -1,57 +1,33 @@
 # Methodology
 
-## Research Question
+## Research question and scope
 
-Did the 2024-06-24 announcement of Denmark's livestock carbon tax change supermarket consumer prices for meat products?
+The paper asks whether Denmark's 24 June 2024 livestock-emissions tax announcement changed beef prices. It reports beef only and estimates all analytical models in Stata.
 
-## Identification
+## Scraped microdata
 
-The main design is a two-way fixed effects difference-in-differences model on a product-store panel of identified food items:
+The main micro specification regresses log normalized price on `beef × post`, product--store fixed effects, and month fixed effects. Standard errors are clustered by product--store. June 2024 is excluded. The sample ends at relative month 15 (September 2025), before the official October 2025 bovine viral diarrhoea outbreak interval.
 
-```text
-log(normalized_price_it) = beta * Treated_i * Post_t + product-store FE_i + period FE_t + error_it
-```
+Beef is compared only with classified untreated foods. Pork, lamb/sheep/goat, dairy, mixed livestock products, non-food products, and unknown products are excluded from beef's control group. Price normalization converts mass to DKK/kg and volume to DKK/litre; unsupported units are excluded.
 
-The event-study model replaces the single post indicator with relative-time interactions for treated units, omitting period `-1` as the reference.
+The event study omits relative month `-1` and tests the remaining pre-period interactions jointly. A Stata synthetic DiD robustness check uses complete commodity--store units and placebo inference.
 
-For treated-commodity DiD and treated-commodity event studies, each focal commodity is estimated against untreated food controls only. Other treated livestock commodities are excluded from that focal regression. For example, the beef DiD and beef event study compare beef with untreated food controls; pork is not used as a beef control.
+## Official aggregate data
 
-## Treatment Groups
+The official panel uses Statistics Denmark PRIS01 monthly CPI series under COICOP 2018. Beef and veal (011221) is treated. The donor pool excludes all treated or plausibly exposed meat and dairy categories. The balanced sample contains 53 series over April 2023--September 2025, exactly 15 pre and 15 post months.
 
-The treated groups are products derived from livestock covered by the policy channel:
+The lags-only DiD preserves the prior OECD specification: subtract the monthly donor mean from log beef CPI, regress the gap on the post indicator, and compute Newey--West standard errors with two lags.
 
-- Beef/veal.
-- Pork.
-- Lamb/sheep/goat.
-- Dairy, coded separately as `dairy_cattle` because dairy-cattle emissions are covered by the livestock-emissions policy channel even though retail dairy is not meat.
+Synthetic control matches 12 lagged CPI outcomes and three- and four-digit category covariates. Inference is the share of donor-placebo post/pre RMSPE ratios at least as large as beef's ratio. Synthetic DiD uses Stata's `sdid` command with placebo inference. SC and SDiD figures contain only treated and synthetic series.
 
-Food controls are identified non-treated food categories: poultry, fish/seafood, eggs, fruit/vegetables, grains/bread, fats/oils, sweets/snacks, beverages, and plant proteins. `unknown` and non-food products are excluded from the main econometric sample.
+## SCC synthesis
 
-## Price Normalization
-
-The source package price is preserved, but the model outcome uses normalized prices. Grams and kilograms convert to DKK/kg; milliliters, centiliters, and liters convert to DKK/liter. Rows without parseable physical units are excluded from the main panel and counted in diagnostics.
-
-## Event Window
-
-The default panel keeps all available pre/post periods after filters, allowing more post periods than pre periods when the data support it. The default unit level is `product_store`, which maximizes cross-sectional food-product support. `commodity_store` and all-store `commodity` panels are available as robustness options. Units are retained when they satisfy minimum pre/post observation support. The older equal-period design is available with `--symmetric-window`, and a strict complete-unit panel is available with `--require-complete-units`.
-
-The event period itself is excluded from pre/post support. For weekly panels, periods are calendar weeks beginning Monday; the event week begins on 2024-06-24. Monthly and quarterly panels are also supported. Monthly aggregation is useful for this project because the expected announcement response may arrive several months after 2024-06-24, while weekly point estimates can be noisy.
-
-## Parallel Trends
-
-The output stage produces event-study plots, aggregate normalized-price trend plots, period-support diagnostics, and `pretrend_summary.csv`. Subgroup pretrend diagnostics use the same focal-versus-untreated sample rule as subgroup DiD. Pre-period coefficients should be inspected before interpreting ATE estimates. If pretrends remain poor, the next robustness steps are to restrict to stable stores/commodities, validate against official food price indices, and consider matched food controls.
-
-## Inference
-
-The included estimator residualizes outcomes and treatment variables by product-store and period fixed effects, then computes cluster-robust standard errors by `unit_id`. For final paper-grade inference, consider validating with `fixest` in R or `statsmodels`/`linearmodels` in Python when those dependencies are available.
-
-## Synthetic DiD
-
-The synthetic DiD robustness output uses complete commodity-store units because the product-store panel is too sparse to form a stable balanced donor matrix. Unit weights match the pre-announcement treated path, time weights match post-period donor averages, and inference uses placebo reassignment over complete control units. The plot reports treated mean log prices and the intercept-adjusted synthetic-control time series.
+One preferred global total-SCC estimate enters per eligible paper. Values are harmonized to 2024 USD/tCO2. Other-year estimates are treated as time-invariant when no source path is reported; Barrage--Nordhaus is interpolated within its published path. Ten papers receive equal weight. A 10,000-replication hierarchical paper bootstrap propagates between-paper dispersion and reported positive source ranges without treating model or parameter ranges as sampling confidence intervals.
 
 ## Limitations
 
-- Estimates capture announcement effects, not statutory tax pass-through.
-- Grocery price data coverage determines the feasible event window.
-- Automated product classification can misclassify mixed products; ambiguous products should be reviewed in robustness checks.
-- Food inflation and retailer pricing campaigns can still affect interpretation despite period fixed effects.
+- Identification is relative to other foods; Denmark has no untreated national unit.
+- Automated classification and package parsing can create measurement error.
+- The official panel has few donors and only 15 pre-periods, making synthetic weights fragile.
+- SCC estimates are structurally heterogeneous; the pooled interval is a sensitivity envelope.
+- Carbon-price mapping is an accounting exercise, not a structural incidence or welfare model.

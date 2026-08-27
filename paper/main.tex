@@ -1,24 +1,10 @@
 \documentclass[11pt]{article}
-
 \usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb}
-\usepackage{booktabs}
-\usepackage{caption}
-\usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{natbib}
-\usepackage{setspace}
-
-\hypersetup{
-  colorlinks=true,
-  linkcolor=blue,
-  citecolor=blue,
-  urlcolor=blue
-}
+\usepackage{amsmath,amssymb,booktabs,caption,graphicx,natbib,pdflscape,setspace}
+\usepackage{url}
 \urlstyle{same}
-
 \onehalfspacing
-
+\newcommand{\figurenotes}[2]{\begin{minipage}{0.96\linewidth}\small\textit{Source:} #1\par\textit{Notes:} #2\end{minipage}}
 \title{Before the Levy: Announcement Pass-Through and Carbon-Price Calibration in Denmark's Livestock Tax}
 \author{Diego Gonz\'alez-Gonz\'alez}
 \date{\today}
@@ -27,211 +13,193 @@
 \maketitle
 
 \begin{abstract}
-Denmark announced in June 2024 that it would introduce a greenhouse-gas tax on livestock emissions, making the agreement one of the first major attempts to price agricultural emissions directly. This draft studies whether that announcement affected supermarket prices before the tax was implemented. Using Danish grocery price histories and a difference-in-differences (DiD) design with product-store and period fixed effects, I find that beef prices increased by 5.8 log points, or about 6.0 percent, after the announcement. Beef is the only treated meat category that both shows a positive price response and passes the individual pre-trend screen in the event-study specification. A synthetic difference-in-differences (SDiD) robustness check gives a larger but much less precise estimate because the method requires a complete commodity-store panel. I then use the estimated beef effect in a back-of-the-envelope carbon-price calibration. After growing the \citet{nordhaus2017} social cost of carbon from 2015 to 2030 and converting to 2024 dollars, the DiD announcement effect is equivalent to about USD 23.2/tCO2e. The implied log-price reference needed to close the remaining carbon-price gap lies inside the DiD confidence interval, so the estimates do not reject exact compensation at the 95 percent level. Point estimates nevertheless illustrate how the framework can fine-tune policy: under the DiD average treatment effect on the treated (ATT), a statutory gross tax of about USD 46.8/tCO2e, or DKK 322/tCO2e, would exactly match the inflation-adjusted Nordhaus benchmark after accounting for announcement pass-through, while the latest event-study point estimate would imply lowering the beef tax if anticipatory effects keep increasing.
+Denmark announced in June 2024 that it would introduce a greenhouse-gas tax on livestock emissions. I estimate the anticipatory response of beef prices using two independent sources: scraped product--store prices and the official Danish consumer price index (CPI). A product--store difference-in-differences (DiD) design yields an average beef-price increase of 4.4 log points. A lags-only DiD applied to official CPI data yields 6.4 log points. The estimates differ by only 0.6 standard errors under an approximate cross-source test. Aggregate synthetic control is close to zero, whereas synthetic DiD is positive but imprecise. All specifications end in September 2025, before the official October 2025 onset of a bovine viral diarrhoea outbreak; the aggregate specifications use symmetric 15-month pre- and post-periods. I then pool ten comparable social-cost-of-carbon (SCC) estimates, treating otherwise undated estimates as time-invariant and propagating published model ranges. The equal-paper-weight mean is USD 158/tCO2 in 2024 dollars, with a hierarchical 95 percent interval of USD 77--363. The estimated announcement response is economically meaningful but smaller than the price adjustment implied by that pooled benchmark. The agreement across independent DiD estimates supports the use of scraped prices for timely policy evaluation, while the estimator dispersion and SCC uncertainty counsel against interpreting any single calibration as definitive.
 \end{abstract}
 
 \section{Introduction}
+Pricing agricultural greenhouse-gas emissions is difficult because the emissions are biologically heterogeneous, farm-level measurement is costly, and food prices are politically salient. A further complication is timing. If a future tax is credible, firms may revise contracts, procurement, and retail prices when the policy is announced rather than when the first liability is paid. Estimates that begin only at implementation can therefore miss part of the policy response.
 
-Agricultural greenhouse-gas emissions remain among the hardest emissions to price. Livestock emissions are biologically and politically salient, consumer prices are highly visible, and pass-through may begin before a formal tax is collected if firms and consumers update expectations when policy is announced. This paper asks whether Denmark's livestock carbon-tax announcement affected supermarket beef prices before implementation, and whether the resulting price change is large enough to matter for the calibration of the eventual tax.
+On 24 June 2024, the Danish government and the parties to the Green Tripartite announced an agreement to introduce a greenhouse-gas tax on livestock emissions \citep{danishgovernment2024}. The measure is an upstream agricultural emissions tax rather than a retail meat excise, and implementation was scheduled for later years. This paper asks whether the announcement changed supermarket beef prices and how the estimated response compares with the price signal implied by the broader SCC literature.
 
-On June 24, 2024, the Danish government and the parties to the Green Tripartite announced an agreement for a ``green Denmark'' \citep{danishgovernment2024}. Public coverage emphasized that Denmark would become the first country to impose a carbon tax on livestock emissions. Institutionally, the policy is not a retail meat excise tax. It is an upstream agricultural greenhouse-gas tax, with implementation scheduled for later years and with deductions and transition mechanisms. Public attention focused especially on cattle and pigs, while the broader agreement also covers land-use and agricultural restructuring.
+The empirical contribution is to triangulate the same research question with two sources whose weaknesses are complementary. The scraped data provide a large, timely product--store panel but are non-official and require transparent text classification and unit normalization. Statistics Denmark's CPI is official and consistently classified, but supplies only a small cross-section of product indices. The microdata DiD estimate is 0.0437 (standard error 0.0163); the aggregate lags-only DiD estimate is 0.0645 (HAC standard error 0.0306). Their difference is not statistically meaningful. Synthetic methods are valuable for the short aggregate panel: synthetic DiD gives 0.0760, while conventional synthetic control gives $-0.0144$ and has weak inferential support. The disagreement is reported rather than averaged away.
 
-The main empirical result is that beef prices increased after the announcement. In the preferred difference-in-differences specification, the estimated average treatment effect on the treated for beef is 0.0583 log points, with a standard error of 0.0157. Interpreted as a percentage price change, this is approximately 6.0 percent. The event-study evidence for beef shows no statistically significant individual pre-period coefficient at the 95 percent level, whereas the other treated meat categories fail the same pre-trend screen. For that reason, the main analysis focuses on beef.\footnote{The pipeline also estimates effects for pork, lamb/sheep/goat, mixed livestock products, dairy cattle, and aggregate treated products. These estimates are useful diagnostics and appendix material, but the pre-period evidence does not support treating them as the main causal estimates.}
+The second contribution is a literature-based calibration that does not privilege a single SCC study. I harmonize one preferred global total-SCC estimate per paper to 2024 dollars. Estimates reported for years other than 2030 enter when the paper does not imply a time path, in which case the estimate is treated as time-invariant. Published uncertainty ranges are retained and propagated through a hierarchical paper bootstrap. This produces a ten-paper mean of USD 158/tCO2 and a wide interval of USD 77--363. The exercise is a transparent synthesis of heterogeneous studies, not a claim that their model ranges are conventional sampling confidence intervals.
 
-The second contribution is a simple carbon-price calibration. \citet{nordhaus2017} reports a 2015 social cost of carbon of USD 31.2/tCO2 in 2010 dollars and a real growth rate of 3 percent per year through 2050. Growing that value to 2030 and converting it to 2024 dollars gives a benchmark of about USD 69.9/tCO2e. Denmark's announced gross tax of DKK 300/tCO2e is about USD 43.5/tCO2e at the 2024 average exchange rate, leaving an internally consistent gap of about USD 26.4/tCO2e. The DiD beef announcement effect is equivalent to about USD 23.2/tCO2e. Since the gap-implied log effect lies inside the estimated confidence interval, these data do not reject the hypothesis that announcement pass-through already compensates the gap at the 95 percent level. Point estimates are still policy-relevant: if policymakers wished the future statutory tax plus announcement-induced pass-through to exactly match the inflation-adjusted Nordhaus benchmark, the DiD ATT implies a statutory gross tax of about USD 46.8/tCO2e, or DKK 322/tCO2e. If anticipatory beef price effects continue to increase, as the event-study path suggests, the beef-specific tax may instead need to be lowered.
+The paper focuses exclusively on beef. The estimand is especially relevant because cattle are the most emissions-intensive major livestock product and prominent in the Danish agreement. Restricting attention to a pre-specified commodity also avoids selecting among a large family of weakly identified commodity-specific estimates. The remainder of the paper describes the two data sources and classification rules, sets out the four estimators, reports cross-source results, and uses the SCC synthesis for a back-of-the-envelope policy calibration.
 
-The broader interpretation is that policy announcements may themselves be economically powerful instruments. The logic is close to the celebrated ``whatever it takes'' moment in monetary policy: a credible public commitment can shift expectations before the full policy instrument is deployed \citep{draghi2012}. That analogy is not exact, but it highlights the same mechanism. If firms and consumers react to credible future policy, some intended price and expectation effects may occur before the statutory instrument takes effect. That does not eliminate the need for policy; rather, it gives policymakers a reason to measure anticipatory pass-through and recalibrate future policy in light of observed market adjustment.
+\section{Data and Panel Construction}\label{sec:data}
+\subsection{Scraped grocery-price microdata}
+The first source is the Danish grocery-price history assembled by dagligepriser.dk. A raw record identifies a store, product, product description, date, price, and---when available---package quantity and unit. I retain observations with a valid positive price and date. Repeated observations within a product--store--month are averaged, so the unit of observation for the main panel is a product--store pair in a calendar month.
 
-\section{Data and Panel Construction}
-\label{sec:data}
+Prices are converted to DKK per kilogram for mass units and DKK per litre for volume units. Reported package quantities take precedence. When quantity or unit fields are absent, the procedure searches the product description for a number followed by kg, g, litre, ml, or cl. Grams, millilitres, and centilitres are converted to their base units before dividing price by quantity. Items measured only per piece and observations with missing, non-positive, or unsupported quantities are excluded. Because normalized prices remain right-skewed, estimation uses their natural logarithm and Table~\ref{tab:descriptives} reports medians and quartiles as well as means.
 
-The analysis uses Danish grocery price histories from the dagligepriser.dk data ecosystem. The pipeline downloads product-level price histories, expands each price-history entry into a product-date observation, classifies products by commodity, and normalizes prices to DKK per kilogram or liter when source quantity information permits. Rows with failed price normalization are excluded from the main estimating sample. The main sample is food-only and excludes unknown commodity classifications.
+Product classification is deterministic and auditable. Names and source categories are case-folded; Danish characters and common encoding variants are transliterated; and short tokens are matched at word boundaries. Beef is assigned when the normalized text contains an English or Danish beef term, including \emph{beef}, \emph{okse}, \emph{oksek\o d}, \emph{kv\ae g}, \emph{kalv}, \emph{veal}, \emph{entrec\^ote}, or \emph{roastbeef}. The comparison group consists of classified foods not exposed as livestock treatment items: poultry; fish and seafood; eggs; fruit and vegetables; grains and bread; plant oils; sweets and snacks; beverages; plant proteins; and pantry goods. Pork, lamb, sheep, goat, dairy, and products matching more than one livestock category are never controls for beef. Prepared foods containing terms such as pizza, lasagne, ready meal, or sandwich are flagged as ambiguous when a livestock term is present. Non-food keywords are removed before commodity matching, and unmatched products are excluded rather than silently assigned to the control group.
 
-The baseline panel is monthly. The event date is June 24, 2024; in the monthly panel, June 2024 is treated as the event period and excluded from the pre/post comparison. The estimation unit is a product-store pair. Units are retained if they have at least one pre-event and one post-event observation. This inclusion rule preserves the large grocery cross-section while avoiding the extreme attrition that would result from requiring every product-store pair to appear in every month.
+The event month, June 2024, is excluded from both pre and post. The scraped panel begins in November 2023 and the analysis retains post-announcement months through September 2025, for 23 observed months in total. Relative month 16, October 2025, and all later months are excluded. The Danish Veterinary and Food Administration records a bovine viral diarrhoea (BVD) outbreak from October 2025 to May 2026 in three cattle holdings and notes that BVD can reduce appetite and milk output \citep{dvfaBVD}. A veterinary report states that surveillance detected the affected large dairy herd in September 2025 \citep{dvt2025}. Ending in September does not prove that all anticipatory disease effects are absent, but it excludes the officially dated outbreak interval and avoids mechanically attributing the subsequent cattle-specific supply disturbance to the tax announcement.
 
-Treatment follows the institutional design of the policy. Beef, pork, lamb/sheep/goat, mixed livestock products, and dairy cattle are coded as livestock-exposed treated groups in the main pipeline. Non-meat foods, fish, and seafood serve as controls. The paper focuses on beef because it is both a prominent target of the policy announcement and the only meat category with a positive post-announcement estimate and acceptable pre-period event-study diagnostics.
+\subsection{Official aggregate consumer prices}
+The second source is Statistics Denmark's monthly PRIS01 consumer price index by COICOP 2018 product class. Beef and veal (011221) is the treated series. Candidate donors are terminal food and non-alcoholic-beverage classes with complete coverage in the estimation window. I exclude pork; lamb, sheep, and goat; dried or salted meat; offal; meat preparations; milk, yoghurt, cheese, cream, dairy desserts, other dairy products; and butter and other dairy fats. These categories are either directly livestock-exposed or sufficiently close to treated animal products that they could absorb the same announcement response. The resulting balanced panel contains beef and 52 donors.
 
-\section{Identification Strategy}
-\label{sec:identification}
+The official-data window runs from April 2023 through September 2025: 15 months before July 2024 and 15 months from July 2024 onward. June 2024 is the final pre-treatment reference month for event-study purposes. This symmetric window prevents the aggregate estimates from being driven by unequal pre- and post-support and, like the microdata restriction, ends before the official October 2025 BVD outbreak interval.
 
-The preferred specification is a two-way fixed-effects difference-in-differences model:
-\begin{equation}
-\log(p_{it}) =
-\alpha_i + \lambda_t
-+ \beta_g \left(\mathbf{1}\{g_i=\text{beef}\} \times \text{Post}_t\right)
-+ \varepsilon_{it},
-\end{equation}
-where \(p_{it}\) is normalized price for product-store unit \(i\) in month \(t\), \(\alpha_i\) are unit fixed effects, and \(\lambda_t\) are month fixed effects. For commodity-specific estimates, the sample contains the focal treated commodity and untreated food controls only; other treated livestock commodities are excluded from that commodity's regression. Standard errors are clustered by product-store unit. The identifying assumption is that, absent the announcement, beef prices would have followed the same time path as the control food products after accounting for product-store and period fixed effects.
+\section{Empirical Strategy}\label{sec:identification}
+The microdata DiD is
+\begin{equation}\log p_{it}=\alpha_i+\lambda_t+\beta(Beef_i\times Post_t)+\varepsilon_{it},\end{equation}
+where $i$ indexes product--store pairs, $\alpha_i$ are product--store fixed effects, and $\lambda_t$ are month fixed effects. Standard errors are clustered by product--store. The event study replaces the post indicator with relative-month interactions and omits the month immediately preceding the announcement.
 
-I assess this assumption with an event-study design:
-\begin{equation}
-\log(p_{it}) =
-\alpha_i + \lambda_t
-+ \sum_{\tau \neq -1} \delta_{\tau}
-\left(\mathbf{1}\{g_i=\text{beef}\} \times \mathbf{1}\{\text{RelativeTime}_t=\tau\}\right)
-+ \varepsilon_{it}.
-\end{equation}
-The omitted period is \(\tau=-1\), which is plotted as a zero estimate with no confidence interval. The beef pre-period coefficients are small relative to the post-period movement and pass the individual 95 percent pre-trend screen.
+The official-data lags-only DiD preserves the earlier specification. For each month, I subtract the unweighted mean log CPI of the 52 donors from log beef CPI and regress this gap on the post indicator. Newey--West standard errors use two lags. The corresponding official event study interacts beef with month indicators, controls for calendar month and three- and four-digit COICOP categories, and uses heteroskedasticity-robust standard errors.
 
-As a robustness check, I also estimate synthetic difference-in-differences \citep{arkhangelsky2021synthetic}. The SDiD estimator constructs unit weights to match the treated pre-period path and time weights to adjust pre-period imbalance. This estimator is applied to complete commodity-store units rather than the full product-store panel, because the weighting step requires a rectangular panel. The resulting beef estimate is larger than the DiD estimate, but its confidence interval is wide, reflecting the reduction to 11 complete commodity-store units.
+The synthetic-control estimator chooses donor weights to match beef's 12 lagged CPI values and the three- and four-digit category indicators. Its ATT is the average post-period difference between treated and synthetic series. Inference is a space-placebo test that sequentially treats each donor as exposed and compares post/pre RMSPE ratios. Synthetic DiD follows \citet{arkhangelsky2021synthetic} and uses placebo inference. Both synthetic estimators operate on the balanced official panel. All DiD, SC, and SDiD estimations and their figures are produced in Stata; Python is limited to downloading, classifying, normalizing, panel construction, and orchestration.
 
-\section{Results}
-\label{sec:results}
+\section{Results}\label{sec:results}
+Table~\ref{tab:main} reports the four beef estimates. The scraped microdata DiD implies a 4.37-log-point increase (approximately 4.47 percent), with a clustered standard error of 1.63 percentage points. The official lags-only DiD gives 6.45 log points, with a Newey--West standard error of 3.06 points. An approximate equality test, treating the estimates as independent, gives
+\begin{equation*}z=\frac{0.0645-0.0437}{\sqrt{0.0306^2+0.0163^2}}=0.60\qquad(p\approx0.55).\end{equation*}
+Thus the official and scraped DiD estimates are statistically compatible. This agreement is encouraging for the external validity of the non-official price panel, although it cannot validate every scraped product or its level normalization.
 
-Table~\ref{tab:did} summarizes the main DiD estimates across treated categories. Beef is the central estimate for the paper: the coefficient is 0.0583 with a standard error of 0.0157, statistically significant at the 1 percent level. The implied price increase is \(\exp(0.0583)-1=6.0\) percent.
+\begin{table}[htbp]
+\centering\caption{Estimated effect of the livestock-tax announcement on beef prices}\label{tab:main}
+\small
+\begin{tabular}{lcccc}\toprule
+ & (1) & (2) & (3) & (4) \\\midrule
+ATT & 0.0437*** & 0.0645** & $-0.0144$ & 0.0760 \\
+ & (0.0163) & \{0.0306\} & [0.811] & [0.115] \\\midrule
+Observations & 151,933 & 30 & 1,590 & 1,590 \\
+Units & 16,912 & 53 & 53 & 53 \\
+Periods & 23 & 30 & 30 & 30 \\
+Pre-treatment average & 158.54 & 84.88 & 84.88 & 84.88 \\
+$R^2$ & 0.961 & --- & --- & --- \\
+Time window & 2023m11--2025m9 & 2023m4--2025m9 & 2023m4--2025m9 & 2023m4--2025m9 \\
+Lags only & No & Yes & No & No \\
+Covariates & No & No & Yes & No \\\bottomrule
+\end{tabular}
+\begin{minipage}{0.98\linewidth}\small
+\textit{Source:} dagligepriser.dk (column 1); Statistics Denmark, PRIS01 (columns 2--4).\par
+\textit{Notes:} The outcome in column 1 is log normalized product price; its DiD includes product--store and month fixed effects. Parentheses contain standard errors clustered by product--store. Column 2 applies the unchanged lags-only aggregate DiD to the log CPI gap between beef and the donor mean; braces contain Newey--West HAC standard errors with two lags. Column 3 is synthetic control with 12 lagged outcomes and three- and four-digit COICOP category covariates. Column 4 is synthetic DiD. Brackets contain space-placebo p-values in columns 3 and 4. The pre-treatment average is DKK/kg in column 1 and the CPI index in columns 2--4. Other livestock-exposed products are excluded from every beef control group. *** $p<0.01$, ** $p<0.05$, * $p<0.10$.
+\end{minipage}\end{table}
 
-\input{../outputs/tables/did/did_results.tex}
+\begin{table}[htbp]
+\centering\caption{Descriptive statistics for the scraped estimation sample}\label{tab:descriptives}
+\small
+\begin{tabular}{llrrrrrr}\toprule
+Sample & Variable & Observations & Mean & SD & P25 & Median & P75 \\\midrule
+All & Normalized price & 151,933 & 518.19 & 4,337.95 & 51.84 & 100.00 & 183.33 \\
+All & Log normalized price & 151,933 & 4.628 & 1.184 & 3.948 & 4.605 & 5.211 \\
+Beef & Normalized price & 5,123 & 265.64 & 1,925.50 & 70.00 & 127.00 & 209.75 \\
+Beef & Log normalized price & 5,123 & 4.773 & 0.917 & 4.248 & 4.844 & 5.346 \\
+Controls & Normalized price & 146,810 & 527.00 & 4,398.05 & 51.18 & 100.00 & 182.14 \\
+Controls & Log normalized price & 146,810 & 4.623 & 1.192 & 3.935 & 4.605 & 5.205 \\\midrule
+All & Months per product--store & 16,912 & 8.98 & 6.26 & 3 & 8 & 14 \\
+Beef & Months per product--store & 592 & 8.65 & 5.79 & 4 & 7.5 & 13 \\
+Controls & Months per product--store & 16,320 & 9.00 & 6.27 & 3 & 8 & 15 \\\bottomrule
+\end{tabular}
+\begin{minipage}{0.98\linewidth}\small
+\textit{Source:} dagligepriser.dk.\par
+\textit{Notes:} Prices are normalized to DKK per kilogram or litre. The large mean--median difference reflects a right-skewed distribution across heterogeneous foods; the estimations use log normalized prices. The observation count in the final three rows is the number of product--store units.
+\end{minipage}\end{table}
 
-Figure~\ref{fig:event_beef} shows the beef event study. The pre-period estimates do not display a clear differential trend and the omitted period \(\tau=-1\) is shown at zero. The post-period path rises over time, with especially large effects in the latest months.
+The synthetic estimates emphasize the remaining uncertainty. Conventional SC is negative and close to zero, with a space-placebo p-value of 0.81. Its pre-treatment path is visibly less satisfactory than the SDiD fit shown in the appendix, so it should not be read as overturning the two DiD results. Aggregate SDiD is positive at 0.076 but its 95 percent interval, $[-0.018,0.170]$, includes zero. The four columns therefore support a narrower conclusion than a single preferred estimate would: the two DiD designs point to a modest positive response, while flexible synthetic reweighting is too unstable in this small aggregate panel to determine the magnitude precisely.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/did/event_study_beef.png}
-\caption{Beef event-study estimates}
-\label{fig:event_beef}
+Figure~\ref{fig:event} compares event-time patterns. In the official panel, coefficients are near zero throughout the 15-month pre-period and then rise gradually, especially from the sixth post month. In the scraped panel, the shorter pre-period is noisier but the pre-announcement coefficients are jointly insignificant ($p=0.78$). The post coefficients are generally positive. The difference in smoothness is expected: official CPI aggregates many price quotes, whereas the scraped panel contains entry, exit, heterogeneous packaging, and intermittent product availability.
+
+\begin{figure}[htbp]\centering
+\begin{minipage}{0.49\linewidth}\centering\textbf{A. Official aggregate CPI}\par\smallskip\includegraphics[width=\linewidth]{../outputs/figures/stata/aggregate_event_study.png}\end{minipage}\hfill
+\begin{minipage}{0.49\linewidth}\centering\textbf{B. Scraped product--store prices}\par\smallskip\includegraphics[width=\linewidth]{../outputs/figures/stata/micro_event_study.png}\end{minipage}
+\caption{Beef event-study estimates across data sources}\label{fig:event}
+\figurenotes{Statistics Denmark, PRIS01 (Panel A); dagligepriser.dk (Panel B).}{Points are relative-month coefficients and bars are 95 percent confidence intervals. Panel A uses heteroskedasticity-robust standard errors and omits June 2024. Panel B uses product--store clustered standard errors and omits relative month $-1$. Both samples end in September 2025, before the official October 2025 BVD outbreak interval.}
 \end{figure}
 
-The SDiD robustness check in Table~\ref{tab:sdid} gives a beef estimate of 0.1828 with a standard error of 0.0926. Although this estimate is larger than the DiD estimate, it is much less precise. The SDiD confidence interval overlaps the DiD confidence interval, so the data do not allow us to rule out equality of the two estimates at conventional levels. The imprecision is substantively important: the SDiD design keeps only complete commodity-store units, reducing the beef SDiD sample to 352 observations and 11 units.
+\section{SCC Synthesis and Policy Calibration}\label{sec:calibration}
+The calibration uses one preferred total global SCC from each eligible paper. Dollar values are inflated to 2024 US dollars and values per ton of carbon are converted to tons of CO2. Barrage and Nordhaus's 2030 value is log-interpolated between their published 2025 and 2050 path points. For the other eligible studies, a reported value at another date is treated as constant when the source does not provide a time path. This implements the interpretation that an otherwise undated estimate is a level rather than evidence that it should be discarded.
 
-\input{../outputs/tables/sdid/synthetic_did_results.tex}
+The equal-paper-weight point mean across ten studies is USD 157.96/tCO2. To reflect both between-paper dispersion and reported within-paper variability, each bootstrap replication samples ten papers with replacement and, when a paper reports a positive range, draws a lognormal value calibrated to that range's stated coverage. Ricke et al.'s 66 percent model range and Rennert et al.'s 5th--95th quantiles retain those coverages; H\"ansel et al.'s ethical-parameter range is conservatively calibrated as a 95 percent range. The resulting interval is USD 77.22--363.40/tCO2. These ranges mix model, parameter, and distributional uncertainty, so the interval is best viewed as a structured sensitivity envelope rather than a frequentist confidence interval for a common structural parameter.
 
-\section{Carbon-Price Calibration}
-\label{sec:calibration}
+Figure~\ref{fig:scc} shows each preferred estimate after mapping it into the additional log beef-price increase required above the announced DKK 300/tCO2 tax. Filled points enter the pool. Hollow points are external comparisons: a partial mortality SCC and a synthesis that could double count the underlying literature. The triangle is a lower bound and also remains external. The wide intervals reveal why retaining study-level variation materially changes the calibration.
 
-The calibration asks what statutory tax would exactly match the Nordhaus benchmark once the observed announcement-induced price increase is taken into account. Let \(\widehat{\tau}\) denote an estimated beef log price effect and \(\bar{p}_{pre}\) the average pre-announcement beef price in DKK/kg. The beef carbon intensity is set to 59.6 kg CO2e/kg product, using the OECD agri-food carbon-footprint report's presentation of the \citet{poore2018} beef-herd benchmark \citep{oecd2025}. The announcement-equivalent carbon price is:
-\begin{equation}
-\widehat{SCC}_{announce}
-=
-\frac{\left[\bar{p}_{pre}\left(\exp(\widehat{\tau})-1\right)/6.8953\right]\times 1000}{59.6}.
-\end{equation}
-The statutory tax that exactly reaches the benchmark is:
-\begin{equation}
-Tax^*
-=
-SCC_{Nordhaus,2030}^{2024USD}
--
-\widehat{SCC}_{announce}.
-\end{equation}
-
-\citet{nordhaus2017} reports USD 31.2/tCO2 for 2015 in 2010 dollars and a real growth rate of 3 percent per year. Therefore:
-\begin{equation}
-SCC_{Nordhaus,2030}^{2024USD}
-=
-31.2(1.03)^{15}\frac{313.689}{218.056}
-=
-69.9.
-\end{equation}
-The announced Danish gross tax is \(300/6.8953=43.5\) USD/tCO2e, so the benchmark gap is 26.4 USD/tCO2e.
-
-Figure~\ref{fig:calibration} compares the DiD and SDiD beef estimates to the log price increase needed to close that gap. The reference value lies inside both confidence intervals. Therefore, the data do not reject the hypothesis that the anticipatory beef price effect already compensates the tax gap at the 95 percent level. This is the main inferential takeaway. The reverse-engineered point estimate should be read as a policy-calibration exercise rather than as a statistically sharp recommendation: using the preferred DiD estimate, the announcement effect is equivalent to 23.2 USD/tCO2e, so the tax that exactly matches the inflation-adjusted Nordhaus benchmark is 46.8 USD/tCO2e, or DKK 322/tCO2e. This is slightly above, not below, the announced DKK 300/tCO2e gross tax.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.72\linewidth]{../outputs/figures/calibration/beef_att_policy_calibration.png}
-\caption{Beef ATT estimates and carbon-price-gap reference}
-\label{fig:calibration}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.98\linewidth]{../outputs/figures/stata/scc_meta_forest.png}
+\caption{SCC estimates and implied beef-price gaps}\label{fig:scc}
+\figurenotes{The studies listed in Appendix Table~\ref{tab:scc}.}{Each point maps a preferred SCC estimate into the log beef-price increase needed in addition to the announced Danish tax, using 59.6 kg CO2e per kg of beef, 6.8953 DKK/USD, and the scraped pre-announcement beef price. Source ranges preserve their original meaning. Filled circles enter the equal-paper-weight pool; hollow circles and the lower-bound triangle do not. The pooled diamond and line show the hierarchical mean and its 95 percent interval.}
 \end{figure}
 
-The latest event-study estimate gives a different policy implication as a point-estimate exercise. At relative period 24, the beef estimate is 0.1924. This corresponds to 81.9 USD/tCO2e, exceeding the inflation-adjusted Nordhaus benchmark. The literal reverse-engineered tax is therefore negative, \(-11.9\) USD/tCO2e, or \(-82\) DKK/tCO2e. With a nonnegative tax constraint, the implied statutory tax is zero. The confidence interval for this latest-period estimate also contains the gap reference, so the policy conclusion should remain cautious. Still, if beef pass-through continues to rise, then the product-specific tax needed to align beef prices with the benchmark would likely be lower than the announced gross rate.
+Let $\bar p=158.54$ be the mean pre-announcement beef price in DKK/kg, $e=6.8953$ DKK/USD, and $q=59.6$ kg CO2e/kg beef. For SCC value $s$ and announced tax $T=300$ DKK/tCO2, the additional log price required is
+\begin{equation}g(s)=\log\left[\frac{\bar p+(se-T)q/1000}{\bar p}\right].\end{equation}
+At the pooled mean, $g(157.96)=0.260$, with a pooled interval of 0.084--0.604. Figure~\ref{fig:policy} compares that benchmark with all four econometric estimates. The micro DiD confidence interval ends at 0.076, just below the pooled interval's lower endpoint. The aggregate DiD and SDiD intervals overlap its lower tail; SC does not suggest a positive response and has no conventional confidence interval because inference is placebo-based.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/calibration/event_study_beef_policy_calibration.png}
-\caption{Beef event-study estimates and carbon-price-gap reference}
-\label{fig:event_calibration}
+\begin{figure}[htbp]\centering
+\includegraphics[width=0.98\linewidth]{../outputs/figures/stata/beef_policy_calibration.png}
+\caption{Econometric estimates and the meta-analytical carbon-price gap}\label{fig:policy}
+\figurenotes{Statistics Denmark, PRIS01; dagligepriser.dk; the studies listed in Appendix Table~\ref{tab:scc}.}{Dots are the four ATT estimates in Table~\ref{tab:main}. Error bars are 95 percent intervals where conventional or placebo standard errors are available; SC is reported as a point with its placebo p-value in Table~\ref{tab:main}. The dashed line is the log beef-price gap implied by the pooled SCC mean, and the grey band maps its hierarchical 95 percent interval into price space.}
 \end{figure}
 
-\section{Discussion and Conclusion}
-\label{sec:conclusion}
+The back-of-the-envelope magnitudes are informative but not a welfare calculation. The micro DiD point estimate corresponds to about DKK 7.1/kg at the pre-period mean, or USD 17/tCO2. Combining this announcement-equivalent signal with the announced gross tax gives roughly USD 61/tCO2, well below the USD 158 pooled mean. Matching the mean mechanically would require a remaining statutory component of about USD 141/tCO2, or DKK 970/tCO2, before deductions and incidence adjustments. This calculation assumes a common beef carbon intensity and full translation of a product-price change into a carbon-price equivalent; neither assumption is structural.
 
-The evidence suggests that Denmark's livestock-tax announcement affected beef prices before the tax was implemented. This is consistent with anticipatory pass-through: firms and consumers may update expectations, contracts, and pricing strategies when a future carbon price becomes credible. Such anticipation complicates policy evaluation because the announcement and implementation stages are not cleanly separable.
+\section{Discussion and Conclusion}\label{sec:conclusion}
+Two independent DiD designs find a modest increase in beef prices following Denmark's announcement. Their statistical compatibility is notable because the sources differ sharply in provenance, sampling, and aggregation. It suggests that carefully classified scraped prices can recover economically relevant aggregate movements faster and at much greater cross-sectional scale than official indices alone. That is evidence in favor of reliability and external validity for this application, not a blanket endorsement of non-official data: product coverage is selected, price normalization is noisy in levels, and product availability is intermittent.
 
-For policy design, the central lesson is not that announcements substitute for taxes. Rather, announcements can generate measurable market adjustment that should be incorporated into later calibration. Under the preferred DiD ATT, the announcement-induced beef price effect covers a large share of the gap between the announced Danish tax and the inflation-adjusted Nordhaus benchmark. Because the gap lies inside the ATT confidence interval, however, we cannot rule out exact compensation at the 95 percent level. Under the latest event-study point estimate, the announcement effect alone exceeds the benchmark, implying a nonnegative tax floor of zero. These two scenarios should be distinguished carefully: the ATT is the more stable summary for policy calibration, while the latest-period estimate is useful as a warning that anticipatory effects may grow over time.
+The synthetic estimators prevent an overly tidy conclusion. Aggregate SDiD is positive but imprecise, and SC is close to zero with poor placebo support. With only 53 official series and 15 pre-treatment months, donor-weight selection is intrinsically fragile. The preferred interpretation therefore rests on triangulation: the two DiD estimates agree, their event studies do not show differential pre-trends, and the direction is supported by SDiD, while the SC discrepancy remains a material caveat.
 
-Several limitations remain. Product classification is deterministic and should receive manual review for mixed meat products. The analysis studies supermarket prices rather than farm-level emissions or producer incidence. Finally, the carbon-price calibration is an accounting exercise, not a structural model of pass-through. Even so, it illustrates a useful policy principle: credible announcements can be policy instruments in their own right, and observing the market response to an announcement can help policymakers adjust the eventual statutory instrument before implementation. This contribution is especially useful for commodity-specific policy design. In the current evidence, beef is the only product for which causal interpretation is supported by both an observed effect and acceptable pre-trend diagnostics; for other livestock commodities, a uniform tax may not generate the same retail-price pass-through.
+The SCC synthesis also changes the policy conclusion. Nordhaus's 2017 value is one informative benchmark, but it is not treated as ground truth. Including time-invariant estimates from the wider literature raises the pooled mean and, once published ranges are propagated, produces substantial uncertainty. The announcement effect is economically meaningful but does not close the central pooled carbon-price gap. Yet the lower end of the pooled range overlaps some aggregate econometric intervals, so the evidence does not identify a single corrective tax with useful precision.
+
+Three limitations are central. First, the announcement was national and there is no untreated Denmark; identification is relative to other food prices and depends on the absence of beef-specific shocks before October 2025. Second, text rules and quantity parsing can misclassify products or create extreme normalized levels, although logs, fixed effects, explicit exclusion rules, and agreement with official CPI mitigate this concern. Third, SCC papers estimate heterogeneous objects under different discounting, damage, and uncertainty assumptions. The meta-analysis represents that heterogeneity rather than resolving it. Credible announcements can move prices before implementation, but later tax design should be updated using observed incidence, farm-level emissions, and post-implementation evidence.
 
 \begin{thebibliography}{99}
-
-\bibitem[Arkhangelsky et~al.(2021)]{arkhangelsky2021synthetic}
-Arkhangelsky, D., Athey, S., Hirshberg, D.~A., Imbens, G.~W., and Wager, S. (2021).
-\newblock Synthetic difference-in-differences.
-\newblock \emph{American Economic Review}, 111(12):4088--4118.
-
-\bibitem[Danish Government(2024)]{danishgovernment2024}
-Danish Government (2024).
-\newblock Regeringen og parterne i gron trepart indgar historisk aftale om et gront Danmark.
-\newblock \url{https://regeringen.dk/aktuelt/nyheder/2024/regeringen-og-parterne-i-groen-trepart-indgaar-historisk-aftale-om-et-groent-danmark/}.
-
-\bibitem[Draghi(2012)]{draghi2012}
-Draghi, M. (2012).
-\newblock Verbatim of the remarks made by Mario Draghi.
-\newblock European Central Bank.
-\newblock \url{https://www.ecb.europa.eu/press/key/date/2012/html/sp120726.en.html}.
-
-\bibitem[Nordhaus(2017)]{nordhaus2017}
-Nordhaus, W.~D. (2017).
-\newblock Revisiting the social cost of carbon.
-\newblock \emph{Proceedings of the National Academy of Sciences}, 114(7):1518--1523.
-
-\bibitem[OECD(2025)]{oecd2025}
-OECD (2025).
-\newblock Measuring carbon footprints of agri-food products.
-\newblock OECD Publishing.
-
-\bibitem[Poore and Nemecek(2018)]{poore2018}
-Poore, J. and Nemecek, T. (2018).
-\newblock Reducing food's environmental impacts through producers and consumers.
-\newblock \emph{Science}, 360(6392):987--992.
-
+\bibitem[Arkhangelsky et~al.(2021)]{arkhangelsky2021synthetic} Arkhangelsky, D., Athey, S., Hirshberg, D.~A., Imbens, G.~W., and Wager, S. (2021). Synthetic difference-in-differences. \emph{American Economic Review}, 111(12):4088--4118.
+\bibitem[Barrage and Nordhaus(2024)]{barrage2024} Barrage, L. and Nordhaus, W.~D. (2024). Policies, projections, and the social cost of carbon: Results from the DICE-2023 model. \emph{PNAS}, 121(13):e2312030121.
+\bibitem[Bilal and K\"anzig(2026)]{bilal2026} Bilal, A. and K\"anzig, D.~R. (2026). The macroeconomic impact of climate change: Global versus local temperature. \emph{Quarterly Journal of Economics}, 141(2):889--944.
+\bibitem[Cai et~al.(2016)]{cai2016} Cai, Y., Lenton, T.~M., and Lontzek, T.~S. (2016). Risk of multiple interacting tipping points should encourage rapid CO2 emission reduction. \emph{Nature Climate Change}, 6:520--525.
+\bibitem[Cai and Lontzek(2019)]{cailontzek2019} Cai, Y. and Lontzek, T.~S. (2019). The social cost of carbon with economic and climate risks. \emph{Journal of Political Economy}, 127(6):2684--2734.
+\bibitem[Carleton et~al.(2022)]{carleton2022} Carleton, T. et~al. (2022). Valuing the global mortality consequences of climate change accounting for adaptation costs and benefits. \emph{Quarterly Journal of Economics}, 137(4):2037--2105.
+\bibitem[Danish Government(2024)]{danishgovernment2024} Danish Government (2024). Regeringen og parterne i gr\o n trepart indg\aa r historisk aftale om et gr\o nt Danmark. \url{https://regeringen.dk/aktuelt/nyheder/2024/regeringen-og-parterne-i-groen-trepart-indgaar-historisk-aftale-om-et-groent-danmark/}.
+\bibitem[Danish Veterinary and Food Administration(2026)]{dvfaBVD} Danish Veterinary and Food Administration (2026). Bovin virus diarr\'e (BVD). \url{https://foedevarestyrelsen.dk/dyr/dyresundhed/dyresygdomme/bovin-virus-diarre-bvd}.
+\bibitem[Dietz et~al.(2021)]{dietz2021} Dietz, S., Rising, J., Stoerk, T., and Wagner, G. (2021). Economic impacts of tipping points in the climate system. \emph{PNAS}, 118(34):e2103081118.
+\bibitem[Dansk Veterin\ae rtidsskrift(2025)]{dvt2025} Dansk Veterin\ae rtidsskrift (2025). Kampen mod de usynlige fjender hos kv\ae g. \url{https://dvt.ddd.dk/bladarkiv/2025/nr-7/kampen-mod-de-usynlige-fjender-hos-kvaeg/}.
+\bibitem[Golosov et~al.(2014)]{golosov2014} Golosov, M., Hassler, J., Krusell, P., and Tsyvinski, A. (2014). Optimal taxes on fossil fuel in general equilibrium. \emph{Econometrica}, 82(1):41--88.
+\bibitem[H\"ansel et~al.(2020)]{hansel2020} H\"ansel, M.~C. et~al. (2020). Climate economics support for the UN climate targets. \emph{Nature Climate Change}, 10:781--789.
+\bibitem[Moore et~al.(2024)]{moore2024} Moore, F.~C. et~al. (2024). Synthesis of evidence yields high social cost of carbon due to structural model variation and uncertainties. \emph{PNAS}, 121(52):e2410733121.
+\bibitem[Nordhaus(2017)]{nordhaus2017} Nordhaus, W.~D. (2017). Revisiting the social cost of carbon. \emph{PNAS}, 114(7):1518--1523.
+\bibitem[Pindyck(2019)]{pindyck2019} Pindyck, R.~S. (2019). The social cost of carbon revisited. \emph{Journal of Environmental Economics and Management}, 94:140--160.
+\bibitem[Poore and Nemecek(2018)]{poore2018} Poore, J. and Nemecek, T. (2018). Reducing food's environmental impacts through producers and consumers. \emph{Science}, 360(6392):987--992.
+\bibitem[Rennert et~al.(2022)]{rennert2022} Rennert, K. et~al. (2022). Comprehensive evidence implies a higher social cost of CO2. \emph{Nature}, 610:687--692.
+\bibitem[Ricke et~al.(2018)]{ricke2018} Ricke, K., Drouet, L., Caldeira, K., and Tavoni, M. (2018). Country-level social cost of carbon. \emph{Nature Climate Change}, 8:895--900.
+\bibitem[van den Bremer and van der Ploeg(2021)]{vandenbremer2021} van den Bremer, T.~S. and van der Ploeg, F. (2021). The risk-adjusted carbon price. \emph{American Economic Review}, 111(9):2782--2810.
 \end{thebibliography}
 
 \appendix
-
+\renewcommand{\thetable}{A\arabic{table}}\renewcommand{\thefigure}{A\arabic{figure}}\setcounter{table}{0}\setcounter{figure}{0}
 \section{Additional Results}
-\label{sec:appendix}
+\begin{landscape}
+\begin{table}[htbp]\centering\caption{Preferred SCC benchmarks and pooling status}\label{tab:scc}
+\small
+\begin{tabular}{lllrrrl}\toprule
+Study & Method & Reference year & 2024 USD/tCO2 & Low & High & Pool status \\\midrule
+Cai et al. (2016) & Stochastic IAM & 2015 & 153.5 & --- & --- & Included \\
+Nordhaus (2017) & DICE IAM & 2030 & 74.2 & --- & --- & Included \\
+Ricke et al. (2018) & Spatial IAM & 2020 & 599.9 & 254.6 & 1,158.0 & Included \\
+Cai--Lontzek (2019) & Stochastic IAM & Undated & 43.4 & --- & --- & Included \\
+Pindyck (2019) & Expert elicitation & Undated & 107.0 & --- & --- & Included \\
+H\"ansel et al. (2020) & Updated DICE & 2020 & 133.7 & 22.5 & 688.2 & Included \\
+van den Bremer--van der Ploeg (2021) & Asset-pricing IAM & 2015 & 52.7 & --- & --- & Included \\
+Dietz et al. (2021) & Meta-analytic IAM & 2020 & 78.5 & --- & --- & Included \\
+Rennert et al. (2022) & Modular IAM & 2020 & 224.2 & 53.3 & 500.6 & Included \\
+Barrage--Nordhaus (2024) & DICE-2023 & 2030 & 112.5 & --- & --- & Included \\
+Carleton et al. (2022) & Mortality damages & 2020 & 21.0 & $-30.3$ & 65.8 & Partial; external \\
+Moore et al. (2024) & Literature synthesis & 2020 & 343.0 & 38.8 & 1,059.3 & Double-count risk; external \\
+Bilal--K\"anzig (2026) & Macro empirical & 2024 & $>1,200$ & --- & --- & Lower bound; external \\\bottomrule
+\end{tabular}
+\begin{minipage}{0.98\linewidth}\small
+\textit{Source:} The studies listed in the first column.\par
+\textit{Notes:} Values are converted to 2024 US dollars per ton of CO2. One preferred global total-SCC estimate enters per eligible paper. Values at dates other than 2030 are treated as time-invariant when no within-paper path is reported. Barrage--Nordhaus is log-interpolated to 2030. Low and high retain their source-specific interpretation. The pooled mean gives equal weight to each included paper; partial estimates, a literature synthesis, and a lower bound are external comparisons.
+\end{minipage}\end{table}\end{landscape}
 
-This appendix reports diagnostic outputs for the broader treated sample. These results are useful for transparency and robustness, but the main causal and calibration discussion remains focused on beef because the other treated commodities do not jointly show the required pre-period diagnostics and post-announcement pattern.
+\begin{figure}[htbp]\centering\includegraphics[width=0.9\linewidth]{../outputs/figures/stata/micro_sdid.png}
+\caption{Scraped-data synthetic DiD: beef and synthetic control}\label{fig:a_micro_sdid}
+\figurenotes{dagligepriser.dk.}{Series are average log normalized prices for the treated beef commodity--store units and their Stata synthetic DiD control. The figure intentionally shows only the two series. The sample ends in September 2025.}\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/did/aggregate_trends.png}
-\caption{Aggregate treated and control price trends}
-\label{fig:aggregate_trends}
-\end{figure}
+\begin{figure}[htbp]\centering\includegraphics[width=0.9\linewidth]{../outputs/figures/stata/aggregate_sc.png}
+\caption{Official-data synthetic control: beef and synthetic control}\label{fig:a_sc}
+\figurenotes{Statistics Denmark, PRIS01.}{Series are log CPI for beef and veal and the Stata synthetic control over the symmetric 15-month pre/post window. The figure intentionally shows only the two series.}\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/did/event_study_pork.png}
-\caption{Pork event-study estimates}
-\label{fig:event_pork}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/did/event_study_dairy_cattle.png}
-\caption{Dairy cattle event-study estimates}
-\label{fig:event_dairy}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/did/event_study_mixed_livestock.png}
-\caption{Mixed livestock event-study estimates}
-\label{fig:event_mixed}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/did/event_study_lamb_sheep_goat.png}
-\caption{Lamb, sheep, and goat event-study estimates}
-\label{fig:event_lamb}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{../outputs/figures/sdid/synthetic_did_beef_trends.png}
-\caption{Synthetic DiD beef trends}
-\label{fig:sdid_beef}
-\end{figure}
-
+\begin{figure}[htbp]\centering\includegraphics[width=0.9\linewidth]{../outputs/figures/stata/aggregate_sdid.png}
+\caption{Official-data synthetic DiD: beef and synthetic control}\label{fig:a_sdid}
+\figurenotes{Statistics Denmark, PRIS01.}{Series are log CPI for beef and veal and the Stata synthetic DiD control over the symmetric 15-month pre/post window. The figure intentionally shows only the two series.}\end{figure}
 \end{document}
