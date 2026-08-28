@@ -75,7 +75,9 @@ where $p_{it}$ is the normalized price of product--store pair $i$ in month $t$; 
 
 The official-data lags-only DiD preserves the earlier specification. For each month, I subtract the unweighted mean log CPI of the 52 donors from log beef CPI and regress this gap on the post indicator. Newey--West standard errors use two lags. The corresponding official event study interacts beef with month indicators, controls for calendar month and three- and four-digit COICOP categories, and uses heteroskedasticity-robust standard errors.
 
-Synthetic DiD follows \citet{arkhangelsky2021synthetic}, jointly weighting donor series and pre-treatment periods to construct a comparison path for beef. It operates on the balanced official panel and uses placebo inference with 200 replications. All DiD and SDiD estimations and their figures are produced in Stata; Python is limited to downloading, classifying, normalizing, panel construction, and orchestration.
+Synthetic DiD follows \citet{arkhangelsky2021synthetic}, jointly weighting donor series and pre-treatment periods to construct a comparison path for beef. It operates on the balanced official panel and uses placebo inference with 200 replications.
+
+Both DiD designs require the retained control foods to be independent of beef with respect to the announcement: they must not be close substitutes or complements whose prices respond directly to the same news. This exclusion restriction may be strong in a general-equilibrium setting, because an announcement about livestock emissions can affect several food markets at once. A future country-level analysis will examine it more directly with synthetic-control and synthetic-DiD designs that treat Denmark as the exposed unit and use untreated countries as the donor pool. For the present study, the available diagnostic is that neither the control series nor the SDiD counterfactual shows a visible break after the announcement (Figure~\ref{fig:a_sdid} in the appendix).
 
 \section{Results}\label{sec:results}
 Table~\ref{tab:main} reports the three beef estimates. The scraped microdata DiD implies a 4.37-log-point increase (approximately 4.47 percent), with a clustered standard error of 1.63 percentage points. The official lags-only DiD gives 6.45 log points, with a Newey--West standard error of 3.06 points. An approximate equality test, treating the estimates as independent, gives
@@ -88,7 +90,7 @@ Thus the official and scraped DiD estimates are statistically compatible. This a
 \begin{tabular}{lccc}\toprule
  & (1) & (2) & (3) \\\midrule
 ATT & 0.0437*** & 0.0645** & 0.0760 \\
- & (0.0163) & \{0.0306\} & [0.115] \\\midrule
+ & (0.0163) & (0.0306) & (0.0481) \\\midrule
 Observations & 151,933 & 1,590 & 1,590 \\
 Units & 16,912 & 53 & 53 \\
 Periods & 23 & 30 & 30 \\
@@ -99,7 +101,7 @@ Lags only & No & Yes & No \\\bottomrule
 \end{tabular}
 \begin{minipage}{0.98\linewidth}\small
 \textit{Source:} dagligepriser.dk (column 1); Statistics Denmark, PRIS01 (columns 2--3).\par
-\textit{Notes:} The outcome in column 1 is log normalized product price; its DiD includes product--store and month fixed effects. Parentheses contain standard errors clustered by product--store. Column 2 applies the unchanged lags-only aggregate DiD to the log CPI gap between beef and the donor mean; braces contain Newey--West HAC standard errors with two lags. Its reported observation count is the 1,590 series--months in the official panel before cross-sectional averaging into 30 monthly gaps. Column 3 is synthetic DiD; brackets contain its placebo p-value. The pre-treatment average is DKK/kg in column 1 and the CPI index in columns 2--3. Other livestock-exposed products are excluded from every beef control group. *** $p<0.01$, ** $p<0.05$, * $p<0.10$.
+\textit{Notes:} The outcome in column 1 is log normalized product price; its DiD includes product--store and month fixed effects. Parentheses contain standard errors: product--store clustered in column 1; Newey--West HAC with two lags for the unchanged lags-only aggregate DiD in column 2; and the standard error reported by Stata's synthetic-DiD command under placebo inference with 200 replications in column 3. The observation count in column 2 is the 1,590 series--months in the official panel before cross-sectional averaging into 30 monthly gaps. The pre-treatment average is DKK/kg in column 1 and the CPI index in columns 2--3. Other livestock-exposed products are excluded from every beef control group. *** $p<0.01$, ** $p<0.05$, * $p<0.10$.
 \end{minipage}\end{table}
 
 Aggregate SDiD is positive at 0.076 but its 95 percent interval, $[-0.018,0.170]$, includes zero. The three columns therefore support a narrower conclusion than a single preferred estimate would: the two DiD designs point to a modest positive response, while synthetic reweighting is too imprecise in this small aggregate panel to determine the magnitude precisely.
@@ -130,6 +132,8 @@ X_j=\exp\!\left(\log\theta_j-\tfrac12\sigma_j^2+\sigma_j Z_j\right),
 where $Z_j$ is an independent standard-normal variate, $X_j$ is the simulated SCC value, and $E[\cdot]$ denotes expectation. The $-\sigma_j^2/2$ adjustment ensures that $E[X_j]=\theta_j$, while the range's log width determines dispersion. For papers without a positive range, $X_j=\theta_j$. The 66 percent model range in \citet{ricke2018} has $\alpha_j=0.17$ and therefore $z_j=\Phi^{-1}(0.83)$; the 5th--95th quantiles in \citet{rennert2022} have $\alpha_j=0.05$ and $z_j=\Phi^{-1}(0.95)$; and the ethical-parameter range in \citet{hansel2020} is conservatively assigned 95 percent coverage, so $\alpha_j=0.025$ and $z_j=\Phi^{-1}(0.975)$.
 
 In the second layer, each of 10,000 bootstrap replications samples ten papers with replacement from the ten-paper pool, makes an independent within-paper draw for every sampled paper, and records the arithmetic mean of those ten draws. Resampling papers captures between-paper dispersion; the lognormal step propagates the reported within-paper range. The 2.5th and 97.5th percentiles of the 10,000 replicated means are USD 77.22 and USD 363.40/tCO2. Because the inputs mix model, parameter, and distributional uncertainty rather than comparable sampling errors, this interval is a hierarchical sensitivity envelope, not a frequentist confidence interval for a common structural parameter.
+
+For the price mapping in Equation~(2), $s$ denotes the SCC input. At the central calibration, $s=\bar{s}\equiv J^{-1}\sum_{j=1}^{J}E[X_j]$ with $J=10$ eligible papers; because the within-paper draws are centered so that $E[X_j]=\theta_j$, this is the equal-paper-weight mean. For each bootstrap replication, $s$ is replaced by that replication's arithmetic mean, so the mapped interval uses the same simulated uncertainty as the SCC interval.
 
 Figure~\ref{fig:scc} shows each preferred estimate after mapping it into the additional log beef-price increase required above the announced DKK 300/tCO2 tax. Filled points enter the pool. Hollow points are external comparisons: a partial mortality SCC and a synthesis that could double count the underlying literature \citep{carleton2022,moore2024}. The triangle is the lower bound reported by \citet{bilal2026} and also remains external. The wide intervals reveal why retaining study-level variation materially changes the calibration.
 
@@ -163,9 +167,9 @@ The timing of the response is itself policy-relevant. The tax had not yet been i
 Three limitations are central. First, the announcement was national and there is no untreated Denmark; identification is relative to other food prices and depends on the absence of beef-specific shocks before October 2025. Second, text rules and quantity parsing can misclassify products or create extreme normalized levels, although logs, fixed effects, explicit exclusion rules, and agreement with official CPI mitigate this concern. Third, SCC papers estimate heterogeneous objects under different discounting, damage, and uncertainty assumptions. The meta-analysis represents that heterogeneity rather than resolving it.
 
 \section{Conclusion}\label{sec:conclusion}
-Denmark's livestock-tax announcement was followed by a modest increase in beef prices in two independent data sources. The close correspondence between the scraped and official DiD estimates supports the use of carefully classified web-scraped prices for timely policy evaluation, while the wider SDiD interval cautions against a precise causal magnitude. Most importantly, the evidence indicates that credible policy announcements may themselves induce behaviour before implementation. Announcement and implementation are therefore distinct policy stages, and evaluations that begin only when a tax is collected may miss an economically meaningful part of the response.
+Denmark's livestock-tax announcement was followed by a modest beef-price increase in two independent sources. Their close DiD estimates support carefully classified web-scraped prices for timely evaluation, while wider SDiD uncertainty cautions against a precise causal magnitude. Most importantly, credible announcements may induce behaviour before implementation; announcement and implementation are distinct policy stages, and evaluations beginning only at collection may miss part of the response.
 
-The pooled SCC benchmark leaves a sizeable but uncertain carbon-price gap; its lower tail overlaps the aggregate estimates. Post-implementation work should revisit the calibration using realized incidence, farm-level emissions, and longer panels that separate announcement effects from later supply shocks.
+The pooled SCC benchmark leaves a sizeable but uncertain carbon-price gap whose lower tail overlaps the aggregate estimates. Future work should revisit calibration with realized incidence, farm-level emissions, and longer panels separating announcement effects from later supply shocks.
 
 \clearpage
 \bibliographystyle{apalike}

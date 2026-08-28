@@ -159,6 +159,19 @@ gen double meta_gap = `pooled_gap'
 gen double meta_gap_low = `pooled_gap_low'
 gen double meta_gap_high = `pooled_gap_high'
 export delimited using "outputs/models/stata/beef_policy_calibration.csv", replace
+* Add endpoint observations for the graph only so the pooled gap and its
+* interval span the full x-axis, while the exported calibration file retains
+* exactly the three econometric estimates.
+local n_econ = _N
+local first_extra = `n_econ' + 1
+local second_extra = `n_econ' + 2
+set obs `second_extra'
+replace plot_position = 1 in `first_extra'
+replace plot_position = 3 in `second_extra'
+replace meta_gap = `pooled_gap' in `first_extra'/`second_extra'
+replace meta_gap_low = `pooled_gap_low' in `first_extra'/`second_extra'
+replace meta_gap_high = `pooled_gap_high' in `first_extra'/`second_extra'
+sort plot_position
 twoway ///
     (rarea meta_gap_low meta_gap_high plot_position, color(gs12%55) lcolor(gs10)) ///
     (line meta_gap plot_position, lcolor(black) lpattern(dash) lwidth(medthick)) ///
