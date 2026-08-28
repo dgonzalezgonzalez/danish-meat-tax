@@ -8,12 +8,14 @@ All analytical estimation is in Stata. Python is limited to downloading, product
 
 - Outcome: log normalized product price in the scraped panel; log CPI in official data.
 - Focus: beef only.
-- Scraped window: November 2023--September 2025, excluding June 2024 and limiting post-treatment support to relative month 15.
+- Scraped window: October 2023--September 2025, excluding June 2024. Source `relative_time=15` is displayed as event month 14 after the June gap is removed.
 - Official window: April 2023--September 2025, exactly 15 pre and 15 post months.
 - Disease cutoff: October 2025 onward is excluded because the Danish Veterinary and Food Administration dates the recent bovine viral diarrhoea outbreak from October 2025.
 - Beef controls exclude pork, lamb/goat/sheep, mixed or processed meat, dairy, and other livestock-exposed categories.
 - Estimators: product--store DiD, official lags-only DiD with Newey--West lag 2, official synthetic DiD, and EU country-price and beef-import SDiD robustness checks.
 - SCC benchmark: equal-paper-weight synthesis of ten eligible preferred estimates, with reported source ranges propagated in a hierarchical paper bootstrap.
+- Theory: a credible future emissions wedge contracts planned supply before implementation when intertemporal adjustment is costly; a fixed-stock slaughter model reverses the current-price sign.
+- Policy calibration: separate DKK 120/tCO2e effective average output burden and DKK 300/tCO2e marginal abatement incentive scenarios.
 
 ## Requirements
 

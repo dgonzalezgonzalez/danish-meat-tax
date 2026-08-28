@@ -27,19 +27,20 @@ which keeps `E[X_j]=theta_j`; papers without a usable range remain at their poin
 
 Assumptions:
 
-- Announced tax: DKK 300/tCO2.
+- Effective average output burden in 2030: DKK 120/tCO2e after the 60% per-animal deduction.
+- Marginal abatement incentive in 2030: DKK 300/tCO2e.
 - Exchange rate: 6.8953 DKK/USD.
-- Beef carbon intensity: 59.6 kg CO2e/kg product.
+- Lifecycle beef carbon-intensity benchmark: 59.6 kg CO2e/kg product. This is broader than the farm-level emissions base subject to the Danish levy, so the exercise is an accounting sensitivity, not a tax-base calculation.
 - Mean pre-announcement beef price: DKK 158.54/kg.
 
-For SCC value `s`, the additional log beef-price gap above the announced tax is:
+For SCC value `s` and policy margin `tau`, the additional log beef-price gap is:
 
 ```text
-log((158.54 + (s * 6.8953 - 300) * 59.6 / 1000) / 158.54)
+log((158.54 + (s * 6.8953 - tau) * 59.6 / 1000) / 158.54)
 ```
 
-At the pooled mean, the log-price gap is 0.260, with a hierarchical interval of 0.084--0.604.
+At the pooled mean, the log-price gap is 0.311 under the DKK 120 average-burden scenario, with a hierarchical interval of 0.144--0.640. Under the DKK 300 marginal-incentive scenario, it is 0.260, with an interval of 0.084--0.604.
 
-The main microdata DiD estimate is 0.0437 (clustered SE 0.0163). At the pre-period mean this is approximately DKK 7.1/kg, equivalent to about USD 17/tCO2. Combining that announcement-equivalent response with the announced gross tax produces about USD 61/tCO2, below the pooled SCC mean. Matching the pooled mean mechanically would leave a statutory component of roughly USD 141/tCO2, or DKK 970/tCO2, before deductions and incidence adjustments.
+The main microdata DiD estimate is 0.0437 (clustered SE 0.0163). At the pre-period mean this is approximately DKK 7.1/kg, mechanically equivalent to about USD 17/tCO2 under the common intensity assumption. This announcement-period price equivalent is not added to either future statutory margin: signals across dates are not structurally additive, and observed pass-through depends on adjustment, credibility, discounting, contracts, demand, and costs.
 
 This is an accounting comparison, not a structural welfare or pass-through model.

@@ -144,7 +144,7 @@ postfile `estimates_post' str12 estimator double estimate std_error p_value conf
     long observations units periods double pre_treated_average r_squared ///
     str24 time_window str3 lags_only str3 covariates str28 inference using `estimates', replace
 post `estimates_post' ("micro_did") (`did_att') (`did_se') (`did_p') (`did_low') (`did_high') ///
-    (`did_n') (`micro_units') (`micro_periods') (`pre_beef_price') (`did_r2') ("2023m11-2025m9") ("No") ("No") ("clustered by product-store")
+    (`did_n') (`micro_units') (`micro_periods') (`pre_beef_price') (`did_r2') ("2023m10-2025m9") ("No") ("No") ("clustered by product-store")
 postclose `estimates_post'
 use `estimates', clear
 gen double pretrend_p_value = `pretrend_p' if estimator == "micro_did"

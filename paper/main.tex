@@ -1,9 +1,11 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,caption,graphicx,natbib,pdflscape,placeins,setspace}
+\usepackage{amsmath,amssymb,booktabs,caption,graphicx,natbib,pdflscape,setspace}
 \usepackage{url}
 \urlstyle{same}
 \onehalfspacing
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
 \newcommand{\figurenotes}[2]{\begin{minipage}{0.96\linewidth}\small\textit{Source:} #1\par\textit{Notes:} #2\end{minipage}}
 \title{Before the Levy: Announcement Pass-Through and Carbon-Price Calibration in Denmark's Livestock Tax}
 \author{Diego Gonz\'alez-Gonz\'alez}
@@ -13,7 +15,7 @@
 \maketitle
 
 \begin{abstract}
-Denmark announced in June 2024 that it would introduce a greenhouse-gas tax on livestock emissions. I estimate the anticipatory response of beef prices using two independent sources: scraped product--store prices and the official Danish consumer price index (CPI). A product--store difference-in-differences (DiD) design yields an average beef-price increase of 4.4 log points. A lags-only DiD applied to official CPI data yields 6.4 log points. The estimates differ by only 0.6 standard errors under an approximate cross-source test. Aggregate synthetic DiD is positive but imprecise. All specifications end in September 2025, before the official October 2025 onset of a bovine viral diarrhoea outbreak; the aggregate specifications use symmetric 15-month pre- and post-periods. I then pool ten comparable social-cost-of-carbon (SCC) estimates, treating otherwise undated estimates as time-invariant and propagating published model ranges. The equal-paper-weight mean is USD 158/tCO2 in 2024 dollars, with a hierarchical 95 percent interval of USD 77--363. The estimated announcement response is economically meaningful but smaller than the price adjustment implied by that pooled benchmark. The agreement across independent DiD estimates supports the use of scraped prices for timely policy evaluation, while the estimator dispersion and SCC uncertainty counsel against interpreting any single calibration as definitive.
+Denmark announced in June 2024 that it would introduce a greenhouse-gas tax on livestock emissions. I estimate the anticipatory response of beef prices using scraped product--store prices and the official Danish consumer price index (CPI). The respective difference-in-differences (DiD) estimates are 4.4 and 6.4 log points; aggregate synthetic DiD is positive but imprecise. A model of planned supply with costly intertemporal adjustment shows that a credible future emissions tax reduces output both at implementation and beforehand, raising the pre-implementation price. Staggered contract renewal maps an immediate shadow-price response into gradual retail pass-through. By contrast, a fixed-stock slaughter model predicts more current supply and a lower current price. The positive estimates therefore favor planned contraction over pure preemptive slaughter, although prices alone do not identify quantities or emissions. I also pool ten comparable social-cost-of-carbon (SCC) estimates. The equal-paper-weight mean is USD 158/tCO2 in 2024 dollars, with a hierarchical 95 percent interval of USD 77--363. Accounting comparisons under both the DKK 120/tCO2 average output burden and the DKK 300/tCO2 marginal abatement incentive remain sensitivity exercises, not estimates of incidence or welfare.
 \end{abstract}
 
 \section{Introduction}
@@ -25,9 +27,71 @@ The empirical contribution is to triangulate the same research question with two
 
 The second contribution is a literature-based calibration that does not privilege a single SCC study. I harmonize one preferred global total-SCC estimate per paper to 2024 dollars. Estimates reported for years other than 2030 enter when the paper does not imply a time path, in which case the estimate is treated as time-invariant. Published uncertainty ranges are retained and propagated through a hierarchical paper bootstrap. This produces a ten-paper mean of USD 158/tCO2 and a wide interval of USD 77--363. The exercise is a transparent synthesis of heterogeneous studies, not a claim that their model ranges are conventional sampling confidence intervals.
 
-The broader contribution concerns announcements as policy instruments. A credible commitment can alter expectations and behaviour before the underlying instrument is deployed, an idea made especially visible by Mario Draghi's \emph{whatever it takes} commitment during the euro-area crisis \citep{draghi2012}. The analogy is not exact: this paper studies prices in a commodity market, not central-bank credibility. It nevertheless motivates separating announcement effects from implementation effects and asking whether an announced future carbon price generates measurable adjustment in advance.
+The broader contribution concerns announcements as policy instruments. Cattle production has biological lags and costly adjustment \citep{rosen1994}. Environmental-economics models and evidence show that agents anticipate future regulation \citep{smulders2012,rittenhouse2018}, while emissions costs can pass through into product prices \citep{fabra2014}. Building on these ideas, I develop a transparent planned-supply model in which the announcement creates an expected future output wedge. When current and future production plans are linked, credibility makes contraction begin before collection. This is a commodity-market application of the general expectations channel highlighted by Mario Draghi's \emph{whatever it takes} commitment \citep{draghi2012}, not an assertion that monetary and environmental policy operate identically.
 
-The paper focuses exclusively on beef. The estimand is especially relevant because cattle are the most emissions-intensive major livestock product and prominent in the Danish agreement. Restricting attention to a pre-specified commodity also avoids selecting among a large family of weakly identified commodity-specific estimates. The remainder of the paper describes the data sources and classification rules, sets out the three main estimators and two EU-data robustness checks, reports the results, and uses the SCC synthesis for a back-of-the-envelope policy calibration.
+The paper focuses exclusively on beef. The estimand is especially relevant because cattle are the most emissions-intensive major livestock product and prominent in the Danish agreement. Restricting attention to a pre-specified commodity also avoids selecting among a large family of weakly identified commodity-specific estimates. Section~\ref{sec:theory} develops the model. Sections~\ref{sec:data}--\ref{sec:results} describe the data, estimators, and results. Section~\ref{sec:calibration} presents the SCC accounting exercise, and Sections~\ref{sec:discussion} and \ref{sec:conclusion} discuss interpretation and limitations.
+
+\section{Theoretical Framework}\label{sec:theory}
+\subsection{A credible future tax and planned supply}
+There are two decision dates: the announcement date, normalized to $0$, and the implementation date $T>0$. Let $Q_t\geq0$ denote aggregate beef output at date $t\in\{0,T\}$, let $P_t(Q_t)$ be inverse demand with $P_t'(Q_t)<0$, and let $C_t(Q_t)$ be the industry's private production cost with $C_t'(Q_t)>0$ and $C_t''(Q_t)\geq0$. Define gross private surplus net of production cost as
+\begin{equation}
+G_t(Q)\equiv\int_0^Q P_t(x)\,dx-C_t(Q).
+\end{equation}
+Thus $G_t'(Q)=P_t(Q)-C_t'(Q)$ and $G_t''(Q)=P_t'(Q)-C_t''(Q)<0$. One unit of output generates $\chi>0$ tons of CO2-equivalent emissions. The statutory tax at $T$ is $\tau_T$ DKK per ton of CO2e. Under risk neutrality, the announcement creates the expected output wedge
+\begin{equation}
+\omega\equiv\chi E_0[\tau_T],
+\qquad E_0[\tau_T]=\pi\tau
+\end{equation}
+in the special case in which the tax equals $\tau>0$ with implementation probability $\pi\in[0,1]$ and zero otherwise. Here $E_0[\cdot]$ is the expectation conditional on information at announcement.
+
+Production planning is intertemporal. Changing planned output between dates costs $\kappa(Q_T-Q_0)^2/2$, where $\kappa\geq0$ summarizes biological lags, capacity adjustment, and procurement commitments. Let $\beta\in(0,1]$ be the one-period discount factor and $\delta\equiv\beta^T$ the discount factor from announcement to implementation. A competitive equilibrium can be represented as the unique maximizer of the strictly concave potential
+\begin{equation}\label{eq:potential}
+G_0(Q_0)+\delta\left[G_T(Q_T)-\omega Q_T-
+\frac{\kappa}{2}(Q_T-Q_0)^2\right].
+\end{equation}
+This representation does not make firms internalize consumer surplus: its first-order conditions reproduce market clearing and price-taking supply in a competitive industry. It also abstracts from literal herd accounting; $Q_t$ is planned market output and $\kappa$ is a reduced-form link between production plans.
+
+\begin{proposition}[Anticipatory contraction]\label{prop:anticipation}
+Suppose the solution to \eqref{eq:potential} is interior and $\kappa>0$. A larger expected implementation wedge reduces planned output both before and at implementation and raises the announcement-period market price:
+\begin{equation}
+\frac{\partial Q_0}{\partial\omega}<0,
+\qquad
+\frac{\partial Q_T}{\partial\omega}<0,
+\qquad
+\frac{\partial P_0}{\partial\omega}>0.
+\end{equation}
+The pre-implementation response vanishes when the policy is not credible ($\pi=0$), adjustment is costless ($\kappa=0$), or implementation is arbitrarily distant ($\delta\rightarrow0$).
+\end{proposition}
+
+The proof is in Appendix~\ref{app:theory}. For a closed form, let demand and costs be stationary and linear--quadratic: $P(Q)=a-bQ$ and $C(Q)=cQ+\gamma Q^2/2$, where $a>c$, $b>0$, and $\gamma\geq0$. Write $h\equiv b+\gamma$ and $Q^*\equiv(a-c)/h$. Then
+\begin{align}
+Q_0&=Q^*-\frac{\delta\kappa}{h[h+\kappa(1+\delta)]}\omega,\label{eq:lq_q0}\\
+Q_T&=Q^*-\frac{h+\delta\kappa}{h[h+\kappa(1+\delta)]}\omega,\label{eq:lq_qt}\\
+\Delta P_0&=\frac{b\delta\kappa}{h[h+\kappa(1+\delta)]}\pi\tau\chi.\label{eq:lq_price}
+\end{align}
+Equation~\eqref{eq:lq_price} makes the mechanism explicit. The price response is larger when implementation is more credible ($\pi$), the announced rate ($\tau$) or emissions intensity ($\chi$) is higher, implementation is closer (larger $\delta$), or intertemporal adjustment is more costly (larger $\kappa$). The last two claims follow because the response coefficient is increasing in both $\delta$ and $\kappa$; it remains bounded and is not a claim that the observed retail-price change equals the future tax wedge.
+
+\subsection{Observed retail prices and contract renewal}
+The model price $p_t^*\equiv P_t(Q_t)$ is the flexible wholesale or shadow price. Retail pass-through can be delayed by contracts. Let $L_i\geq0$ be contract $i$'s first renewal date after announcement, $F_L(t)=\Pr(L_i\leq t)$ its cumulative distribution, and $\lambda_i\in[0,1]$ its pass-through share. If $\lambda_i$ is independent of $L_i$ with mean $\lambda$, an immediate flexible-price change $\Delta p_t^*$ is observed as
+\begin{equation}\label{eq:contract_filter}
+\Delta p_t^R=E[\lambda_i\mathbf{1}\{L_i\leq t\}]\Delta p_t^*
+=\lambda F_L(t)\Delta p_t^*,
+\end{equation}
+where $p_t^R$ is the retail price and $\mathbf{1}\{\cdot\}$ is an indicator. Staggered renewal therefore produces gradual measured pass-through even when expectations move at announcement. Emergence around official event month 6 and scraped event month 8 is consistent with semiannual or dispersed contracting, but does not identify a contract duration.
+
+\subsection{Environmental benchmark and a sign-reversing boundary case}
+Let environmental damages at date $t$ be $D_t(E_t)$, where emissions are $E_t=\chi Q_t$, $D_t'(E_t)>0$, and $D_t$ is measured in DKK. If $SCC_t\equiv D_t'(E_t)$ is marginal damage per ton of CO2e, the standard Pigouvian benchmark is
+\begin{equation}\label{eq:pigou}
+\tau_t^P=SCC_t.
+\end{equation}
+
+\begin{proposition}[Local welfare effect]\label{prop:welfare}
+Suppose adjustment costs are real resource costs and the assumptions of Proposition~\ref{prop:anticipation} hold. Starting from no emissions price, a small increase in a credible future tax raises welfare whenever marginal environmental damage is positive. More generally, an increase in $\omega$ raises welfare locally if the expected output wedge does not exceed marginal implementation-date damage per unit of output, $\omega\leq\chi D_T'(E_T)$; the induced pre-implementation contraction supplies an additional benefit when $D_0'(E_0)>0$.
+\end{proposition}
+
+This result establishes a local corrective role for a credible announcement; it does not show that the Danish rate is globally optimal or identify welfare from retail prices. The relevant calibration margin also matters. The announced 2030 schedule has a DKK 300/tCO2e marginal abatement incentive, while the 60 percent per-animal deduction creates an effective average output burden of DKK 120/tCO2e \citep{danishgovernment2024,danishtaxministry2024}.
+
+Finally, the sign in Proposition~\ref{prop:anticipation} is not mechanical. Suppose instead that a fixed herd stock $H$ must be slaughtered across the two dates, so $Q_0+Q_T=H$, and there is no margin for planned herd contraction. A future output tax makes later slaughter relatively less attractive, shifts slaughter to date 0, and therefore gives $\partial Q_0/\partial\omega>0$ and $\partial P_0/\partial\omega<0$. This preemptive-slaughter channel is the livestock analogue of an anticipation or green-paradox response \citep{smulders2012}. Positive observed prices favor planned contraction over this pure fixed-stock mechanism, but price-only evidence cannot establish that aggregate quantities or emissions fell.
 
 \section{Data and Panel Construction}\label{sec:data}
 \subsection{Scraped grocery-price microdata}
@@ -37,7 +101,7 @@ Prices are converted to DKK per kilogram for mass units and DKK per litre for vo
 
 Product classification is deterministic and auditable. Names and source categories are case-folded; Danish characters and common encoding variants are transliterated; and short tokens are matched at word boundaries. Beef is assigned when the normalized text contains an English or Danish beef term, including \emph{beef}, \emph{okse}, \emph{oksek\o d}, \emph{kv\ae g}, \emph{kalv}, \emph{veal}, \emph{entrec\^ote}, or \emph{roastbeef}. The comparison group consists of classified foods not exposed as livestock treatment items: poultry; fish and seafood; eggs; fruit and vegetables; grains and bread; plant oils; sweets and snacks; beverages; plant proteins; and pantry goods. Pork, lamb, sheep, goat, dairy, and products matching more than one livestock category are never controls for beef. Prepared foods containing terms such as pizza, lasagne, ready meal, or sandwich are flagged as ambiguous when a livestock term is present. Non-food keywords are removed before commodity matching, and unmatched products are excluded rather than silently assigned to the control group.
 
-The event month, June 2024, is excluded from both pre and post. The scraped panel begins in November 2023 and the analysis retains post-announcement months through September 2025, for 23 observed months in total. October 2025, the sixteenth full post-announcement month, and all later months are excluded. The Danish Veterinary and Food Administration records a bovine viral diarrhoea (BVD) outbreak from October 2025 to May 2026 in three cattle holdings and notes that BVD can reduce appetite and milk output \citep{dvfaBVD}. A veterinary report states that surveillance detected the affected large dairy herd in September 2025 \citep{dvt2025}. Ending in September does not prove that all anticipatory disease effects are absent, but it excludes the officially dated outbreak interval and avoids mechanically attributing the subsequent cattle-specific supply disturbance to the tax announcement.
+The event month, June 2024, is excluded from both pre and post. The scraped panel begins in October 2023 and the analysis retains post-announcement months through September 2025, for 23 observed months in total. October 2025, the sixteenth full post-announcement month, and all later months are excluded. The source panel's final relative-time value is 15; because removing June closes the event-time gap, it is displayed as event month 14. The Danish Veterinary and Food Administration records a bovine viral diarrhoea (BVD) outbreak from October 2025 to May 2026 in three cattle holdings and notes that BVD can reduce appetite and milk output \citep{dvfaBVD}. A veterinary report states that surveillance detected the affected large dairy herd in September 2025 \citep{dvt2025}. Ending in September does not prove that all anticipatory disease effects are absent, but it excludes the officially dated outbreak interval and avoids mechanically attributing the subsequent cattle-specific supply disturbance to the tax announcement.
 
 \subsection{Official aggregate consumer prices}
 The second source is Statistics Denmark's monthly PRIS01 consumer price index by COICOP 2018 product class. Beef and veal (011221) is the treated series. Candidate donors are terminal food and non-alcoholic-beverage classes with complete coverage in the estimation window. I exclude pork; lamb, sheep, and goat; dried or salted meat; offal; meat preparations; milk, yoghurt, cheese, cream, dairy desserts, other dairy products; and butter and other dairy fats. These categories are either directly livestock-exposed or sufficiently close to treated animal products that they could absorb the same announcement response. The resulting balanced panel contains beef and 52 donors.
@@ -101,7 +165,7 @@ Units & 16,912 & 53 & 53 \\
 Periods & 23 & 30 & 30 \\
 Pre-treatment average & 158.54 & 84.88 & 84.88 \\
 $R^2$ & 0.961 & --- & --- \\
-Time window & 2023m11--2025m9 & 2023m4--2025m9 & 2023m4--2025m9 \\
+Time window & 2023m10--2025m9 & 2023m4--2025m9 & 2023m4--2025m9 \\
 Lags only & No & Yes & No \\\bottomrule
 \end{tabular}
 \begin{minipage}{0.98\linewidth}\small
@@ -111,7 +175,7 @@ Lags only & No & Yes & No \\\bottomrule
 
 Aggregate SDiD is positive at 0.076 but its 95 percent interval, $[-0.018,0.170]$, includes zero. The three columns therefore support a narrower conclusion than a single preferred estimate would: the two DiD designs point to a modest positive response, while synthetic reweighting is too imprecise in this small aggregate panel to determine the magnitude precisely.
 
-Figure~\ref{fig:event} compares event-time patterns. In the scraped panel, the shorter pre-period is noisier but the pre-announcement coefficients are jointly insignificant ($p=0.78$), and the post coefficients are generally positive. In the official panel, coefficients are near zero throughout the 15-month pre-period and then rise gradually, especially from the sixth post month. The difference in smoothness is expected: official CPI aggregates many price quotes, whereas the scraped panel contains entry, exit, heterogeneous packaging, and intermittent product availability.
+Figure~\ref{fig:event} compares event-time patterns. In the scraped panel, the shorter pre-period is noisier but the pre-announcement coefficients are jointly insignificant ($p=0.78$), and the post coefficients are generally positive, becoming clearly positive around event month 8. In the official panel, pre-period coefficients are small and mostly statistically indistinguishable from zero, after which estimates rise gradually and become clearly positive around event month 6. The difference in smoothness is expected: official CPI aggregates many price quotes, whereas the scraped panel contains entry, exit, heterogeneous packaging, and intermittent product availability.
 
 \par\medskip
 \begin{figure}[htbp]\centering
@@ -120,7 +184,7 @@ Figure~\ref{fig:event} compares event-time patterns. In the scraped panel, the s
 \begin{minipage}{0.49\linewidth}\centering\textbf{B. Official aggregate CPI}\par\smallskip\includegraphics[width=\linewidth]{../outputs/figures/stata/aggregate_event_study.png}\end{minipage}
 \figurenotes{dagligepriser.dk (Panel A); Statistics Denmark, PRIS01 (Panel B).}{Points are relative-month coefficients and bars are 95 percent confidence intervals. In both panels, July 2024 is $t=0$, the first complete post-announcement month. Panel A omits May 2024 ($t=-1$), because the partial event month of June is excluded, and uses product--store clustered standard errors. Panel B uses June 2024 as its omitted reference month and heteroskedasticity-robust standard errors. Both samples end in September 2025, before the official October 2025 BVD outbreak interval.}
 \end{figure}
-\FloatBarrier
+\clearpage
 
 The EU country-price check yields an ATT of 0.0448 (placebo standard error 0.2043; $p=0.826$). The estimate is not statistically distinguishable from zero, and Denmark's series does not track its synthetic counterfactual particularly well during the pre-period (Appendix Figure~\ref{fig:a_country_sdid}). The point estimate is nevertheless almost identical to the scraped-product estimate of 0.0437 and close to the other main estimates. This numerical agreement is suggestive, rather than conclusive, evidence that the main findings are not generated by announcement-induced movements in the food products used as controls.
 
@@ -143,27 +207,29 @@ where $Z_j$ is an independent standard-normal variate, $X_j$ is the simulated SC
 
 In the second layer, each of 10,000 bootstrap replications samples ten papers with replacement from the ten-paper pool, makes an independent within-paper draw for every sampled paper, and records the arithmetic mean of those ten draws. Resampling papers captures between-paper dispersion; the lognormal step propagates the reported within-paper range. The 2.5th and 97.5th percentiles of the 10,000 replicated means are USD 77.22 and USD 363.40/tCO2. Because the inputs mix model, parameter, and distributional uncertainty rather than comparable sampling errors, this interval is a hierarchical sensitivity envelope, not a frequentist confidence interval for a common structural parameter.
 
-Figure~\ref{fig:scc} shows each preferred estimate after mapping it into the additional log beef-price increase required above the announced DKK 300/tCO2 tax. Filled points enter the pool. Hollow points are external comparisons: a partial mortality SCC and a synthesis that could double count the underlying literature \citep{carleton2022,moore2024}. The triangle is the lower bound reported by \citet{bilal2026} and also remains external. The wide intervals reveal why retaining study-level variation materially changes the calibration.
+Figure~\ref{fig:scc} shows each preferred estimate after mapping it into the additional log beef-price increase required above the DKK 300/tCO2e marginal abatement incentive. Filled points enter the pool. Hollow points are external comparisons: a partial mortality SCC and a synthesis that could double count the underlying literature \citep{carleton2022,moore2024}. The triangle is the lower bound reported by \citet{bilal2026} and also remains external. The wide intervals reveal why retaining study-level variation materially changes the calibration.
 
 \begin{figure}[htbp]\centering
 \caption{SCC estimates and implied beef-price gaps}\label{fig:scc}
 \includegraphics[width=0.98\linewidth]{../outputs/figures/stata/scc_meta_forest.png}
-\figurenotes{The studies listed in Appendix Table~\ref{tab:scc}; \citet{oecd2025}.}{Each point maps a preferred SCC estimate into the log beef-price increase needed in addition to the announced Danish tax, using 59.6 kg CO2e per kg of beef, 6.8953 DKK/USD, and the scraped pre-announcement beef price. Source ranges preserve their original meaning. Filled circles enter the equal-paper-weight pool; hollow circles and the lower-bound triangle do not. The pooled diamond and line show the hierarchical mean and its 95 percent interval.}
+\figurenotes{The studies listed in Appendix Table~\ref{tab:scc}; \citet{oecd2025}.}{Each point maps a preferred SCC estimate into the log beef-price increase needed above the DKK 300/tCO2e marginal incentive, using a 59.6 kg CO2e/kg lifecycle benchmark, 6.8953 DKK/USD, and the scraped pre-announcement beef price. The lifecycle benchmark is broader than the farm-level emissions base subject to the Danish levy, so the mapping is an accounting sensitivity rather than a tax-base calculation. Source ranges preserve their original meaning. Filled circles enter the equal-paper-weight pool; hollow circles and the lower-bound triangle do not. The pooled diamond and line show the hierarchical mean and its 95 percent interval.}
 \end{figure}
 
-Let $\bar p=158.54$ be the mean pre-announcement beef price in DKK/kg, $e=6.8953$ DKK/USD, and $q=59.6$ kg CO2e/kg beef. The carbon intensity follows the OECD's presentation of the beef-herd benchmark from \citet{poore2018} \citep{oecd2025}. For SCC value $s$ in USD/tCO2 and announced tax $T=300$ DKK/tCO2, define $g(s)$ as the additional log price required:
-\begin{equation}g(s)=\log\left[\frac{\bar p+(se-T)q/1000}{\bar p}\right].\end{equation}
-Here $s$ denotes the SCC input. At the central calibration, $s=\bar{s}\equiv J^{-1}\sum_{j=1}^{J}E[X_j]$, where $J=10$ is the number of eligible papers. Because the within-paper draws are centered so that $E[X_j]=\theta_j$, $\bar{s}$ is the equal-paper-weight mean. In each bootstrap replication, $s$ is replaced by that replication's arithmetic mean, so the mapped interval uses the same simulated uncertainty as the SCC interval.
+Let $\bar p=158.54$ be the mean pre-announcement beef price in DKK/kg, $r^{FX}=6.8953$ DKK/USD the exchange rate, and $\chi=59.6$ kg CO2e/kg beef the lifecycle carbon-intensity benchmark. The benchmark follows the OECD's presentation of the beef-herd estimate from \citet{poore2018} \citep{oecd2025}. It includes lifecycle emissions beyond the farm-level emissions base to which the Danish levy applies. Equation~\eqref{eq:scc_gap} is therefore a deliberately broad accounting sensitivity and can overstate the price-equivalent wedge if $\chi$ is interpreted as taxable emissions intensity. For SCC value $s$ in USD/tCO2 and Danish rate $\tau$ in DKK/tCO2, define the additional log price required as
+\begin{equation}\label{eq:scc_gap}
+g(s;\tau)=\log\left[\frac{\bar p+(sr^{FX}-\tau)\chi/1000}{\bar p}\right].
+\end{equation}
+Here $s$ denotes the SCC input and $\tau$ is evaluated separately at DKK 120 and DKK 300. The former is the effective average output burden created by the 60 percent per-animal deduction; the latter is the 2030 marginal abatement incentive \citep{danishgovernment2024,danishtaxministry2024}. At the central calibration, $s=\bar{s}\equiv J^{-1}\sum_{j=1}^{J}E[X_j]$, where $J=10$ is the number of eligible papers. Because the within-paper draws are centered so that $E[X_j]=\theta_j$, $\bar{s}$ is the equal-paper-weight mean. In each bootstrap replication, $s$ is replaced by that replication's arithmetic mean, so the mapped interval uses the same simulated uncertainty as the SCC interval.
 
-At the pooled mean, $g(157.96)=0.260$, with a pooled interval of 0.084--0.604. Figure~\ref{fig:policy} compares that benchmark with all three econometric estimates. The micro DiD confidence interval ends at 0.076, just below the pooled interval's lower endpoint. The aggregate DiD and SDiD intervals overlap its lower tail.
+At the pooled mean, the SCC-implied gap is 0.311 under the DKK 120 average burden, with a pooled interval of 0.144--0.640. Under the DKK 300 marginal incentive, it is 0.260, with an interval of 0.084--0.604. Figure~\ref{fig:policy} compares both accounting benchmarks with all three econometric estimates. The micro DiD interval lies below both pooled intervals; the aggregate DiD and SDiD intervals overlap the lower tail of the DKK 300 scenario but not that of the DKK 120 scenario.
 
 \begin{figure}[htbp]\centering
-\caption{Econometric estimates and the meta-analytical carbon-price gap}\label{fig:policy}
-\includegraphics[width=0.82\linewidth]{../outputs/figures/stata/beef_policy_calibration.png}
-\figurenotes{Statistics Denmark, PRIS01; dagligepriser.dk; the studies listed in Appendix Table~\ref{tab:scc}.}{Dots are the three ATT estimates in Table~\ref{tab:main}; error bars are 95 percent intervals. The dashed line is the log beef-price gap implied by the pooled SCC mean, and the grey band maps the 2.5th and 97.5th percentiles of the 10,000 hierarchical bootstrap means into price space.}
+\caption{Econometric estimates and SCC-implied gaps under two policy margins}\label{fig:policy}
+\includegraphics[width=0.92\linewidth]{../outputs/figures/stata/beef_policy_calibration.png}
+\figurenotes{Statistics Denmark, PRIS01; dagligepriser.dk; the studies listed in Appendix Table~\ref{tab:scc}.}{Points show the three ATT estimates in Table~\ref{tab:main} and the SCC-implied log gaps under the DKK 120/tCO2e effective average output burden and DKK 300/tCO2e marginal abatement incentive. Horizontal bars are 95 percent econometric intervals or the mapped 2.5th--97.5th percentile hierarchical SCC sensitivity interval. The 59.6 kg CO2e/kg lifecycle benchmark is broader than the levy tax base. These are accounting comparisons, not estimates of the taxable emissions base, tax incidence, or welfare.}
 \end{figure}
 
-The back-of-the-envelope magnitudes are informative but not a welfare calculation. The micro DiD point estimate corresponds to about DKK 7.1/kg at the pre-period mean, or USD 17/tCO2. Combining this announcement-equivalent signal with the announced gross tax gives roughly USD 61/tCO2, well below the USD 158 pooled mean. Matching the mean mechanically would require a remaining statutory component of about USD 141/tCO2, or DKK 970/tCO2, before deductions and incidence adjustments. This calculation assumes a common beef carbon intensity and full translation of a product-price change into a carbon-price equivalent; neither assumption is structural.
+The back-of-the-envelope magnitudes are informative but are neither a welfare calculation nor an incidence estimate. Translating the micro DiD point estimate mechanically gives about DKK 7.1/kg at the pre-period mean, equivalent to roughly USD 17/tCO2 under the common emissions-intensity assumption. This is an announcement-period price equivalent, not a statutory tax component: it must not be added to a future rate because the two signals occur at different dates and the model's pass-through depends on demand curvature, adjustment costs, discounting, credibility, and contracts. The SCC exercise therefore remains an accounting sensitivity under two distinct statutory margins.
 
 \section{Discussion of the Results}\label{sec:discussion}
 Two independent DiD designs find a modest increase in beef prices following Denmark's announcement. Their statistical compatibility is notable because the sources differ sharply in provenance, sampling, and aggregation. It suggests that carefully classified scraped prices can recover economically relevant aggregate movements faster and at much greater cross-sectional scale than official indices alone. That is evidence in favor of reliability and external validity for this application, not a blanket endorsement of non-official data: product coverage is selected, price normalization is noisy in levels, and product availability is intermittent.
@@ -174,14 +240,18 @@ The EU checks address a separate identification concern. Their point estimates p
 
 The meta-analytical calibration places the estimated announcement effect below the central carbon-price gap while preserving substantial uncertainty across the underlying SCC literature. The lower end of the pooled range overlaps some aggregate econometric intervals, so the evidence does not identify a single corrective tax with useful precision.
 
-The timing of the response is itself policy-relevant. The tax had not yet been implemented, so the estimates are consistent with firms and consumers adjusting to a credible future policy rather than to a current statutory liability. In this respect, the mechanism resembles the expectations channel highlighted by Draghi's \emph{whatever it takes} commitment: the announcement can influence behaviour before the full instrument is used \citep{draghi2012}. The analogy should not be pushed too far, and the design cannot isolate every expectations mechanism. Still, it suggests that clear, credible policy announcements can be instruments in their own right. They need not replace the eventual tax; instead, their measurable anticipatory effects should enter subsequent policy calibration.
+The response's sign and timing are policy-relevant. Proposition~\ref{prop:anticipation} predicts a price increase before implementation when credible future taxation contracts planned supply and adjustment is costly. A demand-driven increase is less natural in this setting: news that highlights beef's environmental cost would ordinarily weaken, not strengthen, beef demand. The agreement of two price sources, a similarly signed country-price estimate, and no detectable increase in imports therefore favor planned supply contraction. The gradual appearance of the official response around event month 6 and the scraped response around month 8 is also consistent with the contract-renewal filter in \eqref{eq:contract_filter}. These patterns favor the model's channel but do not directly reveal producer plans or contract dates.
 
-Three limitations are central. First, the main design identifies a national announcement relative to other food prices and therefore depends on the absence of beef-specific shocks before October 2025. The country-price and trade checks address two implications of this concern but cannot rule out every domestic or international spillover. Second, text rules and quantity parsing can misclassify products or create extreme normalized levels, although logs, fixed effects, explicit exclusion rules, and agreement with official CPI mitigate this concern. Third, SCC papers estimate heterogeneous objects under different discounting, damage, and uncertainty assumptions. The meta-analysis represents that heterogeneity rather than resolving it.
+The fixed-stock counterexample disciplines this interpretation. If producers merely accelerate slaughter to avoid a future tax, current supply rises and the current price falls. The observed positive price response weighs against that pure mechanism. Yet price-only data cannot determine whether quantities, herd size, production, sales volumes, or emissions actually declined. Likewise, the null import response is informative about one offsetting margin but does not measure domestic output. Establishing the full mechanism requires slaughter, herd, production, procurement-contract, and sales-volume data.
+
+A credible announcement can thus be a useful part of policy implementation: by changing the expected future wedge, it may begin addressing the externality before collection. This is not a substitute for the tax itself. Credibility is essential, the welfare result is local, and a poorly designed policy can generate sign-reversing intertemporal substitution. Announcement and implementation should therefore be analyzed jointly rather than treating pre-collection adjustment as either zero or mechanically additive to the later statutory rate.
+
+Three limitations are central. First, the main design identifies a national announcement relative to other food prices and therefore depends on the absence of beef-specific shocks before October 2025. The country-price and trade checks address two implications of this concern but cannot rule out every domestic or international spillover. Surveillance detected an affected dairy herd in September 2025, the final sample month, so excluding the official October outbreak interval does not rule out anticipatory cattle-market effects. Second, text rules and quantity parsing can misclassify products or create extreme normalized levels, although logs, fixed effects, explicit exclusion rules, and agreement with official CPI mitigate this concern. Third, SCC papers estimate heterogeneous objects under different discounting, damage, and uncertainty assumptions. The dual-rate calibration represents that heterogeneity and the policy's distinct average and marginal margins; its lifecycle intensity is broader than the taxable emissions base, and it does not resolve incidence or identify the optimal Danish rate.
 
 \section{Conclusion}\label{sec:conclusion}
-Denmark's livestock-tax announcement was followed by a modest beef-price increase in two independent sources. Their close DiD estimates support carefully classified web-scraped prices for timely evaluation, while wider SDiD uncertainty cautions against a precise causal magnitude. Most importantly, credible announcements may induce behaviour before implementation; announcement and implementation are distinct policy stages, and evaluations beginning only at collection may miss part of the response.
+Denmark's livestock-tax announcement was followed by a modest beef-price increase in two independent sources. Their close DiD estimates support carefully classified web-scraped prices for timely evaluation, while wider SDiD uncertainty cautions against a precise causal magnitude. The theoretical framework explains the positive sign as planned supply contraction under a credible future output wedge and costly adjustment; staggered contracts can explain delayed retail pass-through. A fixed-stock preemptive-slaughter mechanism predicts the opposite price sign.
 
-The pooled SCC benchmark leaves a sizeable but uncertain carbon-price gap whose lower tail overlaps the aggregate estimates. Future work should revisit calibration with realized incidence, farm-level emissions, and longer panels separating announcement effects from later supply shocks.
+The pooled SCC benchmark leaves a sizeable but uncertain accounting gap under both the DKK 120 effective average burden and the DKK 300 marginal incentive. The core policy implication is that an announcement may start addressing an externality before the tax is collected, but its effect is not an extra statutory component and cannot be inferred from prices alone. Future work should test the mechanism with slaughter, herd, production, sales-volume, contract, realized-incidence, and farm-level emissions data, using longer panels that separate announcement effects from implementation and later supply shocks.
 
 \clearpage
 \bibliographystyle{apalike}
@@ -190,6 +260,94 @@ The pooled SCC benchmark leaves a sizeable but uncertain carbon-price gap whose 
 \clearpage
 \appendix
 \renewcommand{\thetable}{A\arabic{table}}\renewcommand{\thefigure}{A\arabic{figure}}\setcounter{table}{0}\setcounter{figure}{0}
+\section{Theory Appendix}\label{app:theory}
+
+\subsection{Proof of Proposition~\ref{prop:anticipation}}
+The interior first-order conditions for \eqref{eq:potential} are
+\begin{align}
+G_0'(Q_0)+\delta\kappa(Q_T-Q_0)&=0,\label{eq:foc0}\\
+G_T'(Q_T)-\omega-\kappa(Q_T-Q_0)&=0.\label{eq:foct}
+\end{align}
+Define $h_0\equiv-G_0''(Q_0)>0$, $h_T\equiv-G_T''(Q_T)>0$, and
+\begin{equation*}
+\Delta\equiv(h_0+\delta\kappa)(h_T+\kappa)-\delta\kappa^2
+=h_0h_T+h_0\kappa+\delta\kappa h_T>0.
+\end{equation*}
+Implicit differentiation of \eqref{eq:foc0}--\eqref{eq:foct} gives
+\begin{equation*}
+\begin{bmatrix}h_0+\delta\kappa&-\delta\kappa\\-\kappa&h_T+\kappa\end{bmatrix}
+\begin{bmatrix}\partial Q_0/\partial\omega\\\partial Q_T/\partial\omega\end{bmatrix}
+=\begin{bmatrix}0\\-1\end{bmatrix}.
+\end{equation*}
+Cramer's rule therefore yields
+\begin{equation}\label{eq:general_cs}
+\frac{\partial Q_0}{\partial\omega}=-\frac{\delta\kappa}{\Delta}<0,
+\qquad
+\frac{\partial Q_T}{\partial\omega}=-\frac{h_0+\delta\kappa}{\Delta}<0.
+\end{equation}
+Since $P_0'(Q_0)<0$, $\partial P_0/\partial\omega=P_0'(Q_0)\partial Q_0/\partial\omega>0$. The first expression in \eqref{eq:general_cs} is zero when $\kappa=0$ or $\delta=0$; when $\pi=0$, $\omega=\pi\tau\chi=0$ and there is no policy-induced change. This proves the proposition.
+
+For completeness, substituting $G'(Q)=a-c-hQ$ into \eqref{eq:foc0}--\eqref{eq:foct} and solving gives \eqref{eq:lq_q0}--\eqref{eq:lq_qt}. Let $D\equiv h[h+\kappa(1+\delta)]$. The coefficient $A\equiv\delta\kappa/D$ governing the announcement response satisfies
+\begin{equation*}
+\frac{\partial A}{\partial\delta}=\frac{\kappa h(h+\kappa)}{D^2}>0,
+\qquad
+\frac{\partial A}{\partial\kappa}=\frac{\delta h^2}{D^2}>0.
+\end{equation*}
+Together with $\omega=\pi\tau\chi$, these derivatives establish the comparative statics stated below \eqref{eq:lq_price}.
+
+\subsection{Multi-period anticipation}
+Consider dates $t=0,\ldots,N$ and implementation at $T\leq N$. The multi-period potential is
+\begin{equation}\label{eq:multi}
+\sum_{t=0}^N\beta^t\left[G_t(Q_t)-\omega\mathbf{1}\{t\geq T\}Q_t\right]
+-\sum_{t=1}^N\beta^t\frac{\kappa}{2}(Q_t-Q_{t-1})^2.
+\end{equation}
+Let $H$ be its Hessian in $Q=(Q_0,\ldots,Q_N)'$. Strict concavity makes $A\equiv-H$ positive definite. Its diagonal entries are positive, its only off-diagonal entries are non-positive adjacent adjustment terms, and for $\kappa>0$ it is irreducible. Hence $A$ is a nonsingular tridiagonal M-matrix and $A^{-1}$ is elementwise nonnegative. Differentiating the first-order conditions with respect to $\omega$ gives
+\begin{equation*}
+A\frac{\partial Q}{\partial\omega}=-b,
+\qquad b_t=\beta^t\mathbf{1}\{t\geq T\}\geq0.
+\end{equation*}
+Therefore $\partial Q/\partial\omega=-A^{-1}b\leq0$, with strict inequality at every date connected by a positive adjustment link to an implementation or post-implementation date. A credible future wedge thus propagates backward through the production plan.
+
+In the stationary linear--quadratic case, the homogeneous pre-implementation response obeys
+\begin{equation*}
+\kappa q_{t-1}-[h+\kappa(1+\beta)]q_t+\beta\kappa q_{t+1}=0,
+\end{equation*}
+where $q_t\equiv\partial Q_t/\partial\omega$. On an infinite horizon, or locally away from the boundaries of a long finite horizon, the stable backward component is proportional to $r^{T-t}$, with
+\begin{equation}\label{eq:root}
+r=\frac{B-\sqrt{B^2-4\beta\kappa^2}}{2\kappa}\in(0,1),
+\qquad B\equiv h+\kappa(1+\beta).
+\end{equation}
+Thus the stable interior component of the anticipation response declines geometrically with distance from implementation. On an arbitrary finite horizon, the exact path is a linear combination of both characteristic roots, with coefficients fixed by the initial and terminal boundary conditions; equation~\eqref{eq:root} is not an exact global finite-horizon solution. The M-matrix sign result above remains exact. The geometric characterization is the multi-period counterpart to the role of $\delta=\beta^T$ in the two-date model.
+
+\subsection{Welfare and the Pigouvian benchmark}
+With emissions $E_t=\chi Q_t$, social welfare in the two-date model is
+\begin{equation}\label{eq:welfare}
+W=G_0(Q_0)-D_0(\chi Q_0)+\delta\left[G_T(Q_T)-D_T(\chi Q_T)-\frac{\kappa}{2}(Q_T-Q_0)^2\right].
+\end{equation}
+At a given date, equating the private output wedge $\chi\tau_t$ to marginal environmental damage per unit of output $\chi D_t'(E_t)$ gives $\tau_t^P=D_t'(E_t)=SCC_t$, proving \eqref{eq:pigou}. This remains the first-best per-ton wedge when the adjustment cost is a private and social resource cost.
+
+Along the private equilibrium defined by \eqref{eq:foc0}--\eqref{eq:foct}, differentiation of \eqref{eq:welfare} and substitution of the first-order conditions yield
+\begin{equation}\label{eq:welfare_derivative}
+\frac{dW}{d\omega}
+=-\chi D_0'(E_0)\frac{\partial Q_0}{\partial\omega}
++\delta[\omega-\chi D_T'(E_T)]\frac{\partial Q_T}{\partial\omega}.
+\end{equation}
+Both quantity derivatives are negative by Proposition~\ref{prop:anticipation}. At $\omega=0$, positive marginal damage makes both terms weakly positive and the first strictly positive. More generally, $D_0'(E_0)>0$ and $\omega\leq\chi D_T'(E_T)$ are sufficient for a positive local welfare effect. This proves Proposition~\ref{prop:welfare}. It is a second-best statement about a future instrument: it does not imply that omission of a current tax is first-best.
+
+\subsection{Fixed-stock counterexample}
+Let a fixed stock $H>0$ satisfy $Q_0+Q_T=H$. Substituting $Q_T=H-Q_0$, the private objective is
+\begin{equation*}
+G_0(Q_0)+\delta[G_T(H-Q_0)-\omega(H-Q_0)].
+\end{equation*}
+Its first-order condition is $G_0'(Q_0)-\delta G_T'(H-Q_0)+\delta\omega=0$. Strict concavity gives
+\begin{equation*}
+\frac{\partial Q_0}{\partial\omega}
+=-\frac{\delta}{G_0''(Q_0)+\delta G_T''(H-Q_0)}>0,
+\qquad
+\frac{\partial P_0}{\partial\omega}<0.
+\end{equation*}
+A future tax therefore accelerates slaughter when total stock cannot adjust. The opposite price sign separates pure intertemporal reallocation of a fixed stock from the planned-contraction mechanism in the main model.
+
 \begin{landscape}
 \section{Additional Results}
 \begin{table}[htbp]\centering\caption{Preferred SCC benchmarks and pooling status}\label{tab:scc}

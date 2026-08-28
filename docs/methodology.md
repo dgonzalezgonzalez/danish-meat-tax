@@ -6,7 +6,7 @@ The paper asks whether Denmark's 24 June 2024 livestock-emissions tax announceme
 
 ## Scraped microdata
 
-The main micro specification regresses log normalized price on `beef × post`, product--store fixed effects, and month fixed effects. Standard errors are clustered by product--store. June 2024 is excluded. The sample ends at relative month 15 (September 2025), before the official October 2025 bovine viral diarrhoea outbreak interval.
+The main micro specification regresses log normalized price on `beef × post`, product--store fixed effects, and month fixed effects. Standard errors are clustered by product--store. June 2024 is excluded. The sample runs from October 2023 through September 2025, before the official October 2025 bovine viral diarrhoea outbreak interval. The source panel ends at `relative_time=15`; closing the excluded-June gap maps that observation to displayed event time 14.
 
 Beef is compared only with classified untreated foods. Pork, lamb/sheep/goat, dairy, mixed livestock products, non-food products, and unknown products are excluded from beef's control group. Price normalization converts mass to DKK/kg and volume to DKK/litre; unsupported units are excluded.
 
@@ -28,6 +28,12 @@ One preferred global total-SCC estimate enters per eligible paper. Values are ha
 
 The interval uses 10,000 hierarchical bootstrap replications. Each replication resamples ten papers with replacement. For a paper with point estimate `theta` and positive central range `[L,U]` of coverage `1-2 alpha`, within-paper dispersion is `sigma=(log(U)-log(L))/(2*Phi^{-1}(1-alpha))`; its draw is lognormal with log mean `log(theta)-sigma^2/2`, so the arithmetic expectation remains `theta`. Papers without usable ranges remain at their point estimates. The replication statistic is the mean of ten selected within-paper draws, and the reported endpoints are the 2.5th and 97.5th percentiles of the replicated means. The result is a sensitivity envelope, not a conventional common-effect confidence interval.
 
+The accounting map is evaluated separately at DKK 120/tCO2e, the effective average output burden after the 60 percent per-animal deduction, and DKK 300/tCO2e, the 2030 marginal abatement incentive. Across-date announcement and statutory signals are not added.
+
+## Theoretical interpretation
+
+The paper represents competitive equilibrium with strictly concave net surplus in current and implementation-date output. A credible expected future emissions wedge reduces both quantities when costly adjustment links production plans, raising the current flexible price. Staggered contract renewal filters this response into gradual retail pass-through. A fixed-stock counterexample instead shifts slaughter forward and lowers the current price. Positive price estimates therefore favor planned contraction, but cannot identify quantities, herd size, or emissions without direct data.
+
 ## Limitations
 
 - Identification is relative to other foods; Denmark has no untreated national unit.
@@ -35,3 +41,4 @@ The interval uses 10,000 hierarchical bootstrap replications. Each replication r
 - The official panel has few donors and only 15 pre-periods, making SDiD weights fragile.
 - SCC estimates are structurally heterogeneous; the pooled interval is a sensitivity envelope.
 - Carbon-price mapping is an accounting exercise, not a structural incidence or welfare model.
+- Price-only results cannot establish changes in slaughter, production, sales volumes, herd size, or emissions.

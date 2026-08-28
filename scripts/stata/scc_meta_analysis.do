@@ -12,7 +12,9 @@ log using "outputs/diagnostics/stata/scc_meta_analysis.log", text replace
 
 local us_cpi_2024 = 313.689
 local usd_dkk = 6.8953
-local tax_dkk = 300
+local tax_effective_dkk = 120
+local tax_marginal_dkk = 300
+* Lifecycle benchmark; broader than the farm-level emissions base taxed by the levy.
 local beef_kgco2_kg = 59.6
 
 import delimited using "data/reference/scc_literature_estimates.csv", varnames(1) encoding("utf-8") clear
@@ -91,13 +93,20 @@ quietly summarize pre_treated_average if estimator == "micro_did", meanonly
 local pre_beef_price = r(mean)
 restore
 
-gen double tax_usd = `tax_dkk' / `usd_dkk'
-gen double log_price_gap = ln((`pre_beef_price' + (scc_usd_2024 - tax_usd) * `usd_dkk' * `beef_kgco2_kg' / 1000) / `pre_beef_price')
-gen double log_price_gap_low = ln((`pre_beef_price' + (interval_low_usd_2024 - tax_usd) * `usd_dkk' * `beef_kgco2_kg' / 1000) / `pre_beef_price')
-gen double log_price_gap_high = ln((`pre_beef_price' + (interval_high_usd_2024 - tax_usd) * `usd_dkk' * `beef_kgco2_kg' / 1000) / `pre_beef_price')
-local pooled_gap = ln((`pre_beef_price' + (`pooled_mean' - `tax_dkk' / `usd_dkk') * `usd_dkk' * `beef_kgco2_kg' / 1000) / `pre_beef_price')
-local pooled_gap_low = ln((`pre_beef_price' + (`pooled_low' - `tax_dkk' / `usd_dkk') * `usd_dkk' * `beef_kgco2_kg' / 1000) / `pre_beef_price')
-local pooled_gap_high = ln((`pre_beef_price' + (`pooled_high' - `tax_dkk' / `usd_dkk') * `usd_dkk' * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+gen double tax_usd_effective_120 = `tax_effective_dkk' / `usd_dkk'
+gen double tax_usd_marginal_300 = `tax_marginal_dkk' / `usd_dkk'
+foreach suffix in effective_120 marginal_300 {
+    local rate = cond("`suffix'" == "effective_120", `tax_effective_dkk', `tax_marginal_dkk')
+    gen double log_price_gap_`suffix' = ln((`pre_beef_price' + (scc_usd_2024 * `usd_dkk' - `rate') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+    gen double log_price_gap_low_`suffix' = ln((`pre_beef_price' + (interval_low_usd_2024 * `usd_dkk' - `rate') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+    gen double log_price_gap_high_`suffix' = ln((`pre_beef_price' + (interval_high_usd_2024 * `usd_dkk' - `rate') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+}
+local pooled_gap_effective_120 = ln((`pre_beef_price' + (`pooled_mean' * `usd_dkk' - `tax_effective_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+local pooled_gap_low_effective_120 = ln((`pre_beef_price' + (`pooled_low' * `usd_dkk' - `tax_effective_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+local pooled_gap_high_effective_120 = ln((`pre_beef_price' + (`pooled_high' * `usd_dkk' - `tax_effective_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+local pooled_gap_marginal_300 = ln((`pre_beef_price' + (`pooled_mean' * `usd_dkk' - `tax_marginal_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+local pooled_gap_low_marginal_300 = ln((`pre_beef_price' + (`pooled_low' * `usd_dkk' - `tax_marginal_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
+local pooled_gap_high_marginal_300 = ln((`pre_beef_price' + (`pooled_high' * `usd_dkk' - `tax_marginal_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
 
 export delimited using "outputs/models/stata/scc_literature_calibration.csv", replace
 
@@ -112,16 +121,19 @@ gen double ci_high = `pooled_high'
 gen double median = `pooled_median'
 gen double min = `pooled_min'
 gen double max = `pooled_max'
-gen double log_price_gap = `pooled_gap'
-gen double log_price_gap_low = `pooled_gap_low'
-gen double log_price_gap_high = `pooled_gap_high'
+gen double log_price_gap_effective_120 = `pooled_gap_effective_120'
+gen double log_price_gap_low_effective_120 = `pooled_gap_low_effective_120'
+gen double log_price_gap_high_effective_120 = `pooled_gap_high_effective_120'
+gen double log_price_gap_marginal_300 = `pooled_gap_marginal_300'
+gen double log_price_gap_low_marginal_300 = `pooled_gap_low_marginal_300'
+gen double log_price_gap_high_marginal_300 = `pooled_gap_high_marginal_300'
 gen str60 inference = "hierarchical paper bootstrap with source-range variation"
 export delimited using "outputs/models/stata/scc_meta_summary.csv", replace
 
 * Forest plot corresponding to the former panel B. Notes and sources are kept
 * out of the image and supplied by LaTeX.
 use `literature_for_figure', clear
-keep if !missing(log_price_gap) & inlist(estimate_type, "total SCC", "average SCC")
+keep if !missing(log_price_gap_marginal_300) & inlist(estimate_type, "total SCC", "average SCC")
 gen str70 display_label = authors + " (" + string(publication_year, "%4.0f") + ")"
 replace display_label = display_label + " [lower bound]" if bound_type == "lower"
 sort display_label
@@ -130,13 +142,13 @@ quietly count
 local n_display = r(N)
 label define plot_order 0 "Pooled mean (n=`n_papers')", add
 twoway ///
-    (rcap log_price_gap_low log_price_gap_high plot_order if !missing(log_price_gap_low, log_price_gap_high), horizontal lcolor(gs8)) ///
-    (scatter plot_order log_price_gap if is_eligible, mcolor(black) msymbol(O) msize(small)) ///
-    (scatter plot_order log_price_gap if !is_eligible & bound_type != "lower", mcolor(black) msymbol(Oh) msize(small)) ///
-    (scatter plot_order log_price_gap if bound_type == "lower", mcolor(black) msymbol(T) msize(small)) ///
-    (scatteri 0 `pooled_gap', msymbol(D) mcolor(black) msize(medium)) ///
-    (pci 0 `pooled_gap_low' 0 `pooled_gap_high', lcolor(black) lwidth(medthick)), ///
-    legend(off) ytitle("") xtitle("Log beef-price increase above the announced tax") ///
+    (rcap log_price_gap_low_marginal_300 log_price_gap_high_marginal_300 plot_order if !missing(log_price_gap_low_marginal_300, log_price_gap_high_marginal_300), horizontal lcolor(gs8)) ///
+    (scatter plot_order log_price_gap_marginal_300 if is_eligible, mcolor(black) msymbol(O) msize(small)) ///
+    (scatter plot_order log_price_gap_marginal_300 if !is_eligible & bound_type != "lower", mcolor(black) msymbol(Oh) msize(small)) ///
+    (scatter plot_order log_price_gap_marginal_300 if bound_type == "lower", mcolor(black) msymbol(T) msize(small)) ///
+    (scatteri 0 `pooled_gap_marginal_300', msymbol(D) mcolor(black) msize(medium)) ///
+    (pci 0 `pooled_gap_low_marginal_300' 0 `pooled_gap_high_marginal_300', lcolor(black) lwidth(medthick)), ///
+    legend(off) ytitle("") xtitle("Log beef-price increase above DKK 300/tCO2e marginal incentive") ///
     yscale(range(-0.5 `=`n_display'+0.5')) ylabel(0/`n_display', valuelabel angle(horizontal) labsize(vsmall)) ///
     xline(0, lcolor(gs8) lpattern(dash)) graphregion(color(white)) plotregion(color(white)) ///
     xsize(11) ysize(7)
@@ -155,32 +167,43 @@ replace plot_position = 1.25 if estimator == "micro_did"
 replace plot_position = 2 if estimator == "aggregate_did"
 replace plot_position = 2.75 if estimator == "aggregate_sdid"
 sort plot_position
-gen double meta_gap = `pooled_gap'
-gen double meta_gap_low = `pooled_gap_low'
-gen double meta_gap_high = `pooled_gap_high'
+gen double meta_gap_effective_120 = `pooled_gap_effective_120'
+gen double meta_gap_low_effective_120 = `pooled_gap_low_effective_120'
+gen double meta_gap_high_effective_120 = `pooled_gap_high_effective_120'
+gen double meta_gap_marginal_300 = `pooled_gap_marginal_300'
+gen double meta_gap_low_marginal_300 = `pooled_gap_low_marginal_300'
+gen double meta_gap_high_marginal_300 = `pooled_gap_high_marginal_300'
 export delimited using "outputs/models/stata/beef_policy_calibration.csv", replace
-* Add endpoint observations for the graph only so the pooled gap and its
-* interval span the full x-axis, while the exported calibration file retains
-* exactly the three econometric estimates.
+* Add the two SCC scenarios as graph-only rows. The exported source file keeps
+* exactly the three econometric rows, each carrying both benchmark scenarios.
 local n_econ = _N
 local first_extra = `n_econ' + 1
 local second_extra = `n_econ' + 2
 set obs `second_extra'
-replace plot_position = 1 in `first_extra'
-replace plot_position = 3 in `second_extra'
-replace meta_gap = `pooled_gap' in `first_extra'/`second_extra'
-replace meta_gap_low = `pooled_gap_low' in `first_extra'/`second_extra'
-replace meta_gap_high = `pooled_gap_high' in `first_extra'/`second_extra'
-sort plot_position
+replace plot_position = 4 in `first_extra'
+replace plot_position = 5 in `second_extra'
+gen double plot_point = estimate
+gen double plot_low = conf_low
+gen double plot_high = conf_high
+gen byte is_scc = 0
+replace plot_point = `pooled_gap_effective_120' in `first_extra'
+replace plot_low = `pooled_gap_low_effective_120' in `first_extra'
+replace plot_high = `pooled_gap_high_effective_120' in `first_extra'
+replace plot_point = `pooled_gap_marginal_300' in `second_extra'
+replace plot_low = `pooled_gap_low_marginal_300' in `second_extra'
+replace plot_high = `pooled_gap_high_marginal_300' in `second_extra'
+replace is_scc = 1 in `first_extra'/`second_extra'
+label define calibration_rows 1 "Microdata DiD" 2 "Aggregate DiD" 3 "Aggregate SDiD" ///
+    4 "SCC gap: DKK 120 average burden" 5 "SCC gap: DKK 300 marginal incentive"
+label values plot_position calibration_rows
 twoway ///
-    (rarea meta_gap_low meta_gap_high plot_position, color(gs12%55) lcolor(gs10)) ///
-    (line meta_gap plot_position, lcolor(black) lpattern(dash) lwidth(medthick)) ///
-    (rcap conf_low conf_high plot_position, lcolor(gs7)) ///
-    (scatter estimate plot_position, mcolor(black) msymbol(O) msize(medium)), ///
-    legend(order(4 "Econometric estimate" 2 "Meta-analytical carbon-price gap" 1 "95% pooled interval") rows(2) position(6) size(small)) ///
-    xlabel(1.25 "Microdata DiD" 2 "Aggregate DiD" 2.75 "Aggregate SDiD", labsize(small) angle(15)) ///
-    xscale(range(1 3)) xtitle("") ytitle("Log beef-price effect") yline(0, lcolor(gs8)) ///
-    graphregion(color(white)) plotregion(color(white)) xsize(8.5) ysize(5.4)
+    (rcap plot_low plot_high plot_position, horizontal lcolor(gs7)) ///
+    (scatter plot_position plot_point if !is_scc, mcolor(black) msymbol(O) msize(medium)) ///
+    (scatter plot_position plot_point if is_scc, mcolor(black) msymbol(D) msize(medium)), ///
+    legend(order(2 "Econometric estimate (95% CI)" 3 "SCC accounting gap (95% sensitivity interval)") rows(2) position(6) size(small)) ///
+    ylabel(1/5, valuelabel angle(horizontal) labsize(small)) yscale(reverse) ytitle("") ///
+    xtitle("Log beef-price effect or SCC-implied gap") xline(0, lcolor(gs8)) ///
+    graphregion(color(white)) plotregion(color(white)) xsize(9.5) ysize(5.8)
 graph export "outputs/figures/stata/beef_policy_calibration.png", width(2400) replace
 
 log close
