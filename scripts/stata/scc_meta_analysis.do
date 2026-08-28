@@ -163,9 +163,10 @@ import delimited using "outputs/models/stata/aggregate_estimates.csv", varnames(
 append using `micro_results'
 keep if inlist(estimator, "micro_did", "aggregate_did", "aggregate_sdid")
 gen double plot_position = .
-replace plot_position = 1.25 if estimator == "micro_did"
+* Keep each econometric marker exactly on its integer y-axis tick.
+replace plot_position = 1 if estimator == "micro_did"
 replace plot_position = 2 if estimator == "aggregate_did"
-replace plot_position = 2.75 if estimator == "aggregate_sdid"
+replace plot_position = 3 if estimator == "aggregate_sdid"
 sort plot_position
 gen double meta_gap_effective_120 = `pooled_gap_effective_120'
 gen double meta_gap_low_effective_120 = `pooled_gap_low_effective_120'
@@ -197,10 +198,12 @@ label define calibration_rows 1 "Microdata DiD" 2 "Aggregate DiD" 3 "Aggregate S
     4 "SCC gap: DKK 120 average burden" 5 "SCC gap: DKK 300 marginal incentive"
 label values plot_position calibration_rows
 twoway ///
-    (rcap plot_low plot_high plot_position, horizontal lcolor(gs7)) ///
+    (rcap plot_low plot_high plot_position if !is_scc, horizontal lcolor(gs7)) ///
+    (pci 4 `pooled_gap_low_effective_120' 4 `pooled_gap_high_effective_120', lcolor(black) lwidth(medthick)) ///
+    (pci 5 `pooled_gap_low_marginal_300' 5 `pooled_gap_high_marginal_300', lcolor(black) lwidth(medthick)) ///
     (scatter plot_position plot_point if !is_scc, mcolor(black) msymbol(O) msize(medium)) ///
     (scatter plot_position plot_point if is_scc, mcolor(black) msymbol(D) msize(medium)), ///
-    legend(order(2 "Econometric estimate (95% CI)" 3 "SCC accounting gap (95% sensitivity interval)") rows(2) position(6) size(small)) ///
+    legend(order(4 "Econometric estimate (95% CI)" 5 "SCC accounting gap (95% sensitivity interval)") rows(2) position(6) size(small)) ///
     ylabel(1/5, valuelabel angle(horizontal) labsize(small)) yscale(reverse) ytitle("") ///
     xtitle("Log beef-price effect or SCC-implied gap") xline(0, lcolor(gs8)) ///
     graphregion(color(white)) plotregion(color(white)) xsize(9.5) ysize(5.8)
