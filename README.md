@@ -12,7 +12,7 @@ All analytical estimation is in Stata. Python is limited to downloading, product
 - Official window: April 2023--September 2025, exactly 15 pre and 15 post months.
 - Disease cutoff: October 2025 onward is excluded because the Danish Veterinary and Food Administration dates the recent bovine viral diarrhoea outbreak from October 2025.
 - Beef controls exclude pork, lamb/goat/sheep, mixed or processed meat, dairy, and other livestock-exposed categories.
-- Estimators: product--store DiD, official lags-only DiD with Newey--West lag 2, and official synthetic DiD.
+- Estimators: product--store DiD, official lags-only DiD with Newey--West lag 2, official synthetic DiD, and EU country-price and beef-import SDiD robustness checks.
 - SCC benchmark: equal-paper-weight synthesis of ten eligible preferred estimates, with reported source ranges propagated in a hierarchical paper bootstrap.
 
 ## Requirements
@@ -34,6 +34,8 @@ Install missing Stata packages once:
 ```
 
 If Stata is installed elsewhere, set `$env:STATA_EXE` to the executable path.
+
+The EU robustness checks require the two raw downloads documented in `docs/country_sdid.md` and `docs/beef_trade_pair_sdid.md`. Place them at `data/raw/eu_beef_carcass_prices_2023m04_2025m09.json` and `data/raw/eu_beef_trade_data_en.csv`. The estimate stage rebuilds both processed panels before running their Stata specifications.
 
 ## Reproduce the analysis
 
@@ -71,6 +73,8 @@ $env:PYTHONPATH='src'; py -3 main.py all --fixture --frequency daily
 - `paper/main.tex`, `paper/references.bib`, and `paper/main.pdf`: publication source, BibTeX database, and compiled paper.
 - `scripts/stata/microdata_analysis.do`: scraped-data DiD, event study, and descriptives.
 - `scripts/stata/aggregate_analysis.do`: official CPI descriptives, DiD, event study, and SDiD.
+- `scripts/stata/country_sdid.do`: country-level beef-price SDiD robustness check.
+- `scripts/stata/beef_trade_pair_sdid.do`: Denmark-importer beef-trade SDiD robustness check.
 - `scripts/stata/scc_meta_analysis.do`: SCC harmonization, hierarchical pooling, forest plot, and policy calibration.
 - `data/reference/scc_literature_estimates.csv`: source-level SCC inventory and eligibility decisions.
 - `outputs/models/stata/`: machine-readable Stata estimates and figure data.

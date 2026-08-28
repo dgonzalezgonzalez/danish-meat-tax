@@ -8,7 +8,7 @@ from .data_sources.heissepreise import download_json, write_fixture
 from .data_sources.statbank import download_pris01
 from .normalize_products import build_processed_products
 from .panel_builder import write_panel
-from .stata_runner import prepare_micro_panel, run_stata
+from .stata_runner import prepare_eu_robustness_panels, prepare_micro_panel, run_stata
 
 
 def _latest_raw_path(paths: PipelinePaths) -> Path:
@@ -86,9 +86,13 @@ def run_stage(
         if fixture:
             print(f"estimate skipped for fixture: Stata input contract -> {stata_panel_path}")
         else:
+            prepare_eu_robustness_panels(paths.root.resolve())
             run_stata(paths.root.resolve(), Path("scripts/stata/microdata_analysis.do"))
             run_stata(paths.root.resolve(), Path("scripts/stata/aggregate_analysis.do"))
-            print(f"estimate: Stata DiD and aggregate SDiD -> {paths.models_dir / 'stata'}")
+            run_stata(paths.root.resolve(), Path("scripts/stata/country_sdid.do"))
+            run_stata(paths.root.resolve(), Path("scripts/stata/beef_trade_pair_sdid.do"))
+            run_stata(paths.root.resolve(), Path("scripts/stata/beef_trade_pair_sdid_bootstrap.do"))
+            print(f"estimate: main and EU robustness estimates -> {paths.models_dir / 'stata'}")
     if stage in {"outputs", "all"}:
         if fixture:
             print("outputs skipped for fixture: analytical publication outputs require real data")

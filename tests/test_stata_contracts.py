@@ -48,6 +48,9 @@ class StataContractsTest(unittest.TestCase):
         self.assertIn("replace event_time = relative_time - 1 if relative_time > 0", micro)
         self.assertNotIn("sdid log_price", micro)
         self.assertIn("microdata_analysis.do", master)
+        self.assertIn("country_sdid.do", master)
+        self.assertIn("beef_trade_pair_sdid.do", master)
+        self.assertIn("beef_trade_pair_sdid_bootstrap.do", master)
         self.assertFalse(Path("src/danish_meat_tax/estimators.py").exists())
         self.assertFalse(Path("src/danish_meat_tax/output.py").exists())
 

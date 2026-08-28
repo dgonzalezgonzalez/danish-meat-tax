@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,caption,graphicx,natbib,pdflscape,setspace}
+\usepackage{amsmath,amssymb,booktabs,caption,graphicx,natbib,pdflscape,placeins,setspace}
 \usepackage{url}
 \urlstyle{same}
 \onehalfspacing
@@ -27,7 +27,7 @@ The second contribution is a literature-based calibration that does not privileg
 
 The broader contribution concerns announcements as policy instruments. A credible commitment can alter expectations and behaviour before the underlying instrument is deployed, an idea made especially visible by Mario Draghi's \emph{whatever it takes} commitment during the euro-area crisis \citep{draghi2012}. The analogy is not exact: this paper studies prices in a commodity market, not central-bank credibility. It nevertheless motivates separating announcement effects from implementation effects and asking whether an announced future carbon price generates measurable adjustment in advance.
 
-The paper focuses exclusively on beef. The estimand is especially relevant because cattle are the most emissions-intensive major livestock product and prominent in the Danish agreement. Restricting attention to a pre-specified commodity also avoids selecting among a large family of weakly identified commodity-specific estimates. The remainder of the paper describes the two data sources and classification rules, sets out the three estimators, reports cross-source results, and uses the SCC synthesis for a back-of-the-envelope policy calibration.
+The paper focuses exclusively on beef. The estimand is especially relevant because cattle are the most emissions-intensive major livestock product and prominent in the Danish agreement. Restricting attention to a pre-specified commodity also avoids selecting among a large family of weakly identified commodity-specific estimates. The remainder of the paper describes the data sources and classification rules, sets out the three main estimators and two EU-data robustness checks, reports the results, and uses the SCC synthesis for a back-of-the-envelope policy calibration.
 
 \section{Data and Panel Construction}\label{sec:data}
 \subsection{Scraped grocery-price microdata}
@@ -44,7 +44,12 @@ The second source is Statistics Denmark's monthly PRIS01 consumer price index by
 
 The official-data window runs from April 2023 through September 2025: 15 months before July 2024 and 15 months from July 2024 onward. June 2024 is the final pre-treatment reference month for event-study purposes. This symmetric window prevents the aggregate estimates from being driven by unequal pre- and post-support and, like the microdata restriction, ends before the official October 2025 BVD outbreak interval.
 
-Table~\ref{tab:descriptives} summarizes both estimation samples. The scraped panel contains 151,933 monthly observations from 16,912 product--store pairs, of which 5,123 observations and 592 pairs are classified as beef. Normalized prices are strongly right-skewed: the overall mean is DKK 518 per kilogram or litre, compared with a median of DKK 100, and the beef mean is DKK 266 compared with a median of DKK 127. This dispersion motivates logarithmic estimation while retaining prices in levels for transparent description. Product availability is intermittent, with the median product--store observed for eight months overall and 7.5 months for beef. The official panel is balanced by construction: 30 observations for beef and 1,560 for the 52 donor series. Its CPI distribution is much tighter, reflecting aggregation within official product classes rather than product-level price heterogeneity.
+\subsection{EU robustness data}
+Two robustness checks use the European Commission's Agri-food Data Portal. The first uses weekly beef-carcass prices reported by EU Member States. I retain the AO2 young-bull series, average prices in euros per 100 kg within country--month, exclude the EU aggregate, and keep the 23 Member States observed in every month from April 2023 through September 2025. Denmark is the exposed country and the other 22 Member States form the donor pool.
+
+The second check uses the European Commission's Beef Trade Data Explorer, which draws on Eurostat COMEXT data under statistical regime 4. The data report extra-EU beef trade by Member State, external partner, month, and CN8 product. I aggregate imports across beef products to monthly carcass-weight tonnes and balance the panel by coding unreported importer--partner--months as zero. The resulting panel contains 383 importer--partner pairs, including 17 pairs with Denmark as importer, over the same 30-month window.
+
+Table~\ref{tab:descriptives} summarizes the two main estimation samples. The scraped panel contains 151,933 monthly observations from 16,912 product--store pairs, of which 5,123 observations and 592 pairs are classified as beef. Normalized prices are strongly right-skewed: the overall mean is DKK 518 per kilogram or litre, compared with a median of DKK 100, and the beef mean is DKK 266 compared with a median of DKK 127. This dispersion motivates logarithmic estimation while retaining prices in levels for transparent description. Product availability is intermittent, with the median product--store observed for eight months overall and 7.5 months for beef. The official panel is balanced by construction: 30 observations for beef and 1,560 for the 52 donor series. Its CPI distribution is much tighter, reflecting aggregation within official product classes rather than product-level price heterogeneity.
 
 \begin{table}[htbp]
 \centering\caption{Descriptive statistics for the estimation samples}\label{tab:descriptives}
@@ -77,7 +82,7 @@ The official-data lags-only DiD preserves the earlier specification. For each mo
 
 Synthetic DiD follows \citet{arkhangelsky2021synthetic}, jointly weighting donor series and pre-treatment periods to construct a comparison path for beef. It operates on the balanced official panel and uses placebo inference with 200 replications.
 
-Both DiD designs require the retained control foods to be independent of beef with respect to the announcement: they must not be close substitutes or complements whose prices respond directly to the same news. This exclusion restriction may be strong in a general-equilibrium setting, because an announcement about livestock emissions can affect several food markets at once. A future country-level analysis will examine it more directly with synthetic-control and synthetic-DiD designs that treat Denmark as the exposed unit and use untreated countries as the donor pool. For the present study, the available diagnostic is that neither the control series nor the SDiD counterfactual shows a visible break after the announcement (Figure~\ref{fig:a_sdid} in the appendix).
+Both main DiD designs require the retained control foods to be independent of beef with respect to the announcement: they must not be close substitutes or complements whose prices respond directly to the same news. This exclusion restriction may be strong in a general-equilibrium setting because an announcement about livestock emissions could affect several food markets at once. I assess it with two additional synthetic-DiD specifications over the same 15-month pre- and post-periods. The first treats Denmark's log AO2 beef-carcass price as exposed and uses the other EU Member States as donors. This comparison no longer relies on other foods as controls. The second tests whether Denmark's extra-EU beef imports changed relative to other Member State--partner pairs; its outcome is the log of one plus carcass-weight tonnes. Both specifications use synthetic unit and time weights. Country-price inference is based on 200 placebos; the import specification reports a 200-replication unit-cluster bootstrap, which is feasible because Denmark contributes multiple treated importer--partner pairs. These checks do not prove independence, but they directly examine the food-control concern and one international-market spillover that could compromise the country comparison (Appendix Figures~\ref{fig:a_country_sdid} and \ref{fig:a_trade_sdid}).
 
 \section{Results}\label{sec:results}
 Table~\ref{tab:main} reports the three beef estimates. The scraped microdata DiD implies a 4.37-log-point increase (approximately 4.47 percent), with a clustered standard error of 1.63 percentage points. The official lags-only DiD gives 6.45 log points, with a Newey--West standard error of 3.06 points. An approximate equality test, treating the estimates as independent, gives
@@ -115,6 +120,11 @@ Figure~\ref{fig:event} compares event-time patterns. In the scraped panel, the s
 \begin{minipage}{0.49\linewidth}\centering\textbf{B. Official aggregate CPI}\par\smallskip\includegraphics[width=\linewidth]{../outputs/figures/stata/aggregate_event_study.png}\end{minipage}
 \figurenotes{dagligepriser.dk (Panel A); Statistics Denmark, PRIS01 (Panel B).}{Points are relative-month coefficients and bars are 95 percent confidence intervals. In both panels, July 2024 is $t=0$, the first complete post-announcement month. Panel A omits May 2024 ($t=-1$), because the partial event month of June is excluded, and uses product--store clustered standard errors. Panel B uses June 2024 as its omitted reference month and heteroskedasticity-robust standard errors. Both samples end in September 2025, before the official October 2025 BVD outbreak interval.}
 \end{figure}
+\FloatBarrier
+
+The EU country-price check yields an ATT of 0.0448 (placebo standard error 0.2043; $p=0.826$). The estimate is not statistically distinguishable from zero, and Denmark's series does not track its synthetic counterfactual particularly well during the pre-period (Appendix Figure~\ref{fig:a_country_sdid}). The point estimate is nevertheless almost identical to the scraped-product estimate of 0.0437 and close to the other main estimates. This numerical agreement is suggestive, rather than conclusive, evidence that the main findings are not generated by announcement-induced movements in the food products used as controls.
+
+The import check yields an ATT of $-0.0801$ (bootstrap standard error 0.0782; $p=0.306$), providing no evidence of an announcement-induced increase in beef imports into Denmark (Appendix Figure~\ref{fig:a_trade_sdid}). The null result weakens the specific concern that an international supply response contaminates the country-level comparison. Taken together, the country-price and trade checks support using the main food controls as approximately independent of beef in this application, while their imprecision precludes treating that restriction as verified.
 
 \section{SCC Synthesis and Policy Calibration}\label{sec:calibration}
 The calibration uses one preferred total global SCC from each eligible paper \citep{cai2016,nordhaus2017,ricke2018,cailontzek2019,pindyck2019,hansel2020,vandenbremer2021,dietz2021,rennert2022,barrage2024}. Dollar values are inflated to 2024 US dollars and values per ton of carbon are converted to tons of CO2. The 2030 value from \citet{barrage2024} is log-interpolated between their published 2025 and 2050 path points. For the other eligible studies, a reported value at another date is treated as constant when the source does not provide a time path.
@@ -124,7 +134,7 @@ The equal-paper-weight point mean across ten studies is USD 157.96/tCO2. The int
 z_j=\Phi^{-1}(1-\alpha_j),\qquad
 \sigma_j=\frac{\log U_j-\log L_j}{2z_j}.
 \end{equation*}
-where $z_j$ is the corresponding standard-normal quantile and $\sigma_j$ is the calibrated log-scale standard deviation. For a selected paper with a usable range, the within-paper draw is
+Here $z_j$ is the corresponding standard-normal quantile and $\sigma_j$ is the calibrated log-scale standard deviation. For a selected paper with a usable range, the within-paper draw is
 \begin{equation*}
 X_j=\exp\!\left(\log\theta_j-\tfrac12\sigma_j^2+\sigma_j Z_j\right),
 \qquad Z_j\sim N(0,1),
@@ -132,8 +142,6 @@ X_j=\exp\!\left(\log\theta_j-\tfrac12\sigma_j^2+\sigma_j Z_j\right),
 where $Z_j$ is an independent standard-normal variate, $X_j$ is the simulated SCC value, and $E[\cdot]$ denotes expectation. The $-\sigma_j^2/2$ adjustment ensures that $E[X_j]=\theta_j$, while the range's log width determines dispersion. For papers without a positive range, $X_j=\theta_j$. The 66 percent model range in \citet{ricke2018} has $\alpha_j=0.17$ and therefore $z_j=\Phi^{-1}(0.83)$; the 5th--95th quantiles in \citet{rennert2022} have $\alpha_j=0.05$ and $z_j=\Phi^{-1}(0.95)$; and the ethical-parameter range in \citet{hansel2020} is conservatively assigned 95 percent coverage, so $\alpha_j=0.025$ and $z_j=\Phi^{-1}(0.975)$.
 
 In the second layer, each of 10,000 bootstrap replications samples ten papers with replacement from the ten-paper pool, makes an independent within-paper draw for every sampled paper, and records the arithmetic mean of those ten draws. Resampling papers captures between-paper dispersion; the lognormal step propagates the reported within-paper range. The 2.5th and 97.5th percentiles of the 10,000 replicated means are USD 77.22 and USD 363.40/tCO2. Because the inputs mix model, parameter, and distributional uncertainty rather than comparable sampling errors, this interval is a hierarchical sensitivity envelope, not a frequentist confidence interval for a common structural parameter.
-
-For the price mapping in Equation~(2), $s$ denotes the SCC input. At the central calibration, $s=\bar{s}\equiv J^{-1}\sum_{j=1}^{J}E[X_j]$ with $J=10$ eligible papers; because the within-paper draws are centered so that $E[X_j]=\theta_j$, this is the equal-paper-weight mean. For each bootstrap replication, $s$ is replaced by that replication's arithmetic mean, so the mapped interval uses the same simulated uncertainty as the SCC interval.
 
 Figure~\ref{fig:scc} shows each preferred estimate after mapping it into the additional log beef-price increase required above the announced DKK 300/tCO2 tax. Filled points enter the pool. Hollow points are external comparisons: a partial mortality SCC and a synthesis that could double count the underlying literature \citep{carleton2022,moore2024}. The triangle is the lower bound reported by \citet{bilal2026} and also remains external. The wide intervals reveal why retaining study-level variation materially changes the calibration.
 
@@ -145,6 +153,8 @@ Figure~\ref{fig:scc} shows each preferred estimate after mapping it into the add
 
 Let $\bar p=158.54$ be the mean pre-announcement beef price in DKK/kg, $e=6.8953$ DKK/USD, and $q=59.6$ kg CO2e/kg beef. The carbon intensity follows the OECD's presentation of the beef-herd benchmark from \citet{poore2018} \citep{oecd2025}. For SCC value $s$ in USD/tCO2 and announced tax $T=300$ DKK/tCO2, define $g(s)$ as the additional log price required:
 \begin{equation}g(s)=\log\left[\frac{\bar p+(se-T)q/1000}{\bar p}\right].\end{equation}
+Here $s$ denotes the SCC input. At the central calibration, $s=\bar{s}\equiv J^{-1}\sum_{j=1}^{J}E[X_j]$, where $J=10$ is the number of eligible papers. Because the within-paper draws are centered so that $E[X_j]=\theta_j$, $\bar{s}$ is the equal-paper-weight mean. In each bootstrap replication, $s$ is replaced by that replication's arithmetic mean, so the mapped interval uses the same simulated uncertainty as the SCC interval.
+
 At the pooled mean, $g(157.96)=0.260$, with a pooled interval of 0.084--0.604. Figure~\ref{fig:policy} compares that benchmark with all three econometric estimates. The micro DiD confidence interval ends at 0.076, just below the pooled interval's lower endpoint. The aggregate DiD and SDiD intervals overlap its lower tail.
 
 \begin{figure}[htbp]\centering
@@ -160,11 +170,13 @@ Two independent DiD designs find a modest increase in beef prices following Denm
 
 Aggregate SDiD prevents an overly tidy conclusion: it is positive but imprecise. With only 53 official series and 15 pre-treatment months, synthetic weighting is intrinsically fragile. The preferred interpretation therefore rests on triangulation: the two DiD estimates agree, their event studies do not show differential pre-trends, and SDiD points in the same direction without determining the magnitude precisely.
 
+The EU checks address a separate identification concern. Their point estimates provide no evidence that the main result is driven by movements in control-food prices or by a post-announcement increase in beef imports. The close numerical agreement between the country-price ATT and the product-level ATT is encouraging, but the country-price pre-fit is weak and both checks are imprecise. They therefore support, without establishing, the independence restriction underlying the main designs.
+
 The meta-analytical calibration places the estimated announcement effect below the central carbon-price gap while preserving substantial uncertainty across the underlying SCC literature. The lower end of the pooled range overlaps some aggregate econometric intervals, so the evidence does not identify a single corrective tax with useful precision.
 
 The timing of the response is itself policy-relevant. The tax had not yet been implemented, so the estimates are consistent with firms and consumers adjusting to a credible future policy rather than to a current statutory liability. In this respect, the mechanism resembles the expectations channel highlighted by Draghi's \emph{whatever it takes} commitment: the announcement can influence behaviour before the full instrument is used \citep{draghi2012}. The analogy should not be pushed too far, and the design cannot isolate every expectations mechanism. Still, it suggests that clear, credible policy announcements can be instruments in their own right. They need not replace the eventual tax; instead, their measurable anticipatory effects should enter subsequent policy calibration.
 
-Three limitations are central. First, the announcement was national and there is no untreated Denmark; identification is relative to other food prices and depends on the absence of beef-specific shocks before October 2025. Second, text rules and quantity parsing can misclassify products or create extreme normalized levels, although logs, fixed effects, explicit exclusion rules, and agreement with official CPI mitigate this concern. Third, SCC papers estimate heterogeneous objects under different discounting, damage, and uncertainty assumptions. The meta-analysis represents that heterogeneity rather than resolving it.
+Three limitations are central. First, the main design identifies a national announcement relative to other food prices and therefore depends on the absence of beef-specific shocks before October 2025. The country-price and trade checks address two implications of this concern but cannot rule out every domestic or international spillover. Second, text rules and quantity parsing can misclassify products or create extreme normalized levels, although logs, fixed effects, explicit exclusion rules, and agreement with official CPI mitigate this concern. Third, SCC papers estimate heterogeneous objects under different discounting, damage, and uncertainty assumptions. The meta-analysis represents that heterogeneity rather than resolving it.
 
 \section{Conclusion}\label{sec:conclusion}
 Denmark's livestock-tax announcement was followed by a modest beef-price increase in two independent sources. Their close DiD estimates support carefully classified web-scraped prices for timely evaluation, while wider SDiD uncertainty cautions against a precise causal magnitude. Most importantly, credible announcements may induce behaviour before implementation; announcement and implementation are distinct policy stages, and evaluations beginning only at collection may miss part of the response.
@@ -207,4 +219,14 @@ Bilal--K\"anzig (2026) & Macro empirical & 2024 & $>1,200$ & --- & --- & Lower b
 \caption{Official-data synthetic DiD: beef and SDiD counterfactual}\label{fig:a_sdid}
 \includegraphics[width=0.9\linewidth]{../outputs/figures/stata/aggregate_sdid.png}
 \figurenotes{Statistics Denmark, PRIS01.}{Series are log CPI for beef and veal and the Stata SDiD counterfactual over the symmetric 15-month pre/post window. The dashed vertical line marks July 2024, the first post-announcement month.}\end{figure}
+
+\begin{figure}[htbp]\centering
+\caption{Country-level synthetic DiD: Danish beef-carcass prices}\label{fig:a_country_sdid}
+\includegraphics[width=0.9\linewidth]{../outputs/figures/stata/country_sdid.png}
+\figurenotes{European Commission, Agri-food Data Portal, Beef Prices.}{Series are log AO2 young-bull carcass prices for Denmark and the SDiD counterfactual constructed from 22 other EU Member States over the symmetric April 2023--September 2025 window. The dashed vertical line marks July 2024. The pre-treatment fit is imperfect. The ATT is 0.0448 (placebo standard error 0.2043; $p=0.826$; 200 replications).}\end{figure}
+
+\begin{figure}[htbp]\centering
+\caption{Synthetic DiD: beef imports into Denmark}\label{fig:a_trade_sdid}
+\includegraphics[width=0.9\linewidth]{../outputs/figures/stata/beef_trade_pair_sdid.png}
+\figurenotes{European Commission, Beef Trade Data Explorer; Eurostat COMEXT.}{Series are mean log-one-plus monthly extra-EU beef imports, measured in carcass-weight tonnes, for Denmark--partner pairs and their SDiD counterfactual over the symmetric April 2023--September 2025 window. The dashed vertical line marks July 2024. The ATT is $-0.0801$ (unit-cluster bootstrap standard error 0.0782; $p=0.306$; 200 replications).}\end{figure}
 \end{document}

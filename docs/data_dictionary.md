@@ -60,5 +60,10 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/models/stata/aggregate_estimates.csv` | Official DiD and SDiD summaries. |
 | `outputs/models/stata/micro_event_study.csv` | Scraped-data beef event-study coefficients. |
 | `outputs/models/stata/aggregate_event_study.csv` | Official beef event-study coefficients. |
+| `outputs/models/stata/country_sdid_estimate.csv` | Country-level Danish beef-price SDiD estimate and inference. |
+| `outputs/models/stata/country_sdid_series.csv` | Danish and synthetic country-level beef-price series. |
+| `outputs/models/stata/beef_trade_pair_sdid_estimate.csv` | Denmark-importer beef-trade SDiD estimate with placebo inference. |
+| `outputs/models/stata/beef_trade_pair_sdid_bootstrap_estimate.csv` | Same beef-trade ATT with unit-cluster bootstrap inference. |
+| `outputs/models/stata/beef_trade_pair_sdid_series.csv` | Denmark-importer and synthetic beef-import series. |
 | `outputs/models/stata/scc_meta_summary.csv` | Pooled SCC and implied price-gap interval. |
 | `outputs/models/stata/beef_policy_calibration.csv` | Three ATT estimates and SCC calibration band. |

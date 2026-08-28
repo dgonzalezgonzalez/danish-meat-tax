@@ -1,0 +1,2 @@
+estimator,estimate,std_error,p_value,conf_low,conf_high,observations,units,treated_units,periods,pre_treated_average,time_window,outcome,inference
+beef_trade_pair_sdid,-.0801265,.1166656,.49220571,-.30878687,.14853388,11490,383,17,30,17.25025098039216,2023m4-2025m9,ln(1+carcase_weight_tonnes),placebo

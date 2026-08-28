@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import shutil
 import subprocess
 
 import pandas as pd
@@ -59,3 +60,43 @@ def run_stata(root: Path, do_file: Path) -> None:
     )
     if result.returncode:
         raise RuntimeError(f"Stata failed with exit code {result.returncode}: {resolved_do}")
+
+
+def prepare_eu_robustness_panels(root: Path) -> None:
+    """Build publication panels for country-price and beef-import robustness checks."""
+    powershell = shutil.which("powershell.exe") or shutil.which("pwsh")
+    if powershell is None:
+        raise FileNotFoundError("PowerShell was not found; EU robustness panels cannot be prepared.")
+
+    jobs = (
+        (
+            root / "data/raw/eu_beef_carcass_prices_2023m04_2025m09.json",
+            root / "scripts/prepare_country_beef_panel.ps1",
+        ),
+        (
+            root / "data/raw/eu_beef_trade_data_en.csv",
+            root / "scripts/prepare_beef_trade_pair_panel.ps1",
+        ),
+    )
+    for raw_path, script_path in jobs:
+        if not raw_path.exists():
+            raise FileNotFoundError(
+                f"EU robustness input missing: {raw_path}. See docs for source and retrieval steps."
+            )
+        result = subprocess.run(
+            [
+                powershell,
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(script_path),
+            ],
+            cwd=root,
+            check=False,
+            timeout=1800,
+        )
+        if result.returncode:
+            raise RuntimeError(
+                f"EU robustness panel preparation failed with exit code {result.returncode}: {script_path}"
+            )

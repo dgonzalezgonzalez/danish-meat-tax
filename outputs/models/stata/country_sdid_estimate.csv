@@ -1,0 +1,2 @@
+estimator,estimate,std_error,p_value,conf_low,conf_high,observations,units,periods,pre_treated_average,time_window,treatment_series,inference
+country_sdid_AO2,.0447826,.2042592,.82646,-.35555807,.44512329,690,23,30,387.8426666666667,2023m4-2025m9,Denmark,placebo
