@@ -159,27 +159,18 @@ gen double meta_gap = `pooled_gap'
 gen double meta_gap_low = `pooled_gap_low'
 gen double meta_gap_high = `pooled_gap_high'
 export delimited using "outputs/models/stata/beef_policy_calibration.csv", replace
-* Add endpoint observations for the graph only so the pooled gap and its
-* interval span the full x-axis, while the exported calibration file retains
-* exactly the three econometric estimates.
-local n_econ = _N
-local first_extra = `n_econ' + 1
-local second_extra = `n_econ' + 2
-set obs `second_extra'
-replace plot_position = .5 in `first_extra'
-replace plot_position = 3.5 in `second_extra'
-replace meta_gap = `pooled_gap' in `first_extra'/`second_extra'
-replace meta_gap_low = `pooled_gap_low' in `first_extra'/`second_extra'
-replace meta_gap_high = `pooled_gap_high' in `first_extra'/`second_extra'
-sort plot_position
+* Draw the pooled interval as one wide range bar. Its width reaches the
+* established plot boundaries without changing the estimator coordinates.
 twoway ///
-    (rarea meta_gap_low meta_gap_high plot_position, color(gs12%55) lcolor(gs10)) ///
-    (line meta_gap plot_position, lcolor(black) lpattern(dash) lwidth(medthick)) ///
+    (rbar meta_gap_low meta_gap_high plot_position if estimator == "aggregate_did", barwidth(2) color(gs12%55) lcolor(gs10)) ///
+    (line meta_gap plot_position, lcolor(black) lpattern(dash) lwidth(thick)) ///
     (rcap conf_low conf_high plot_position, lcolor(gs7)) ///
     (scatter estimate plot_position, mcolor(black) msymbol(O) msize(medium)), ///
     legend(order(4 "Econometric estimate" 2 "Meta-analytical carbon-price gap" 1 "95% pooled interval") rows(2) position(6) size(small)) ///
     xlabel(1.25 "Microdata DiD" 2 "Aggregate DiD" 2.75 "Aggregate SDiD", labsize(small) angle(15)) ///
-    xscale(range(.5 3.5) noextend) xtitle("") ytitle("Log beef-price effect") yline(0, lcolor(gs8)) ///
+    xscale(range(1 3)) xtitle("") ytitle("Log beef-price effect") ///
+    yline(0, lcolor(gs8) lpattern(dash) extend) ///
+    yline(`pooled_gap', lstyle(foreground) lcolor(black) lpattern(dash) lwidth(thick) extend) ///
     graphregion(color(white)) plotregion(color(white)) xsize(8.5) ysize(5.4)
 graph export "outputs/figures/stata/beef_policy_calibration.png", width(2400) replace
 
