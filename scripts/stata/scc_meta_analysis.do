@@ -166,8 +166,8 @@ local n_econ = _N
 local first_extra = `n_econ' + 1
 local second_extra = `n_econ' + 2
 set obs `second_extra'
-replace plot_position = .5 in `first_extra'
-replace plot_position = 3.5 in `second_extra'
+replace plot_position = 1 in `first_extra'
+replace plot_position = 3 in `second_extra'
 replace meta_gap = `pooled_gap' in `first_extra'/`second_extra'
 replace meta_gap_low = `pooled_gap_low' in `first_extra'/`second_extra'
 replace meta_gap_high = `pooled_gap_high' in `first_extra'/`second_extra'
@@ -179,7 +179,7 @@ twoway ///
     (scatter estimate plot_position, mcolor(black) msymbol(O) msize(medium)), ///
     legend(order(4 "Econometric estimate" 2 "Meta-analytical carbon-price gap" 1 "95% pooled interval") rows(2) position(6) size(small)) ///
     xlabel(1.25 "Microdata DiD" 2 "Aggregate DiD" 2.75 "Aggregate SDiD", labsize(small) angle(15)) ///
-    xscale(range(.5 3.5) noextend) xtitle("") ytitle("Log beef-price effect") yline(0, lcolor(gs8)) ///
+    xscale(range(1 3)) xtitle("") ytitle("Log beef-price effect") yline(0, lcolor(gs8)) ///
     graphregion(color(white)) plotregion(color(white)) xsize(8.5) ysize(5.4)
 graph export "outputs/figures/stata/beef_policy_calibration.png", width(2400) replace
 
