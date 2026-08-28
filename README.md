@@ -12,14 +12,14 @@ All analytical estimation is in Stata. Python is limited to downloading, product
 - Official window: April 2023--September 2025, exactly 15 pre and 15 post months.
 - Disease cutoff: October 2025 onward is excluded because the Danish Veterinary and Food Administration dates the recent bovine viral diarrhoea outbreak from October 2025.
 - Beef controls exclude pork, lamb/goat/sheep, mixed or processed meat, dairy, and other livestock-exposed categories.
-- Estimators: product--store DiD, official lags-only DiD with Newey--West lag 2, official synthetic control, and official synthetic DiD.
+- Estimators: product--store DiD, official lags-only DiD with Newey--West lag 2, and official synthetic DiD.
 - SCC benchmark: equal-paper-weight synthesis of ten eligible preferred estimates, with reported source ranges propagated in a hierarchical paper bootstrap.
 
 ## Requirements
 
 - Python 3.10+
 - Stata 19 or StataNow 19
-- Stata packages `synth`, `sdid`, and `estout`
+- Stata packages `sdid` and `estout`
 
 Install Python dependencies:
 
@@ -68,9 +68,9 @@ $env:PYTHONPATH='src'; py -3 main.py all --fixture --frequency daily
 
 ## Main artifacts
 
-- `paper/main.tex` and `paper/main.pdf`: publication source and compiled paper.
-- `scripts/stata/microdata_analysis.do`: scraped-data DiD, event study, descriptives, and micro SDiD appendix series.
-- `scripts/stata/aggregate_analysis.do`: official CPI DiD, event study, SC, SDiD, and space placebos.
+- `paper/main.tex`, `paper/references.bib`, and `paper/main.pdf`: publication source, BibTeX database, and compiled paper.
+- `scripts/stata/microdata_analysis.do`: scraped-data DiD, event study, and descriptives.
+- `scripts/stata/aggregate_analysis.do`: official CPI descriptives, DiD, event study, and SDiD.
 - `scripts/stata/scc_meta_analysis.do`: SCC harmonization, hierarchical pooling, forest plot, and policy calibration.
 - `data/reference/scc_literature_estimates.csv`: source-level SCC inventory and eligibility decisions.
 - `outputs/models/stata/`: machine-readable Stata estimates and figure data.

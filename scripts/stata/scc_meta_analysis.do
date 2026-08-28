@@ -142,34 +142,32 @@ twoway ///
     xsize(11) ysize(7)
 graph export "outputs/figures/stata/scc_meta_forest.png", width(3000) replace
 
-* Figure 2: four econometric estimates and the meta-analytical gap band.
+* Policy calibration: three econometric estimates and the meta-analytical gap band.
 import delimited using "outputs/models/stata/micro_estimates.csv", varnames(1) clear
 keep if estimator == "micro_did"
 tempfile micro_results
 save `micro_results'
 import delimited using "outputs/models/stata/aggregate_estimates.csv", varnames(1) clear
 append using `micro_results'
-keep if inlist(estimator, "micro_did", "aggregate_did", "aggregate_sc", "aggregate_sdid")
-gen byte plot_order = .
-replace plot_order = 1 if estimator == "micro_did"
-replace plot_order = 2 if estimator == "aggregate_did"
-replace plot_order = 3 if estimator == "aggregate_sc"
-replace plot_order = 4 if estimator == "aggregate_sdid"
-label define estimator_order 1 "Microdata DiD" 2 "Aggregate DiD" 3 "Aggregate SC" 4 "Aggregate SDiD"
-label values plot_order estimator_order
-sort plot_order
+keep if inlist(estimator, "micro_did", "aggregate_did", "aggregate_sdid")
+gen double plot_position = .
+replace plot_position = 1.25 if estimator == "micro_did"
+replace plot_position = 2 if estimator == "aggregate_did"
+replace plot_position = 2.75 if estimator == "aggregate_sdid"
+sort plot_position
 gen double meta_gap = `pooled_gap'
 gen double meta_gap_low = `pooled_gap_low'
 gen double meta_gap_high = `pooled_gap_high'
 export delimited using "outputs/models/stata/beef_policy_calibration.csv", replace
 twoway ///
-    (rarea meta_gap_low meta_gap_high plot_order, color(gs12%55) lcolor(gs10)) ///
-    (line meta_gap plot_order, lcolor(black) lpattern(dash) lwidth(medthick)) ///
-    (rcap conf_low conf_high plot_order if estimator != "aggregate_sc", lcolor(gs7)) ///
-    (scatter estimate plot_order, mcolor(black) msymbol(O) msize(medium)), ///
+    (rarea meta_gap_low meta_gap_high plot_position, color(gs12%55) lcolor(gs10)) ///
+    (line meta_gap plot_position, lcolor(black) lpattern(dash) lwidth(medthick)) ///
+    (rcap conf_low conf_high plot_position, lcolor(gs7)) ///
+    (scatter estimate plot_position, mcolor(black) msymbol(O) msize(medium)), ///
     legend(order(4 "Econometric estimate" 2 "Meta-analytical carbon-price gap" 1 "95% pooled interval") rows(2) position(6) size(small)) ///
-    xlabel(1/4, valuelabel labsize(small) angle(20)) xtitle("") ytitle("Log beef-price effect") yline(0, lcolor(gs8)) ///
-    graphregion(color(white)) plotregion(color(white)) xsize(11) ysize(6)
-graph export "outputs/figures/stata/beef_policy_calibration.png", width(3000) replace
+    xlabel(1.25 "Microdata DiD" 2 "Aggregate DiD" 2.75 "Aggregate SDiD", labsize(small) angle(15)) ///
+    xscale(range(1 3)) xtitle("") ytitle("Log beef-price effect") yline(0, lcolor(gs8)) ///
+    graphregion(color(white)) plotregion(color(white)) xsize(8.5) ysize(5.4)
+graph export "outputs/figures/stata/beef_policy_calibration.png", width(2400) replace
 
 log close

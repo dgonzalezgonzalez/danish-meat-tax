@@ -1,4 +1,3 @@
 estimator,estimate,std_error,p_value,conf_low,conf_high,observations,units,periods,pre_treated_average,r_squared,time_window,lags_only,covariates,inference
-aggregate_did,.0644724476716705,.030602036,.044222157,.0017870168,.12715788,30,53,30,84.88000000000001,,2023m4-2025m9,Yes,No,HAC Newey-West lag 2
-aggregate_sc,-.0143864941062809,,.81132078,,,1590,53,30,84.88000000000001,,2023m4-2025m9,No,Yes,space placebo
+aggregate_did,.0644724476716705,.030602036,.044222157,.0017870168,.12715788,1590,53,30,84.88000000000001,,2023m4-2025m9,Yes,No,HAC Newey-West lag 2
 aggregate_sdid,.0759608,.0481419,.11459959,-.01839559,.17031719,1590,53,30,84.88000000000001,,2023m4-2025m9,No,No,placebo

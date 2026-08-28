@@ -9,7 +9,19 @@ The calibration uses the Stata estimates and an equal-paper-weight synthesis of 
 - Median across paper point estimates: USD 109.74/tCO2.
 - Number of equally weighted papers: 10.
 
-The hierarchical interval uses 10,000 paper-bootstrap replications. Within each replication, source-level variation is drawn when a paper reports a positive range. Ricke et al.'s 66% model range and Rennert et al.'s 5th--95th quantiles retain their stated coverages. Hänsel et al.'s parameter span is conservatively calibrated as a 95% range. These inputs are not relabelled as sampling confidence intervals.
+The hierarchical interval uses 10,000 paper-bootstrap replications. Let `theta_j` denote a paper's preferred estimate and `[L_j,U_j]` a positive central range with coverage `1-2 alpha_j`. Its log-scale dispersion is
+
+```text
+sigma_j = (log(U_j) - log(L_j)) / (2 * Phi^-1(1-alpha_j)).
+```
+
+Each replication samples ten papers with replacement. For every selected paper with a usable range it draws
+
+```text
+X_j = exp(log(theta_j) - sigma_j^2/2 + sigma_j * Z_j),  Z_j ~ N(0,1),
+```
+
+which keeps `E[X_j]=theta_j`; papers without a usable range remain at their point estimate. The mean of the ten selected draws is saved. The reported interval is the 2.5th--97.5th percentile range of the 10,000 saved means. Ricke et al.'s 66% model range and Rennert et al.'s 5th--95th quantiles retain their stated coverages, while Hänsel et al.'s parameter span is conservatively calibrated as a 95% range. Paper resampling captures between-paper dispersion and the lognormal draws propagate within-paper range information. These inputs are not relabelled as sampling confidence intervals.
 
 ## Mapping to beef prices
 

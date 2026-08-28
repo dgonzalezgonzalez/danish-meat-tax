@@ -54,10 +54,11 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/diagnostics/panel_balance.csv` | Main panel dimensions and filter settings. |
 | `outputs/diagnostics/panel_commodity_counts.csv` | Units/rows by commodity, treatment group, and treated status. |
 | `outputs/diagnostics/panel_period_support.csv` | Units/rows by relative period and treated status. |
-| `outputs/models/stata/micro_estimates.csv` | Scraped-data DiD and SDiD summaries. |
-| `outputs/models/stata/aggregate_estimates.csv` | Official DiD, SC, and SDiD summaries. |
+| `outputs/models/stata/micro_estimates.csv` | Scraped-data DiD summary. |
+| `outputs/models/stata/descriptive_statistics.csv` | Scraped-sample level-price and panel-support descriptives. |
+| `outputs/models/stata/aggregate_descriptive_statistics.csv` | Official CPI descriptives for beef and donor series. |
+| `outputs/models/stata/aggregate_estimates.csv` | Official DiD and SDiD summaries. |
 | `outputs/models/stata/micro_event_study.csv` | Scraped-data beef event-study coefficients. |
 | `outputs/models/stata/aggregate_event_study.csv` | Official beef event-study coefficients. |
-| `outputs/models/stata/aggregate_sc_placebos.csv` | Space-placebo RMSPE ratios for SC inference. |
 | `outputs/models/stata/scc_meta_summary.csv` | Pooled SCC and implied price-gap interval. |
-| `outputs/models/stata/beef_policy_calibration.csv` | Four ATT estimates and SCC calibration band. |
+| `outputs/models/stata/beef_policy_calibration.csv` | Three ATT estimates and SCC calibration band. |

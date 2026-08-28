@@ -58,15 +58,19 @@ local did_n = e(N)
 local did_r2 = e(r2)
 
 * Beef event study. June 2024 is excluded from the source panel and month -1
-* is the omitted reference period, matching the paper's existing design.
+* (May 2024) is the omitted reference period. July 2024, the first complete
+* post-announcement month, is displayed as event time zero.
+gen int event_time = relative_time
+replace event_time = relative_time - 1 if relative_time > 0
 local event_variables
 local pretest_variables
-quietly levelsof relative_time, local(relative_periods)
+quietly levelsof event_time, local(relative_periods)
 foreach relative_period of local relative_periods {
     if `relative_period' != -1 {
         if `relative_period' < 0 local event_name event_m`=abs(`relative_period')'
+        if `relative_period' == 0 local event_name event_0
         if `relative_period' > 0 local event_name event_p`relative_period'
-        gen byte `event_name' = beef * (relative_time == `relative_period')
+        gen byte `event_name' = beef * (event_time == `relative_period')
         local event_variables `event_variables' `event_name'
         if `relative_period' < -1 local pretest_variables `pretest_variables' `event_name'
     }
@@ -84,6 +88,7 @@ foreach relative_period of local relative_periods {
     }
     else {
         if `relative_period' < 0 local event_name event_m`=abs(`relative_period')'
+        if `relative_period' == 0 local event_name event_0
         if `relative_period' > 0 local event_name event_p`relative_period'
         local event_estimate = _b[`event_name']
         local event_se = _se[`event_name']
@@ -101,7 +106,7 @@ twoway ///
     (scatter estimate relative_time, mcolor(black) msymbol(O) msize(small)), ///
     legend(off) yline(0, lcolor(gs6) lpattern(dash)) xline(0, lcolor(gs9) lpattern(shortdash)) ///
     xtitle("Months relative to the announcement") ytitle("Log price effect and 95% CI") ///
-    xlabel(-8(4)16) graphregion(color(white)) plotregion(color(white))
+    xlabel(-8(4)12 14) graphregion(color(white)) plotregion(color(white))
 graph export "outputs/figures/stata/micro_event_study.png", width(2200) replace
 restore
 
@@ -115,8 +120,6 @@ foreach sample in all beef controls {
     if "`sample'" == "controls" local condition if untreated_control
     quietly summarize price `condition', detail
     post `desc_post' ("`sample'") ("Normalized price") (r(N)) (r(mean)) (r(sd)) (r(p25)) (r(p50)) (r(p75))
-    quietly summarize log_price `condition', detail
-    post `desc_post' ("`sample'") ("Log normalized price") (r(N)) (r(mean)) (r(sd)) (r(p25)) (r(p50)) (r(p75))
 }
 preserve
 bysort unit: gen byte first_unit = _n == 1
@@ -135,44 +138,6 @@ use `descriptives', clear
 export delimited using "outputs/models/stata/descriptive_statistics.csv", replace
 restore
 
-* Synthetic DiD robustness estimate at the complete commodity-store level.
-preserve
-collapse (mean) log_price price (firstnm) beef relative_time, by(store commodity month)
-egen commodity_store = group(store commodity), label
-bysort commodity_store: gen int support = _N
-keep if support == `micro_periods'
-gen byte sdid_treatment = beef * (relative_time > 0)
-quietly levelsof commodity_store, local(sdid_unit_values)
-local sdid_units : word count `sdid_unit_values'
-quietly count
-local sdid_observations = r(N)
-quietly summarize price if beef & relative_time < 0, meanonly
-local sdid_pre_price = r(mean)
-sdid log_price commodity_store month sdid_treatment, vce(placebo) reps(200) seed(20260827)
-local sdid_att = e(ATT)
-local sdid_se = e(se)
-local sdid_p = 2 * normal(-abs(`sdid_att' / `sdid_se'))
-local sdid_low = e(ATT_l)
-local sdid_high = e(ATT_r)
-matrix micro_sdid_series = e(series)
-tempfile sdid_panel
-save `sdid_panel'
-clear
-svmat double micro_sdid_series
-rename micro_sdid_series1 month
-rename micro_sdid_series2 synthetic
-rename micro_sdid_series3 treated
-format month %tm
-export delimited using "outputs/models/stata/micro_sdid_series.csv", replace
-twoway ///
-    (line treated month, lcolor(black) lwidth(medthick)) ///
-    (line synthetic month, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
-    legend(order(1 "Beef" 2 "Synthetic control") rows(1) position(6)) ///
-    xtitle("") ytitle("Log normalized price") graphregion(color(white)) plotregion(color(white))
-graph export "outputs/figures/stata/micro_sdid.png", width(2200) replace
-use `sdid_panel', clear
-restore
-
 tempfile estimates
 tempname estimates_post
 postfile `estimates_post' str12 estimator double estimate std_error p_value conf_low conf_high ///
@@ -180,8 +145,6 @@ postfile `estimates_post' str12 estimator double estimate std_error p_value conf
     str24 time_window str3 lags_only str3 covariates str28 inference using `estimates', replace
 post `estimates_post' ("micro_did") (`did_att') (`did_se') (`did_p') (`did_low') (`did_high') ///
     (`did_n') (`micro_units') (`micro_periods') (`pre_beef_price') (`did_r2') ("2023m11-2025m9") ("No") ("No") ("clustered by product-store")
-post `estimates_post' ("micro_sdid") (`sdid_att') (`sdid_se') (`sdid_p') (`sdid_low') (`sdid_high') ///
-    (`sdid_observations') (`sdid_units') (`micro_periods') (`sdid_pre_price') (.) ("2023m11-2025m9") ("No") ("No") ("placebo")
 postclose `estimates_post'
 use `estimates', clear
 gen double pretrend_p_value = `pretrend_p' if estimator == "micro_did"

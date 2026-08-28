@@ -88,7 +88,7 @@ def run_stage(
         else:
             run_stata(paths.root.resolve(), Path("scripts/stata/microdata_analysis.do"))
             run_stata(paths.root.resolve(), Path("scripts/stata/aggregate_analysis.do"))
-            print(f"estimate: Stata DiD, SC, and SDiD -> {paths.models_dir / 'stata'}")
+            print(f"estimate: Stata DiD and aggregate SDiD -> {paths.models_dir / 'stata'}")
     if stage in {"outputs", "all"}:
         if fixture:
             print("outputs skipped for fixture: analytical publication outputs require real data")
