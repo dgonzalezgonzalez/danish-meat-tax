@@ -33,14 +33,14 @@ Assumptions:
 - Lifecycle beef carbon-intensity benchmark: 59.6 kg CO2e/kg product. This is broader than the farm-level emissions base subject to the Danish levy, so the exercise is an accounting sensitivity, not a tax-base calculation.
 - Mean pre-announcement beef price: DKK 158.54/kg.
 
-For SCC value `s` and policy margin `tau`, the additional log beef-price gap is:
+For SCC value `c_SCC` and policy margin `tau`, the additional log beef-price gap is:
 
 ```text
-log((158.54 + (s * 6.8953 - tau) * 59.6 / 1000) / 158.54)
+log((158.54 + (c_SCC * 6.8953 - tau) * 59.6 / 1000) / 158.54)
 ```
 
 At the pooled mean, the log-price gap is 0.311 under the DKK 120 average-burden scenario, with a hierarchical interval of 0.144--0.640. Under the DKK 300 marginal-incentive scenario, it is 0.260, with an interval of 0.084--0.604.
 
-The main microdata DiD estimate is 0.0437 (clustered SE 0.0163). At the pre-period mean this is approximately DKK 7.1/kg, mechanically equivalent to about USD 17/tCO2 under the common intensity assumption. This announcement-period price equivalent is not added to either future statutory margin: signals across dates are not structurally additive, and observed pass-through depends on adjustment, credibility, discounting, contracts, demand, and costs.
+The main microdata DiD estimate is 0.0437 (clustered SE 0.0163). At the pre-period mean this is approximately DKK 7.1/kg, mechanically equivalent to about USD 17/tCO2 under the common intensity assumption. This announcement-period price equivalent is not added to either future statutory margin: signals across dates are not structurally additive, and observed pass-through depends on adjustment, credibility, discounting, demand elasticity, and technology.
 
 This is an accounting comparison, not a structural welfare or pass-through model.
