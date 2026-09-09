@@ -69,7 +69,7 @@ export delimited using "outputs/models/stata/country_sdid_series.csv", replace
 twoway ///
     (line treated month_id, lcolor(black) lwidth(medthick)) ///
     (line synthetic month_id, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
-    legend(order(1 "Denmark (AO2 beef carcass price)" 2 "SDiD counterfactual") rows(1) position(6)) ///
+    legend(order(1 "Denmark (AO2 beef carcass price)" 2 "Weighted donors") rows(1) position(6)) ///
     xline(`event', lcolor(gs9) lpattern(shortdash)) ///
     xtitle("") ytitle("Log beef carcass price (EUR/100 kg)") ///
     graphregion(color(white)) plotregion(color(white))

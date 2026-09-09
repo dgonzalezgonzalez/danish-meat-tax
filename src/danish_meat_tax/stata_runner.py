@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -52,14 +53,28 @@ def run_stata(root: Path, do_file: Path) -> None:
     resolved_do = do_file if do_file.is_absolute() else root / do_file
     if not resolved_do.exists():
         raise FileNotFoundError(resolved_do)
+    batch_log = root / (resolved_do.stem + ".log")
+    previous_mtime = batch_log.stat().st_mtime_ns if batch_log.exists() else None
+    startupinfo = None
+    if os.name == "nt":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = subprocess.SW_HIDE
     result = subprocess.run(
         [str(executable), "/e", "do", str(resolved_do)],
         cwd=root,
         check=False,
         timeout=1800,
+        startupinfo=startupinfo,
     )
     if result.returncode:
         raise RuntimeError(f"Stata failed with exit code {result.returncode}: {resolved_do}")
+    # Windows Stata can return zero even after a do-file exits with r(...).
+    if batch_log.exists() and batch_log.stat().st_mtime_ns != previous_mtime:
+        log_text = batch_log.read_text(encoding="utf-8", errors="replace")
+        errors = re.findall(r"^r\((\d+)\);\s*$", log_text, re.MULTILINE)
+        if errors:
+            raise RuntimeError(f"Stata reported r({errors[-1]}) in {batch_log}")
 
 
 def prepare_eu_robustness_panels(root: Path) -> None:

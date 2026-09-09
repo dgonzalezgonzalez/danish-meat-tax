@@ -28,3 +28,6 @@ paper/*.aux
 paper/*.log
 paper/*.bbl
 paper/*.blg
+
+!outputs/figures/python/
+!outputs/figures/python/*.png

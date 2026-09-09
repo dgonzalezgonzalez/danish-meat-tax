@@ -3,9 +3,11 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from .calibration_figures import render_calibration_surfaces
 from .config import EVENT_DATE, PipelinePaths
 from .data_sources.heissepreise import download_json, write_fixture
 from .data_sources.statbank import download_pris01
+from .data_sources.production import download_production, prepare_production_panel
 from .normalize_products import build_processed_products
 from .panel_builder import write_panel
 from .stata_runner import prepare_eu_robustness_panels, prepare_micro_panel, run_stata
@@ -56,6 +58,7 @@ def run_stage(
             official = download_pris01(paths.raw_dir, refresh=refresh)
             official_note = " cached" if official.cached else ""
             print(f"download official CPI{official_note}: {official.data}")
+            download_production(paths.raw_dir, refresh=refresh)
     if stage in {"process", "all"}:
         raw_path = raw_path if raw_path.exists() else _latest_raw_path(paths)
         if not raw_path.exists():
@@ -87,17 +90,20 @@ def run_stage(
             print(f"estimate skipped for fixture: Stata input contract -> {stata_panel_path}")
         else:
             prepare_eu_robustness_panels(paths.root.resolve())
+            prepare_production_panel(paths.root.resolve())
             run_stata(paths.root.resolve(), Path("scripts/stata/microdata_analysis.do"))
             run_stata(paths.root.resolve(), Path("scripts/stata/aggregate_analysis.do"))
             run_stata(paths.root.resolve(), Path("scripts/stata/country_sdid.do"))
             run_stata(paths.root.resolve(), Path("scripts/stata/beef_trade_pair_sdid.do"))
             run_stata(paths.root.resolve(), Path("scripts/stata/beef_trade_pair_sdid_bootstrap.do"))
+            run_stata(paths.root.resolve(), Path("scripts/stata/production_analysis.do"))
             print(f"estimate: main and EU robustness estimates -> {paths.models_dir / 'stata'}")
     if stage in {"outputs", "all"}:
         if fixture:
             print("outputs skipped for fixture: analytical publication outputs require real data")
         else:
             run_stata(paths.root.resolve(), Path("scripts/stata/scc_meta_analysis.do"))
+            render_calibration_surfaces(paths.root.resolve())
             print(f"outputs: Stata figures and calibration -> {paths.figures_dir / 'stata'}")
 
 
@@ -130,7 +136,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--dairy-as-control",
         dest="include_dairy_as_treated",
         action="store_false",
-        help="Treat dairy as food control instead of livestock-exposed treatment.",
+        help="Deprecated: rejected because dairy is livestock-exposed.",
     )
     parser.add_argument("--min-pre-periods", type=int, default=1, help="Minimum pre-event periods required per unit.")
     parser.add_argument("--min-post-periods", type=int, default=1, help="Minimum post-event periods required per unit.")

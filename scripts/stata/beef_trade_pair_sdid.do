@@ -71,7 +71,7 @@ export delimited using "outputs/models/stata/beef_trade_pair_sdid_series.csv", r
 twoway ///
     (line treated month_id, lcolor(black) lwidth(medthick)) ///
     (line synthetic month_id, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
-    legend(order(1 "Denmark-importer pairs" 2 "SDiD counterfactual") rows(1) position(6)) ///
+    legend(order(1 "Denmark-importer pairs" 2 "Weighted donors") rows(1) position(6)) ///
     xline(`event', lcolor(gs9) lpattern(shortdash)) ///
     xtitle("") ytitle("Log(1 + beef imports, carcase-weight tonnes)") ///
     graphregion(color(white)) plotregion(color(white))

@@ -13,11 +13,12 @@ class PolicyTaxonomyTest(unittest.TestCase):
         self.assertTrue(assignment.treated)
         self.assertEqual(assignment.treatment_group, "lamb_sheep_goat")
 
-    def test_poultry_is_food_control(self):
+    def test_poultry_and_eggs_are_livestock_exposed(self):
         assignment = classify_product("Kyllingebryst")
-        self.assertFalse(assignment.treated)
-        self.assertEqual(assignment.treatment_group, "control_poultry")
-        self.assertEqual(assignment.analysis_role, "control_food")
+        self.assertTrue(assignment.treated)
+        self.assertEqual(assignment.treatment_group, "poultry")
+        self.assertEqual(assignment.analysis_role, "treated_livestock_meat")
+        self.assertTrue(classify_product("Eggs").treated)
 
     def test_dairy_is_livestock_exposed(self):
         assignment = classify_product("Letmaelk 1 liter")

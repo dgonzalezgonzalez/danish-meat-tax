@@ -8,31 +8,31 @@ The paper asks whether Denmark's 24 June 2024 livestock-emissions tax announceme
 
 The main micro specification regresses log normalized price on `beef × post`, product--store fixed effects, and month fixed effects. Standard errors are clustered by product--store. June 2024 is excluded. The sample runs from October 2023 through September 2025, before the official October 2025 bovine viral diarrhoea outbreak interval. The source panel ends at `relative_time=15`; closing the excluded-June gap maps that observation to displayed event time 14.
 
-Beef is compared only with classified untreated foods. Pork, lamb/sheep/goat, dairy, mixed livestock products, non-food products, and unknown products are excluded from beef's control group. Price normalization converts mass to DKK/kg and volume to DKK/litre; unsupported units are excluded.
+Beef is compared only with classified untreated foods. Pork, poultry, eggs, lamb/sheep/goat, dairy, mixed livestock products, non-food products, and unknown products are excluded from beef's control group. Price normalization converts mass to DKK/kg and volume to DKK/litre; unsupported units are excluded.
 
 The event study excludes the partial announcement month of June 2024, uses May as the omitted `t=-1` reference, labels July 2024 as the first complete post-announcement month at `t=0`, and tests the remaining pre-period interactions jointly.
 
 ## Official aggregate data
 
-The official panel uses Statistics Denmark PRIS01 monthly CPI series under COICOP 2018. Beef and veal (011221) is treated. The donor pool excludes all treated or plausibly exposed meat and dairy categories. The balanced sample contains 53 series over April 2023--September 2025, exactly 15 pre and 15 post months.
+The official panel uses Statistics Denmark PRIS01 monthly CPI series under COICOP 2018. Beef and veal (011221) is treated. The donor pool excludes all treated or plausibly exposed meat and dairy categories. The balanced sample contains 51 series over April 2023--September 2025, exactly 15 pre and 15 post months.
 
 The lags-only DiD preserves the prior OECD specification: subtract the monthly donor mean from log beef CPI, regress the gap on the post indicator, and compute Newey--West standard errors with two lags.
 
-The lags-only regression contains 30 monthly gaps after cross-sectional averaging, but reported `N` is the 1,590 series--month observations in the balanced official panel before that averaging step.
+The lags-only regression contains 30 monthly gaps after cross-sectional averaging, but reported `N` is the 1,530 series--month observations in the balanced official panel before that averaging step.
 
 Synthetic DiD uses Stata's `sdid` command with 200 placebo replications. Its figure contains only the treated and synthetic series and marks July 2024 with a dashed vertical line.
 
 ## SCC synthesis
 
-One preferred global total-SCC estimate enters per eligible paper. Values are harmonized to 2024 USD/tCO2. Other-year estimates are treated as time-invariant when no source path is reported; Barrage--Nordhaus is interpolated within its published path. Ten papers receive equal weight.
+One selected benchmark enters per included paper. Pindyck measures an average rather than a marginal SCC; its exclusion is reported. Values are harmonized to 2024 USD/tCO2. Other-year estimates are held constant as an explicit sensitivity assumption even when a source supplies a changing path; Barrage--Nordhaus is interpolated within its published path. Ten papers receive equal weight.
 
 The interval uses 10,000 hierarchical bootstrap replications. Each replication resamples ten papers with replacement. For a paper with point estimate `theta` and positive central range `[L,U]` of coverage `1-2 alpha`, within-paper dispersion is `sigma=(log(U)-log(L))/(2*Phi^{-1}(1-alpha))`; its draw is lognormal with log mean `log(theta)-sigma^2/2`, so the arithmetic expectation remains `theta`. Papers without usable ranges remain at their point estimates. The replication statistic is the mean of ten selected within-paper draws, and the reported endpoints are the 2.5th and 97.5th percentiles of the replicated means. The result is a sensitivity envelope, not a conventional common-effect confidence interval.
 
-The accounting map is evaluated separately at DKK 120/tCO2e, the effective average output burden after the 60 percent per-animal deduction, and DKK 300/tCO2e, the 2030 marginal abatement incentive. Across-date announcement and statutory signals are not added.
+The accounting map is evaluated separately at DKK 120/tCO2e, the effective average output burden after the 60 percent per-animal deduction, and DKK 300/tCO2e, the 2030 marginal abatement incentive. These quoted rates are in 2022 prices and are converted to 2024 DKK with PRIS04. The persistence extension separates retained announcement incidence from an additional implementation increment; a total pass-through estimate cannot be added again.
 
 ## Theoretical interpretation
 
-The paper represents competitive equilibrium with a strictly concave market potential in current and implementation-date output, normalized at an arbitrary positive reference quantity so isoelastic demand is well-defined for every positive elasticity. A credible expected future emissions wedge reduces both quantities when costly adjustment links production plans, raising the current price. The implementation-date output plan is committed before policy uncertainty resolves. Constant-elasticity quasi-linear preferences generate isoelastic beef demand, while Cobb--Douglas production with capital fixed over the policy horizon generates convex costs and upward-sloping supply. The resulting exact local comparative statics connect announcement incidence to demand elasticity, production curvature, discounting, and adjustment costs; finite changes are first-order approximations. A fixed-stock counterexample instead shifts slaughter forward and lowers the current price when liability falls on later slaughter. Positive price estimates therefore favor planned contraction, but cannot identify quantities, herd size, or emissions without direct data.
+The paper represents competitive equilibrium with a strictly concave market potential in current and implementation-date output, normalized at an arbitrary positive reference quantity so isoelastic demand is well-defined for every positive elasticity. A credible expected future emissions wedge reduces both quantities when costly adjustment links production plans, raising the current price. The implementation-date output plan is committed before policy uncertainty resolves. Constant-elasticity quasi-linear preferences generate isoelastic beef demand, while Cobb--Douglas production with capital fixed over the policy horizon generates convex costs and upward-sloping supply. The resulting exact local comparative statics connect announcement incidence to demand elasticity, production curvature, discounting, and adjustment costs; finite changes are first-order approximations. A fixed-stock counterexample instead shifts slaughter forward and lowers the current price when liability falls on later slaughter. Positive prices are compatible with planned contraction, while the slaughter estimates remain imprecise and sensitive to the pre-treatment window.
 
 ## Limitations
 
@@ -41,4 +41,9 @@ The paper represents competitive equilibrium with a strictly concave market pote
 - The official panel has few donors and only 15 pre-periods, making SDiD weights fragile.
 - SCC estimates are structurally heterogeneous; the pooled interval is a sensitivity envelope.
 - Carbon-price mapping is an accounting exercise, not a structural incidence or welfare model.
-- Price-only results cannot establish changes in slaughter, production, sales volumes, herd size, or emissions.
+- Slaughter estimates do not establish contraction; they do not measure herd size or emissions.
+- The April-announced, July-effective end of the cattle nitrate derogation is an unresolved confound.
+
+## Production extension
+
+See `production_analysis.md`: six Stata SDiD specifications, EU27 bovine slaughter, positive complete panels, no missing-to-zero replacement, main 15/15 months and two temporal sensitivities. The appendix reports full results.

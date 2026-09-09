@@ -12,8 +12,20 @@ log using "outputs/diagnostics/stata/scc_meta_analysis.log", text replace
 
 local us_cpi_2024 = 313.689
 local usd_dkk = 6.8953
-local tax_effective_dkk = 120
-local tax_marginal_dkk = 300
+* Published rates are in 2022 DKK, indexed by the Danish net-price index.
+* Express them in the same 2024 price base as the SCC and retail benchmark.
+import delimited "data/raw/statbank_pris04_total.csv", delimiter(";") varnames(1) stringcols(_all) clear
+gen year = real(substr(tid,1,4))
+destring indhold, replace
+quietly summarize indhold if year == 2022, meanonly
+assert r(N) == 12
+local npi2022 = r(mean)
+quietly summarize indhold if year == 2024, meanonly
+assert r(N) == 12
+local npi2024 = r(mean)
+local tax_price_factor = `npi2024'/`npi2022'
+local tax_effective_dkk = 120 * `tax_price_factor'
+local tax_marginal_dkk = 300 * `tax_price_factor'
 * Lifecycle benchmark; broader than the farm-level emissions base taxed by the levy.
 local beef_kgco2_kg = 59.6
 
@@ -23,8 +35,10 @@ gen byte is_eligible = upper(eligible_for_pool) == "TRUE"
 destring estimate interval_low interval_high pulse_year dollar_year path_year path_value publication_year, replace force
 
 * One preferred estimate per paper. Values reported for dates other than 2030
-* are interpreted as time-invariant when the source supplies no time path.
+* are held constant in this sensitivity exercise unless a numeric 2030 value
+* or the explicitly selected interpolation anchors are in the inventory.
 keep if is_preferred
+isid study_id
 gen double scc_original = estimate
 replace scc_original = exp(ln(78) + (2030 - 2025) / (2050 - 2025) * (ln(175) - ln(78))) if study_id == "barrage2024"
 gen int display_year = pulse_year
@@ -47,7 +61,7 @@ gen double interval_high_usd_2024 = interval_high * carbon_unit_factor * `us_cpi
 
 * Source ranges are not relabelled as sampling confidence intervals. For the
 * hierarchical bootstrap, lognormal within-study variation is calibrated to
-* each range's own coverage when known and to a conservative 95% sensitivity
+* each range's own coverage when known and to an assumed 95% sensitivity
 * range for the Hänsel et al. parameter span. Draws are centered on the paper's
 * preferred estimate so every paper retains equal expected weight.
 gen double range_z = .
@@ -66,8 +80,18 @@ local pooled_mean = r(mean)
 local pooled_median = r(p50)
 local pooled_min = r(min)
 local pooled_max = r(max)
+quietly summarize scc_usd_2024 if display_year == 2030, meanonly
+local dated_2030_mean = r(mean)
+local dated_2030_n = r(N)
 tempfile meta_pool
 save `meta_pool'
+
+* Paper-selection sensitivity: no assumption that these are independent
+* estimates of one common parameter, and no precision weighting.
+gen double leave_one_out_mean = (`n_papers' * `pooled_mean' - scc_usd_2024) / (`n_papers' - 1)
+keep study_id scc_usd_2024 leave_one_out_mean
+export delimited "outputs/models/stata/scc_leave_one_out.csv", replace
+use `meta_pool', clear
 
 capture program drop one_meta_draw
 program define one_meta_draw, rclass
@@ -115,6 +139,11 @@ save `literature_for_figure'
 clear
 set obs 1
 gen int n_papers = `n_papers'
+gen int dated_2030_n = `dated_2030_n'
+gen double dated_2030_mean = `dated_2030_mean'
+gen double tax_price_factor = `tax_price_factor'
+gen double tax_effective_2024_dkk = `tax_effective_dkk'
+gen double tax_marginal_2024_dkk = `tax_marginal_dkk'
 gen double mean = `pooled_mean'
 gen double ci_low = `pooled_low'
 gen double ci_high = `pooled_high'
@@ -210,3 +239,5 @@ twoway ///
 graph export "outputs/figures/stata/beef_policy_calibration.png", width(2400) replace
 
 log close
+
+do "scripts/stata/persistence_analysis.do"

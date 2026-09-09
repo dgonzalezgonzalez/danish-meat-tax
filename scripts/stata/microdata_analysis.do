@@ -20,6 +20,9 @@ else {
     gen byte untreated_control = treated == 0
 }
 gen byte beef = treatment_group == "beef"
+* Poultry emissions are covered by the livestock-tax architecture; eggs share
+* that production base. Never classify either as untreated beef controls.
+replace untreated_control = 0 if inlist(commodity, "poultry", "eggs")
 keep if beef | untreated_control
 destring relative_time did log_price price, replace force
 keep if relative_time <= 15

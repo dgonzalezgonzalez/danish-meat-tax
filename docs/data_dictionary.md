@@ -67,3 +67,15 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/models/stata/beef_trade_pair_sdid_series.csv` | Denmark-importer and synthetic beef-import series. |
 | `outputs/models/stata/scc_meta_summary.csv` | Pooled SCC and implied price-gap interval. |
 | `outputs/models/stata/beef_policy_calibration.csv` | Three ATT estimates and SCC calibration band. |
+
+## Production and calibration additions
+
+`eurostat_bovine_slaughter.csv` retains JSON-stat dimensions (`freq`, `meat`, `meatitem`, `unit`, `geo`, `time` as supplied), numeric `value`, and source `flag`. Missing source values remain blank. Stata selects B1000/SLAUGHT/M and THS_T or THS_HD. Production result fields are specification, measure, att, se, low, high, p_value, pre_rmse, observations, units, pre_months, post_months. Exact samples and treated/weighted-donor series are exported per specification.
+
+`calibration_scenarios.csv` stores persistence, taxable_share, incremental_pass_through, damage_dkk_kg, announcement_dkk_kg, implementation_dkk_kg, remaining_gap_dkk_kg, conf_low, and conf_high. SCC and tax inputs are recorded in `scc_meta_summary.csv`. All monetary levels use the common 2024-price approximation. `scc_leave_one_out.csv` records the excluded study and remaining mean. `scc_meta_summary.csv` also includes the directly dated 2030 subset and the Danish net-price conversion.
+
+## Preferred-estimate calibration grids
+
+`calibration_surfaces.csv` has 10,404 rows: `panel` identifies taxable shares 0.25, 0.50, 0.75, and 1; `x`/`persistence` and `y`/`incremental_pass_through` range from zero to one in .02 steps. `taxable_share` is constant within each panel. `beta`, `beta_low`, and `beta_high` preserve the preferred CPI DiD estimate and HAC interval. `pre_price_dkk_kg` anchors the proportional estimate to grocery levels. Damage, announcement, implementation, remaining-gap, and `conf_low`/`conf_high` fields are DKK/kg. Confidence bounds condition on all non-coefficient inputs. `calibration_scenarios.csv` contains the full 27-row coarse parameter cube with matching amount and confidence fields.
+
+`production_descriptive_statistics.csv` records sample (`all`, `denmark`, `donors`), measure (`THS_T`, `THS_HD`), country-month observation count, mean, sample standard deviation, quartiles, and median from the exact main estimation samples.

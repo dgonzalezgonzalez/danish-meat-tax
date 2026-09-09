@@ -34,11 +34,11 @@ gen byte food_leaf = ///
 keep if food_leaf
 
 * Beef is treated. Policy-exposed or compositionally ambiguous livestock foods
-* are excluded from the donor pool; poultry, fish, plant foods, eggs, and
-* non-alcoholic beverages remain eligible controls.
+* are excluded from the donor pool, including poultry and eggs.
 gen byte beef = product_code == "011221"
 gen byte excluded_livestock = inlist(product_code, "011222", "011223", "01123", "01124", "01125")
 replace excluded_livestock = 1 if inlist(product_code, "01141", "01142", "01143", "01145", "01146", "01147", "01152")
+replace excluded_livestock = 1 if inlist(product_code, "011224", "01144")
 drop if excluded_livestock
 drop if missing(cpi, month)
 
@@ -123,7 +123,7 @@ export delimited using "outputs/models/stata/aggregate_sdid_series.csv", replace
 twoway ///
     (line treated month, lcolor(black) lwidth(medthick)) ///
     (line synthetic month, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
-    legend(order(1 "Beef and veal" 2 "SDiD counterfactual") rows(1) position(6)) ///
+    legend(order(1 "Beef and veal" 2 "Weighted donors") rows(1) position(6)) ///
     xline(`event', lcolor(gs9) lpattern(shortdash)) ///
     xtitle("") ytitle("Log consumer price index") graphregion(color(white)) plotregion(color(white))
 graph export "outputs/figures/stata/aggregate_sdid.png", width(2200) replace

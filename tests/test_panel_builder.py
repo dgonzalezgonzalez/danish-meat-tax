@@ -8,6 +8,11 @@ from danish_meat_tax.panel_builder import build_balanced_panel
 
 
 class PanelBuilderTest(unittest.TestCase):
+    def test_dairy_cannot_be_reclassified_as_a_control(self):
+        products = normalize_records(_fixture_records())
+        with self.assertRaisesRegex(ValueError, "livestock-exposed"):
+            build_balanced_panel(products, include_dairy_as_treated=False)
+
     def test_balanced_panel_has_equal_pre_post_periods(self):
         products = normalize_records(_fixture_records())
         result = build_balanced_panel(products, frequency="daily", require_complete_units=True)

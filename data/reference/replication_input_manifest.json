@@ -1,0 +1,51 @@
+{
+  "snapshot_audited": "2026-09-09",
+  "note": "Checksums identify the files used. Audit date is not an original retrieval timestamp. Source access and provenance are documented in README.md.",
+  "files": [
+    {
+      "path": "data/raw/heissepreise_20260609T092146Z.json",
+      "bytes": 369805467,
+      "sha256": "6bbee13f5c84168c71935c3c0ade42bc2288eb11cc7fbe00e2e01622e55cdad9"
+    },
+    {
+      "path": "data/raw/statbank_pris01.csv",
+      "bytes": 7888933,
+      "sha256": "6a3070902671628f06973780e82789545b552e172a5ac35980d1ea9421eb4273"
+    },
+    {
+      "path": "data/raw/statbank_pris01_metadata.json",
+      "bytes": 39109,
+      "sha256": "2246fe345ce4e60a6e7c2e2910190d739464e68c8804ade764f97c9d1a0a4078"
+    },
+    {
+      "path": "data/raw/eu_beef_carcass_prices_2023m04_2025m09.json",
+      "bytes": 21300147,
+      "sha256": "bc571f3821ad829ae8a4b30b7d6eae6b0b8c7e18c547cc8b24821255cbf3940d"
+    },
+    {
+      "path": "data/raw/eu_beef_trade_data_en.csv",
+      "bytes": 34341206,
+      "sha256": "3354f5c7a74a943d2bae8e0615237325807118f84d7b4e9a9aed94771e1cda2f"
+    },
+    {
+      "path": "data/raw/eurostat_bovine_slaughter_2020_2025.json",
+      "bytes": 83087,
+      "sha256": "db0240a9af16ce387d5f4e85b5f81fc76ff23bde878a9e3a02dafb7a05636e49"
+    },
+    {
+      "path": "data/raw/statbank_ani41.csv",
+      "bytes": 640588,
+      "sha256": "23043f518686d86771a1702393f7bf1e9a1c7fe5af3ffadb46e9f0314f919427"
+    },
+    {
+      "path": "data/raw/statbank_ani41_metadata.json",
+      "bytes": 33496,
+      "sha256": "f4de440910bf2536870d77aa415a9aa89e51ca4fc428fcc63ea2bfd0c8f8df85"
+    },
+    {
+      "path": "data/raw/statbank_pris04_total.csv",
+      "bytes": 15750,
+      "sha256": "915d2bf2848f1417efece94126eeb63be85fb26390a17a328fd0eb4779fb4c1f"
+    }
+  ]
+}

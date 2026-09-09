@@ -21,10 +21,10 @@ For 2030, official material distinguishes a DKK 300/tCO2e marginal abatement inc
 | Beef/cattle/veal | Treated core | Central livestock emissions category and prominent in public coverage. |
 | Pork/pig | Treated core | Central livestock category in Danish agriculture and public coverage. |
 | Lamb/sheep/goat | Treated livestock scope | Livestock emissions source; not safe as untreated control. |
-| Poultry | Treated sensitivity group | Livestock but lower intensity and less central to public coverage. |
+| Poultry and eggs | Excluded from controls | Poultry digestion/manure emissions are within the livestock architecture; egg production shares that exposure. |
 | Fish/seafood | Untreated control | Not livestock in the tax-base discussion. |
 | Dairy | Excluded from implemented controls | Livestock-exposed and therefore not a clean untreated comparison for beef. |
-| Non-meat foods | Untreated control | Not affected by the livestock meat treatment definition. |
+| Other non-livestock foods | Comparison group | Outside direct livestock exposure; substitution and broader agricultural measures remain possible. |
 
 ## Sources
 
@@ -33,3 +33,11 @@ For 2030, official material distinguishes a DKK 300/tCO2e marginal abatement inc
 - Green Tripartite agreement PDF, https://regeringen.dk/media/ng3b13va/aftale-om-et-groent-danmark.pdf
 - Danish Ministry of Taxation / Expert Group material, "Green Tax Reform final report", https://skm.dk/media/tngh1b4r/green-tax-reform-final-report.pdf
 - Danish Ministry of Taxation, "Faktaark: Skatteinitiativer i Aftale om et Grønt Danmark", https://skm.dk/media/lpeia2kz/faktaark_-skatteinitiaitver-i-aftale-om-groen-trepart.pdf
+
+## Price base and concurrent regulation
+
+The announced 120/300 DKK rates are quoted in 2022 prices and indexed by the net-price index. PRIS04 annual means imply 125.93/314.81 in 2024 DKK. The 60% deduction creates a reference-animal average output burden; it does not reduce the marginal incentive to abate one additional ton.
+
+The [Ministry announcement of 10 April 2024](https://mim.dk/nyheder/pressemeddelelser/2024/april/kvaegundtagelsen-ophoerer-31-juli-2024) ended the cattle nitrate derogation on 31 July 2024. Affected farms faced a reduction from 230 to 170 kg manure nitrogen per hectare. This overlapping cost shock cannot be separated from the livestock-tax announcement with the available national comparisons.
+
+The [Danish expert report](https://skm.dk/media/jjypotl4/groen-skattereform-endelig-afrapportering-tilgaengeliggjort.pdf) explicitly considers cattle, pigs, and poultry. A small or rounded-zero category liability is not evidence of absence from the policy architecture.
