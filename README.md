@@ -63,7 +63,7 @@ python main.py outputs
 
 ### Randomness and diagnostics
 
-Micro/aggregate/country and SCC use seed 20260827; trade uses 20260828; production uses 20260909. SDiD inference uses 200 replications; SCC uses 10,000. Each analytical do-file clears Stata state and records a log under `outputs/diagnostics/stata/`. Root Windows batch logs are also checked for Stata `r(...)` failures even when the process returns zero. Changes to software, sorting, or inputs can affect simulated results.
+Micro/aggregate/country and SCC use seed 20260827; trade uses 20260828; production uses 20260909. SDiD inference uses 200 replications; SCC uses 10,000. Combined calibration uncertainty pairs these SCC draws with independent coefficient draws using seed 20260910. Each analytical do-file clears Stata state and records a log under `outputs/diagnostics/stata/`. Root Windows batch logs are also checked for Stata `r(...)` failures even when the process returns zero. Changes to software, sorting, or inputs can affect simulated results.
 
 The deterministic fixture stops at the Stata input contract and does not fabricate publication estimates:
 
@@ -84,7 +84,7 @@ python -m unittest discover -s tests
 | `scripts/stata/master.do` | Complete publication analysis in dependency order. |
 | `scripts/stata/production_analysis.do` | Six EU27 slaughter specifications and ANI41 descriptive series. |
 | `scripts/stata/scc_meta_analysis.do` | Harmonization, bootstrap, leave-one-out checks, figures; calls persistence analysis. |
-| `scripts/stata/persistence_analysis.do` | Preferred CPI DiD calibration; 27 scenarios and four 51-by-51 grids with conditional confidence bounds. |
+| `scripts/stata/persistence_analysis.do` | Preferred CPI DiD calibration; 27 scenarios and four 51-by-51 grids with combined SCC-and-coefficient sensitivity bounds. |
 | `scripts/stata/production_descriptives.do` | Table 1, Panel C, from the exact main slaughter samples; called by production analysis. |
 | `scripts/render_calibration.py`, `src/danish_meat_tax/calibration_figures.py` | Python rendering of the Stata calibration grids; four panels at taxable shares 0.25, 0.50, 0.75, and 1. |
 | `outputs/models/stata/`, `outputs/figures/stata/` | Machine-readable results and publication PNGs. |

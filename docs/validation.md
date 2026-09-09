@@ -18,8 +18,8 @@
 - Re-ran all 27 unit tests successfully after pipeline integration changes.
 - Ran `production_descriptives.do` against the exact main estimation samples: six descriptive rows, with 810/30/780 country-months for all countries/Denmark/donors per outcome. The production analysis calls this do-file automatically.
 - Ran the revised pipeline `outputs` stage successfully, including SCC analysis, the nested persistence do-file, and the Python renderer. The previously validated production and price estimators were unchanged, so the complete estimation master was not redundantly rerun after these additions.
-- Verified all 10,404 unique surface cells: taxable shares .25/.50/.75/1, full a/lambda support, accounting identities, interval order, and collapsed coefficient uncertainty at zero persistence. The global point minimum is 47.61 DKK/kg; the lowest conditional confidence bound is 36.44. The original HAC endpoints are transformed in reverse order because R decreases in the coefficient.
-- Matplotlib 3.10.8 renders Stata-calculated grids. Visual inspection found and corrected overlapping panel labels and clipped vertical-axis labels. The final four-panel figure retains dashed confidence meshes and uses one common vertical scale.
+- In the initial coefficient-only version, verified all 10,404 unique surface cells: taxable shares .25/.50/.75/1, full a/lambda support, accounting identities, interval order, and collapsed coefficient uncertainty at zero persistence. The global point minimum is 47.61 DKK/kg; the lowest conditional confidence bound is 36.44. The original HAC endpoints are transformed in reverse order because R decreases in the coefficient.
+- Matplotlib 3.10.8 renders Stata-calculated grids. Visual inspection found and corrected overlapping panel labels and clipped vertical-axis labels. The four-panel figure retains dashed interval meshes and uses one common vertical scale.
 - The paper uses the preferred official CPI DiD coefficient with an explicit grocery-level anchor assumption. The SDiD equations follow Arkhangelsky et al. (2021), equations 1.1 and 2.4–2.5; notation preserves the manuscript's unit/time effects. JEL codes were checked against the American Economic Association classification.
 
 ## Research audit findings
@@ -33,3 +33,11 @@ Calibration corrections include the 2022 price base of statutory rates, the Cai�
 ## Practical limits
 
 This is validation in the stated local environment, not an independent clean-machine replication or a journal certification. Historical inputs are identified by hashes but lack a complete immutable public deposit. Source reuse rights, an original-code license, and author preservation/assistance declarations remain to be supplied for a journal deposit. No empirical inference is drawn from the deterministic fixture.
+
+## Combined SCC and coefficient uncertainty
+
+Figure 4 now uses pointwise combined sensitivity intervals rather than coefficient-only confidence bounds. The original SCC simulation exports 10,000 draws; persistence analysis pairs these with independent beta_hat + HAC_SE*t(28) draws and exports the paired inputs. Price anchor, emissions intensity, FX, and tax rate remain fixed. The independence and reference-distribution assumptions are stated in the manuscript and calibration documentation.
+
+The complete updated `outputs` stage passed. An independent NumPy recomputation from the exported paired draws matched Stata's 2.5th/97.5th percentiles (Weibull sample-quantile convention) at a=0, .5, and 1. All 10,404 cells have ordered intervals; intervals shift by exactly the deterministic implementation amount, and SCC uncertainty remains at a=0. Bounds are stored in double precision. At a=f=lambda=1 the combined interval is 11.04–132.35 DKK/kg; the point remains 47.61. The old coefficient-only interval remains exported for comparison.
+
+The rebuilt 33-page PDF has no unresolved references or overfull/underfull boxes. Figure 4 and the affected surrounding pages were rendered and visually checked; all panels use the same zero-based vertical scale and the legend identifies combined sensitivity bounds.

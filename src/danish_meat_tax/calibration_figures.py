@@ -26,7 +26,7 @@ def render_calibration_surfaces(root: Path) -> Path:
         if len(rows) != 51 * 51 or rows.duplicated(["x", "y"]).any():
             raise ValueError("Expected a unique 51 by 51 Stata grid for each panel")
         x, y = (rows[c].to_numpy().reshape(51, 51) for c in ["x", "y"])
-        z, low, high = (rows[c].to_numpy().reshape(51, 51) for c in ["remaining_gap_dkk_kg", "conf_low", "conf_high"])
+        z, low, high = (rows[c].to_numpy().reshape(51, 51) for c in ["remaining_gap_dkk_kg", "sensitivity_low", "sensitivity_high"])
         ax.plot_surface(x, y, z, color="#356A91", alpha=.87, shade=False,
                         edgecolor="none", rcount=51, ccount=51)
         for bound in (low, high):
@@ -37,8 +37,8 @@ def render_calibration_surfaces(root: Path) -> Path:
         ax.set_ylabel(ylabel, labelpad=5)
         ax.set_zlabel("")
         ax.text2D(.01, .84, r"$R$ (DKK/kg)", transform=ax.transAxes, fontsize=12)
-        ax.set(xlim=(0, 1), ylim=(0, 1), zlim=(35, 70),
-               xticks=[0, .5, 1], yticks=[0, .5, 1], zticks=[40, 50, 60, 70])
+        ax.set(xlim=(0, 1), ylim=(0, 1), zlim=(0, 160),
+               xticks=[0, .5, 1], yticks=[0, .5, 1], zticks=[0, 50, 100, 150])
         ax.view_init(elev=24, azim=-125)
         # Both horizontal axes share the near origin; label its zero once.
         ax.set_yticklabels(["", "0.5", "1.0"])
@@ -48,7 +48,7 @@ def render_calibration_surfaces(root: Path) -> Path:
             axis.pane.fill = False
             axis._axinfo["grid"].update(color="#dddddd", linewidth=.5)
     fig.legend(handles=[Patch(facecolor="#356A91", label="Point estimate"),
-                        Line2D([0], [0], color="#454545", linestyle="--", label="Conditional 95% confidence bounds")],
+                        Line2D([0], [0], color="#454545", linestyle="--", label="Combined 95% sensitivity bounds")],
                loc="lower center", ncol=2, frameon=False, bbox_to_anchor=(.5, .015))
     fig.subplots_adjust(left=.07, right=.97, top=.95, bottom=.11, wspace=.23, hspace=.28)
     destination = root / "outputs/figures/python/calibration_surfaces.png"

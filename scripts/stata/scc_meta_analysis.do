@@ -105,6 +105,7 @@ program define one_meta_draw, rclass
 end
 
 simulate pooled_mean = r(pooled_mean), reps(10000) seed(20260827) nodots: one_meta_draw
+export delimited "outputs/models/stata/scc_meta_draws.csv", replace
 quietly centile pooled_mean, centile(2.5 97.5)
 local pooled_low = r(c_1)
 local pooled_high = r(c_2)
