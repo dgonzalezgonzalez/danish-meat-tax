@@ -18,11 +18,6 @@
       "sha256": "2246fe345ce4e60a6e7c2e2910190d739464e68c8804ade764f97c9d1a0a4078"
     },
     {
-      "path": "data/raw/eu_beef_carcass_prices_2023m04_2025m09.json",
-      "bytes": 21300147,
-      "sha256": "bc571f3821ad829ae8a4b30b7d6eae6b0b8c7e18c547cc8b24821255cbf3940d"
-    },
-    {
       "path": "data/raw/eu_beef_trade_data_en.csv",
       "bytes": 34341206,
       "sha256": "3354f5c7a74a943d2bae8e0615237325807118f84d7b4e9a9aed94771e1cda2f"
@@ -46,6 +41,15 @@
       "path": "data/raw/statbank_pris04_total.csv",
       "bytes": 15750,
       "sha256": "915d2bf2848f1417efece94126eeb63be85fb26390a17a328fd0eb4779fb4c1f"
+    },
+    {
+      "path": "data/raw/eurostat_beef_hicp_2023m04_2025m09.json",
+      "bytes": 23960,
+      "sha256": "b3f48ec3ab5ab8d2d5eb20d5e46c793ef3f15e9cf6fae9266a216a1945284828",
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?lang=EN&freq=M&unit=I15&coicop=CP01121&sinceTimePeriod=2023-04&untilTimePeriod=2025-09",
+      "retrieved_utc": "2026-09-11T11:24:56.142464+00:00",
+      "source_updated": "2026-02-06T23:00:00+0100"
     }
-  ]
+  ],
+  "revision_note": "2026-09-11: replaced the obsolete carcass-price input with the newly retrieved historical Eurostat beef-and-veal HICP snapshot, following the authorized change of country-price outcome. All other input hashes are unchanged."
 }

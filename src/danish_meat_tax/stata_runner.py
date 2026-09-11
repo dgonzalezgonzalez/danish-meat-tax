@@ -8,6 +8,8 @@ import subprocess
 
 import pandas as pd
 
+from .data_sources.hicp import prepare_hicp_panel
+
 
 STATA_CANDIDATES = (
     Path(r"C:\Program Files\StataNow19\StataMP-64.exe"),
@@ -79,15 +81,12 @@ def run_stata(root: Path, do_file: Path) -> None:
 
 def prepare_eu_robustness_panels(root: Path) -> None:
     """Build publication panels for country-price and beef-import robustness checks."""
+    prepare_hicp_panel(root)
     powershell = shutil.which("powershell.exe") or shutil.which("pwsh")
     if powershell is None:
         raise FileNotFoundError("PowerShell was not found; EU robustness panels cannot be prepared.")
 
     jobs = (
-        (
-            root / "data/raw/eu_beef_carcass_prices_2023m04_2025m09.json",
-            root / "scripts/prepare_country_beef_panel.ps1",
-        ),
         (
             root / "data/raw/eu_beef_trade_data_en.csv",
             root / "scripts/prepare_beef_trade_pair_panel.ps1",

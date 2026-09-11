@@ -60,8 +60,8 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/models/stata/aggregate_estimates.csv` | Official DiD and SDiD summaries. |
 | `outputs/models/stata/micro_event_study.csv` | Scraped-data beef event-study coefficients. |
 | `outputs/models/stata/aggregate_event_study.csv` | Official beef event-study coefficients. |
-| `outputs/models/stata/country_sdid_estimate.csv` | Country-level Danish beef-price SDiD estimate and inference. |
-| `outputs/models/stata/country_sdid_series.csv` | Danish and synthetic country-level beef-price series. |
+| `outputs/models/stata/country_sdid_estimate.csv` | Country-level Danish beef-and-veal HICP SDiD estimate and inference. |
+| `outputs/models/stata/country_sdid_series.csv` | Danish and synthetic country-level log HICP series. |
 | `outputs/models/stata/beef_trade_pair_sdid_estimate.csv` | Denmark-importer beef-trade SDiD estimate with placebo inference. |
 | `outputs/models/stata/beef_trade_pair_sdid_bootstrap_estimate.csv` | Same beef-trade ATT with unit-cluster bootstrap inference. |
 | `outputs/models/stata/beef_trade_pair_sdid_series.csv` | Denmark-importer and synthetic beef-import series. |
@@ -93,3 +93,12 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 - `scc_literature_calibration.csv`: `source_gap_low/high_effective_120` and `source_gap_low/high_marginal_300` retain direct source-range mappings at the fixed central price. `log_price_gap_low/high_*` now contain simulated 2.5th–97.5th percentile SCC/price bounds, with missing bounds for the theory-only and lower-bound rows. Published `interval_low/high_usd_2024` retain their original definitions.
 
 All resulting bounds condition on fixed lifecycle intensity, FX, tax rates, and independent draws across the three uncertainty sources. Neither `f` nor intensity is assigned a probability distribution.
+
+
+## Eurostat country consumer-price replacement
+
+`eu_beef_hicp_country_month_panel.csv` is decoded from the Eurostat JSON-stat snapshot: `geo` (EU country code), `country` (source label), `month` (YYYY-MM), `hicp` (index, 2015=100), `flag` (unaltered Eurostat status), `coicop` (CP01121, beef and veal), and `index_unit` (I15). EU and euro-area aggregates and non-EU countries are excluded. Missing values remain blank. Country completeness and positive-value selection occur in Stata, with no interpolation or zero filling.
+
+`country_hicp_coverage.csv` records `geo`, `country`, `valid_months`, and `included` for the requested window. All 27 EU countries have 30 valid months. `country_hicp_estimation_sample.csv` preserves the exact 810-row sample, index values, flags, log outcome, monthly dates, country IDs, and treatment indicators.
+
+`country_sdid_estimate.csv` now uses estimator label `country_sdid_HICP`; `pre_treated_average` is an index level, not a currency amount. `pre_rmse` is the root mean squared pre-treatment treated–synthetic gap after subtracting its pre-treatment mean. `country_sdid_series.csv` contains `month_id`, `synthetic`, `treated`, `post`, `gap`, and `synthetic_aligned` (raw synthetic series shifted by the pre-treatment mean gap for display); series and gaps are in log-index units. Output filenames and the single appendix figure are retained; the price source is replaced, with no additional price robustness figure. Trade definitions are unchanged.

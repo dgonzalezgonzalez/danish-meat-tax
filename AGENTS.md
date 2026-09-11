@@ -43,3 +43,5 @@ Treat the April/July 2024 nitrate-derogation change as an unresolved confound. D
 Write academic artifacts in normal scholarly prose, following the question, mechanism, design, evidence, and implications. Conversation brevity does not apply to the paper. Preserve existing unrelated work and never invent author affiliations, data rights, repository licenses, or preservation commitments.
 
 Use the official CPI DiD (Table 2, column 2; HAC with two lags) as the preferred price estimate. Keep dataset identifiers and random seeds in replication documentation, not manuscript prose. Empirical result tables use specification columns and ATT rows with parenthesized standard errors.
+
+The country-price robustness check uses Eurostat beef-and-veal HICP for Denmark against the other EU27 countries, April 2023--September 2025, with July 2024 treatment and placebo SDiD inference. It replaces the carcass-price check; do not reintroduce carcass prices as consumer prices. This changes the control group, not the underlying Danish statistical provider. The Commission beef-trade analysis and grocery level-price anchor for SCC calibration remain separate.

@@ -1,12 +1,12 @@
 # Data and Code for: Before the Levy: Environmental Policy Announcements and Denmark's Beef Market
 
-**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 9 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
+**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 11 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
 
 ## Overview
 
 This package studies market adjustment following Denmark's June 2024 announcement of a future livestock-emissions tax. It prepares grocery and official price panels, estimates difference-in-differences and synthetic difference-in-differences models, examines cattle slaughter and extra-EU imports, and constructs conditional carbon-damage calibrations. Estimation, analytical descriptive statistics, simulations, and calibration grids are produced in Stata. Python renders the four-panel calibration surface figure from Stata outputs; the remaining figures are produced in Stata. Python and PowerShell also handle acquisition, classification, normalization, reshaping, and orchestration.
 
-The revision excludes poultry and eggs as well as other livestock-exposed products from beef controls. Grocery DiD is 0.0278 (SE 0.0144); official CPI DiD is 0.0644 (SE 0.0305). Main slaughter-weight SDiD is -0.0661 (SE 0.0811), with estimates close to zero under longer pre-treatment support. The concurrent end of the cattle nitrate derogation prevents isolating the tax announcement from all other cattle regulation.
+The revision excludes poultry and eggs as well as other livestock-exposed products from beef controls. Grocery DiD is 0.0278 (SE 0.0144); official CPI DiD is 0.0644 (SE 0.0305). Country-level beef-and-veal HICP SDiD is 0.0157 (SE 0.0293), using the other 26 EU countries as donors; its interval includes zero. Main slaughter-weight SDiD is -0.0661 (SE 0.0811), with estimates close to zero under longer pre-treatment support. The concurrent end of the cattle nitrate derogation prevents isolating the tax announcement from all other cattle regulation.
 
 ## Data availability and provenance
 
@@ -18,20 +18,20 @@ All inputs were obtained from public websites or published research. No confiden
 |---|---|---|---|
 | dagligepriser.dk grocery histories | `heissepreise_20260609T092146Z.json` | [Canonical JSON](https://dagligepriser.dk/data/latest-canonical.json); retrieved 9 June 2026, 09:22:01 UTC. Public, without credentials. The historical snapshot is not promised at this changing URL; redistribution terms remain to be confirmed. | Product descriptions, stores, packages, and dated prices; October 2023–September 2025, excluding June 2024. |
 | Statistics Denmark PRIS01 | `statbank_pris01.csv`, `statbank_pris01_metadata.json` | [Data](https://api.statbank.dk/v1/data/PRIS01/CSV?VAREGR=*&ENHED=100&Tid=*), [metadata](https://api.statbank.dk/v1/tableinfo/PRIS01?lang=en). Existing snapshot audited 9 September 2026; original retrieval timestamp not recorded. | Monthly CPI; beef plus 50 donors. |
-| European Commission beef-carcass prices | `eu_beef_carcass_prices_2023m04_2025m09.json` | [API documentation](https://agridata.ec.europa.eu/extensions/API_Documentation/Beef.html), endpoint `api/beef/prices`, window 3 April 2023–28 September 2025. Existing snapshot audited; original retrieval timestamp not recorded. [Instructions](docs/country_sdid.md). | AO2 young-bull prices, EUR/100 kg, 23 countries. |
+| Eurostat beef-and-veal HICP | `eurostat_beef_hicp_2023m04_2025m09.json` | [Exact query](https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?lang=EN&freq=M&unit=I15&coicop=CP01121&sinceTimePeriod=2023-04&untilTimePeriod=2025-09), retrieved 11 September 2026, 11:24:56 UTC. Historical ECOICOP series, 2015=100; [source and replication notes](docs/country_sdid.md). | Monthly consumer-price index; 27 EU countries, 810 observations. |
 | Commission Beef Trade Data Explorer / Eurostat COMEXT | `eu_beef_trade_data_en.csv` | [Dashboard](https://agridata.ec.europa.eu/extensions/DashboardBeef/BeefTrade.html): download the English Data Explorer bulk CSV. Existing snapshot audited; original retrieval timestamp not recorded. [Instructions](docs/beef_trade_pair_sdid.md). | Extra-EU imports in carcass-weight tonnes, 383 importer–partner pairs. |
 | Eurostat `apro_mt_pwgtm` | `eurostat_bovine_slaughter_2020_2025.json` | [Exact query](https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/apro_mt_pwgtm?lang=EN&meat=B1000&sinceTimePeriod=2020-01&untilTimePeriod=2025-09), downloaded 9 September 2026. | EU27 bovine slaughter, thousand tonnes and heads. |
 | Statistics Denmark ANI41 | `statbank_ani41.csv`, `statbank_ani41_metadata.json` | [Data](https://api.statbank.dk/v1/data/ANI41/CSV?DYRKAT=*&ENHED=PROD,SLAGEKS&Tid=*&lang=en), [metadata](https://api.statbank.dk/v1/tableinfo/ANI41?lang=en), downloaded 9 September 2026. | National cattle production cross-check. |
 | Statistics Denmark PRIS04 | `statbank_pris04_total.csv` | [Total net-price index](https://api.statbank.dk/v1/data/PRIS04/CSV?VAREGR=000005&ENHED=100&Tid=*&lang=en), downloaded 9 September 2026. | Converts 2022-DKK statutory rates to 2024 DKK. |
 | SCC studies and conversion constants | Included inventory under `data/reference/` | [Inventory](data/reference/scc_literature_estimates.csv) gives individual citations, URLs, source locators, units, price bases, scenarios, ranges, and selection decisions. US CPI-U constants are transcribed in `scc_meta_analysis.do`; [BLS annual CPI](https://www.bls.gov/cpi/tables/supplemental-files/home.htm). | Ten-study sensitivity benchmark, not an exhaustive systematic review. |
 
-Source metadata and [data_dictionary.md](docs/data_dictionary.md) define variables and units. Consult providers' current reuse conditions before redistribution. No paid access, application, or data-use agreement was required for these public downloads. Commission data acquisition includes manual steps; subsequent transformations are scripted. Official statistics do not require the author's logged-in browser session.
+Source metadata and [data_dictionary.md](docs/data_dictionary.md) define variables and units. Consult providers' current reuse conditions before redistribution. No paid access, application, or data-use agreement was required for these public downloads. Commission trade-data acquisition includes manual steps; subsequent transformations are scripted. Official statistics do not require the author's logged-in browser session.
 
 ## Software and computational requirements
 
 Validated environment: Windows x64; Python **3.12.14**, NumPy **2.3.5**, pandas **3.0.1**; Matplotlib **3.10.8**; PowerShell; **Stata/MP 19.5** with **sdid 2.0.2**. Stata is commercial software. `estout` is also installed by the dependency script. The paper compiles with **MiKTeX 25.12**, pdfTeX 1.40.28, and BibTeX 0.99e; standard Computer Modern fonts and packages appear in the TeX preamble. No R, MATLAB, or Python econometric library is required.
 
-The tested host has an Intel Core i7-1165G7 at 2.80 GHz, eight logical processors, and about 16 GB physical RAM. Peak memory was not measured. Budget at least 5 GB free disk: required raw snapshots occupy roughly 0.44 GB and processed working files roughly 1.44 GB, plus temporary files. The final complete Stata master, including calibration, took 729 seconds (12.2 minutes); grocery preprocessing adds several minutes. Allow 30 minutes for a local rerun as a planning estimate, excluding variable download time. See [validation.md](docs/validation.md) for the final validation record.
+The tested host has an Intel Core i7-1165G7 at 2.80 GHz, eight logical processors, and about 16 GB physical RAM. Peak memory was not measured. Budget at least 5 GB free disk: required raw snapshots occupy roughly 0.44 GB and processed working files roughly 1.44 GB, plus temporary files. The final complete Stata master, including calibration, took 649 seconds (10.8 minutes); grocery preprocessing adds several minutes. Allow 30 minutes for a local rerun as a planning estimate, excluding variable download time. See [validation.md](docs/validation.md) for the final validation record.
 
 Install Python dependencies with `python -m pip install -r requirements.txt`. For tested versions, use `requirements-replication.txt`. In Stata, run `do scripts/install_stata_dependencies.do` once. This installs missing `sdid` and `estout` from SSC without pinning future SSC versions; record `which sdid` and `which esttab`. A licensed Stata installation must exist. Set `STATA_EXE` when outside conventional installation locations. Python 3.10+ is the intended minimum; only the environment above was tested in this revision.
 
@@ -39,8 +39,8 @@ Install Python dependencies with `python -m pip install -r requirements.txt`. Fo
 
 Run from the repository root. Keep fixture outputs in a separate directory.
 
-1. Install software. Acquire the two Commission inputs using the linked instructions. Obtain the named grocery snapshot for exact replication.
-2. With `PYTHONPATH=src`, run `python main.py download`. This downloads or reuses grocery data, PRIS01, production, and PRIS04. Avoid `--refresh` for an existing snapshot.
+1. Install software. Acquire the Commission trade input using the linked instructions. Obtain the named grocery snapshot for exact replication.
+2. With `PYTHONPATH=src`, run `python main.py download`. This downloads or reuses grocery data, PRIS01, Eurostat beef-and-veal HICP, production, and PRIS04. Avoid `--refresh` for an existing snapshot.
 3. Run `python scripts/verify_inputs.py`. Investigate mismatches; do not silently relabel new downloads as the research snapshot.
 4. Run the wrapper below to verify inputs, rebuild panels, run every Stata analysis, and optionally compile the paper.
 
@@ -80,7 +80,8 @@ python -m unittest discover -s tests
 | `main.py`, `src/danish_meat_tax/pipeline.py` | Acquisition, preprocessing, and orchestration. |
 | `src/danish_meat_tax/data_sources/` | Grocery, StatBank, and Eurostat readers. |
 | `normalize_products.py`, `policy_taxonomy.py`, `panel_builder.py` | Conversion, classification, period aggregation; no estimation. |
-| `scripts/prepare_country_beef_panel.ps1`, `scripts/prepare_beef_trade_pair_panel.ps1` | Commission source reshaping, called by `estimate`. |
+| `data_sources/hicp.py`, `scripts/prepare_country_hicp_panel.py` | Eurostat HICP download and JSON-stat reshaping; integrated into `download` and `estimate`. |
+| `scripts/prepare_beef_trade_pair_panel.ps1` | Commission trade-source reshaping, called by `estimate`. |
 | `scripts/stata/master.do` | Complete publication analysis in dependency order. |
 | `scripts/stata/production_analysis.do` | Six EU27 slaughter specifications and ANI41 descriptive series. |
 | `scripts/stata/scc_meta_analysis.do` | Harmonization, bootstrap, leave-one-out checks, figures; calls persistence analysis. |

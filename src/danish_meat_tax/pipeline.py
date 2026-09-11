@@ -7,6 +7,7 @@ from .calibration_figures import render_calibration_surfaces
 from .config import EVENT_DATE, PipelinePaths
 from .data_sources.heissepreise import download_json, write_fixture
 from .data_sources.statbank import download_pris01
+from .data_sources.hicp import download_hicp
 from .data_sources.production import download_production, prepare_production_panel
 from .normalize_products import build_processed_products
 from .panel_builder import write_panel
@@ -59,6 +60,7 @@ def run_stage(
             official_note = " cached" if official.cached else ""
             print(f"download official CPI{official_note}: {official.data}")
             download_production(paths.raw_dir, refresh=refresh)
+            download_hicp(paths.raw_dir, refresh=refresh)
     if stage in {"process", "all"}:
         raw_path = raw_path if raw_path.exists() else _latest_raw_path(paths)
         if not raw_path.exists():

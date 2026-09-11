@@ -1,9 +1,9 @@
-# Validation record — 9 September 2026
+# Validation record
 
-## Executed checks
+## Earlier full revision: executed checks
 
 - Reprocessed the original June 2026 grocery snapshot after updating policy classification; rebuilt the monthly product–store panel and Stata input. The grocery ATT changed because poultry/eggs were removed as controls and ambiguous mixtures were reclassified consistently during preprocessing.
-- Rebuilt both Commission panels through the existing PowerShell scripts: 23 countries / 690 observations for AO2 prices; 383 importer–partner pairs / 11,490 observations for extra-EU imports, including 17 treated pairs and 7,775 zero cells.
+- The earlier revision rebuilt the Commission carcass-price and trade panels. The carcass-price check is superseded by the HICP replacement recorded below. The unchanged trade panel has 383 importer–partner pairs / 11,490 observations, including 17 treated pairs and 7,775 zero cells.
 - Decoded the official Eurostat JSON-stat payload, preserving missing values and flags. All six production samples have 27 complete positive country series.
 - Ran the complete `scripts/stata/master.do` successfully with Stata/MP 19.5. Final wall time: **729.297 seconds**. The master includes microdata, aggregate CPI, country prices, trade placebo and bootstrap, six production specifications, national production descriptors, and SCC calibration. All seven analytical logs reached normal closure; the batch log contains no terminal Stata `r(...)` error.
 - Ran **27 unittest tests**, including the offline fixture, production JSON-stat ordering/missing/flag tests, rejection of dairy controls, and detection of a Stata do-file error despite a zero operating-system exit code. All passed.
@@ -53,3 +53,15 @@ The main price-resampling interval is 146.97–178.28 DKK/kg. Updated pooled log
 The OECD chapter and Poore–Nemecek supplement/workbook were inspected. Their producer-distribution percentiles are not a confidence interval for the 59.6 benchmark; no intensity distribution was imputed. Source locators and fingerprints are in `emissions_intensity_audit.md`. The manuscript discusses the omitted intensity uncertainty, source coverage, dependence assumptions, and unchanged substantive conclusions.
 
 The updated 34-page PDF compiled successfully with no unresolved references, overfull/underfull boxes, or oversized floats. Figures 2, 3, and 4 were rendered and visually checked. Figure 4's caption was shortened to keep all notes clear of the footer while preserving the full-size panels.
+
+## HICP replacement of country-price robustness — 11 September 2026
+
+Retrieved Eurostat's historical `prc_hicp_midx` beef-and-veal monthly indices (`CP01121`, `I15`) for April 2023–September 2025. The source snapshot's retrieval timestamp, query, source-update timestamp, byte size, and SHA-256 are recorded in the input manifest. This was an authorized source replacement; the obsolete carcass-price entry was removed, and every other input hash was retained. All nine current research inputs pass `scripts/verify_inputs.py`.
+
+The EU27 sample has 810 positive observations, 30 months per country, and no source status flags in this snapshot. Independent checks matched every value and flag between the decoded source and Stata's exact estimation sample, verified country-month uniqueness, and verified the displayed donor intercept and centered pre-fit RMSE. No missing values were filled and no countries were selected using estimated treatment effects. The historical release is used consistently rather than splicing the 2026 classification into the study window.
+
+The complete `scripts/stata/master.do` passed in **649.062 seconds**, including all existing main-price, trade, production, and calibration analyses. The country SDiD gives ATT 0.0156655, placebo SE 0.0292872, p=0.59272426, interval [-0.041736357,0.07306736], and centered pre-treatment RMSE 0.0099884672. After the master, the country script was rerun to verify the display-only level alignment; the estimate remained unchanged. Integrated EU preprocessing passed, including the unchanged 383-pair trade panel. The calibration renderer also completed. Other publication estimates and calibration values are unchanged; the calibration grid differed only in row ordering, so the existing order was retained after exact keyed equality was verified.
+
+All **30 unit tests** passed, including new HICP tests for JSON-stat country-month alignment, retained missing values/status flags, exclusion of aggregates/non-EU countries, rejection of incorrect index units, and reuse of cached snapshots. Tests using temporary directories ran outside the Windows sandbox because it denied access to Python-created temporary directories. The offline fixture continues to stop before analytical estimation.
+
+The replacement uses the same single Figure B3. Data, methods, results, discussion, figure notes, bibliography, README, source notes, dictionary, output map, and repository guidance were updated. The manuscript describes this as an alternative-control-group check, acknowledges the smaller insignificant estimate, and retains the official CPI DiD as preferred. The compiled 34-page PDF has no unresolved references, overfull/underfull boxes, or oversized floats; the replacement appendix page was rendered and visually checked.

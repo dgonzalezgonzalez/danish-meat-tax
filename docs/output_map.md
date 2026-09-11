@@ -13,7 +13,7 @@ Table and figure numbers refer to the 9 September 2026 revision. Paths below are
 | Table B2: production specifications | `production_analysis.do` | `production_estimates.csv` | Eurostat B1000 source cells |
 | Figure B1: production | `production_analysis.do` | `production_sdid.png`, `production_THS_T_main_series.csv` | Same |
 | Figure B2: official SDiD comparison | `aggregate_analysis.do` | `aggregate_sdid.png`, `aggregate_sdid_series.csv` | PRIS01 |
-| Figure B3: country beef prices | `country_sdid.do` | `country_sdid.png`, `country_sdid_estimate.csv`, `country_sdid_series.csv` | Commission AO2 country panel |
+| Figure B3: country beef prices | `country_sdid.do` | `country_sdid.png`, `country_sdid_estimate.csv`, `country_sdid_series.csv` | Eurostat beef-and-veal HICP country panel |
 | Figure B4: beef imports | `beef_trade_pair_sdid.do`, `beef_trade_pair_sdid_bootstrap.do` | `beef_trade_pair_sdid.png`, `beef_trade_pair_sdid_bootstrap_estimate.csv`, `beef_trade_pair_sdid_series.csv` | Commission extra-EU importer–partner panel |
 
 ## Numerical claims outside the tables
@@ -45,3 +45,5 @@ The SDiD graphs show treated and unit-weighted donor levels. They retain pre-tre
 - Figures 2–3 pooled mapped intervals: `scc_price_gap_draws.csv` and `scc_meta_summary.csv`; average-burden 0.307 [0.143,0.631], marginal-incentive 0.255 [0.082,0.593]. ATT intervals remain the Table 2 intervals.
 - Figure 4 block-length check: `calibration_block_sensitivity.csv`; one/two/four months give 10.94–132.57 / 11.06–132.19 / 11.12–132.32 DKK/kg at a=f=lambda=1.
 - Intensity remains a fixed scenario input: `docs/emissions_intensity_audit.md` records why the producer-heterogeneity percentiles are not propagated as a confidence interval for the 59.6 benchmark.
+
+- Country-price replacement: `country_hicp_coverage.csv` and `country_hicp_estimation_sample.csv` preserve country inclusion and exact source values/flags. `country_sdid_estimate.csv` gives 0.0157 (SE 0.0293), p=.593, interval [-.0417,.0731], 27 countries / 810 observations, and centered pre-fit RMSE .0100. These replace the former carcass-price result in the same Figure B3.
