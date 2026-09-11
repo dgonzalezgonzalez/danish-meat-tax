@@ -84,10 +84,14 @@ python -m unittest discover -s tests
 | `scripts/stata/master.do` | Complete publication analysis in dependency order. |
 | `scripts/stata/production_analysis.do` | Six EU27 slaughter specifications and ANI41 descriptive series. |
 | `scripts/stata/scc_meta_analysis.do` | Harmonization, bootstrap, leave-one-out checks, figures; calls persistence analysis. |
-| `scripts/stata/persistence_analysis.do` | Preferred CPI DiD calibration; 27 scenarios and four 51-by-51 grids with combined SCC-and-coefficient sensitivity bounds. |
+| `scripts/stata/price_benchmark_analysis.do` | Crossed product–store and circular-month-block resampling of the grocery price benchmark; called by the SCC script. |
+| `scripts/stata/persistence_analysis.do` | Preferred CPI DiD calibration; 27 scenarios and four 51-by-51 grids with combined SCC, coefficient, and grocery-price sensitivity bounds. |
 | `scripts/stata/production_descriptives.do` | Table 1, Panel C, from the exact main slaughter samples; called by production analysis. |
 | `scripts/render_calibration.py`, `src/danish_meat_tax/calibration_figures.py` | Python rendering of the Stata calibration grids; four panels at taxable shares 0.25, 0.50, 0.75, and 1. |
 | `outputs/models/stata/`, `outputs/figures/stata/` | Machine-readable results and publication PNGs. |
 | `paper/main.tex`, `paper/references.bib`, `paper/main.pdf` | Manuscript, bibliography, compiled paper. |
 
 [output_map.md](docs/output_map.md) maps every paper table and figure and otherwise unmapped in-text numbers to inputs and scripts. [production_analysis.md](docs/production_analysis.md), [methodology.md](docs/methodology.md), and [beef_carbon_price_calibration.md](docs/beef_carbon_price_calibration.md) explain design and interpretation. Historical `docs/plans/` notes are not the current replication specification. Unintegrated world-price experiments are outside the publication master.
+
+
+The calibration intervals in Figures 2–4 include resampling of the grocery pre-announcement mean (seed 20260911, with one-, two-, and four-month block checks); study-level mapped intervals use seed 20260912. Figure 4 additionally uses the preferred CPI coefficient's uncertainty. These are conditional sensitivity intervals, with independent simulation draws across uncertainty sources. The 59.6 lifecycle benchmark remains fixed because the inspected sources do not supply a compatible sampling interval; [the emissions source audit](docs/emissions_intensity_audit.md) distinguishes producer heterogeneity from uncertainty in this benchmark. Full methods and numerical checks are in [the calibration note](docs/beef_carbon_price_calibration.md).

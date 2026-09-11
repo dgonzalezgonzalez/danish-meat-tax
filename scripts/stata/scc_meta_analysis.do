@@ -1,3 +1,5 @@
+do "scripts/stata/price_benchmark_analysis.do"
+
 version 19.5
 clear all
 set more off
@@ -66,7 +68,7 @@ gen double interval_high_usd_2024 = interval_high * carbon_unit_factor * `us_cpi
 * preferred estimate so every paper retains equal expected weight.
 gen double range_z = .
 replace range_z = invnormal(.83) if interval_type == "66% model range"
-replace range_z = invnormal(.95) if interval_type == "5th-95th quantiles"
+replace range_z = invnormal(.95) if inlist(interval_type, "5th-95th quantiles", "5th-95th range")
 replace range_z = invnormal(.975) if interval_type == "parameter range"
 gen double sigma_log = (ln(interval_high_usd_2024) - ln(interval_low_usd_2024)) / (2 * range_z) ///
     if interval_low_usd_2024 > 0 & interval_high_usd_2024 > 0 & range_z < .
@@ -133,6 +135,67 @@ local pooled_gap_marginal_300 = ln((`pre_beef_price' + (`pooled_mean' * `usd_dkk
 local pooled_gap_low_marginal_300 = ln((`pre_beef_price' + (`pooled_low' * `usd_dkk' - `tax_marginal_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
 local pooled_gap_high_marginal_300 = ln((`pre_beef_price' + (`pooled_high' * `usd_dkk' - `tax_marginal_dkk') * `beef_kgco2_kg' / 1000) / `pre_beef_price')
 
+* Price-bootstrap uncertainty in each study's mapping; keep source ranges separate.
+foreach suffix in effective_120 marginal_300 {
+    rename log_price_gap_low_`suffix' source_gap_low_`suffix'
+    rename log_price_gap_high_`suffix' source_gap_high_`suffix'
+}
+tempfile study_bounds
+tempname study_post
+postfile `study_post' str32 study_id double log_price_gap_low_effective_120 ///
+    double log_price_gap_high_effective_120 double log_price_gap_low_marginal_300 ///
+    double log_price_gap_high_marginal_300 using `study_bounds', replace
+quietly levelsof study_id if !missing(scc_usd_2024), local(studies)
+set seed 20260912
+foreach study of local studies {
+    quietly summarize scc_usd_2024 if study_id == "`study'", meanonly
+    local center = r(mean)
+    quietly summarize sigma_log if study_id == "`study'", meanonly
+    local sigma = r(mean)
+    quietly count if study_id == "`study'" & bound_type == "lower"
+    if r(N) == 0 {
+        preserve
+        import delimited "outputs/models/stata/price_benchmark_draws.csv", varnames(1) asdouble clear
+        gen double scc_draw = `center'
+        if `sigma' < . replace scc_draw = exp(ln(`center')-.5*`sigma'^2+`sigma'*rnormal())
+        foreach suffix in effective_120 marginal_300 {
+            local rate = cond("`suffix'"=="effective_120",`tax_effective_dkk',`tax_marginal_dkk')
+            gen double gap = ln(1+(scc_draw*`usd_dkk'-`rate')*`beef_kgco2_kg'/1000/price_draw)
+            assert gap < .
+            quietly centile gap, centile(2.5 97.5)
+            local lo_`suffix' = r(c_1)
+            local hi_`suffix' = r(c_2)
+            drop gap
+        }
+        restore
+        post `study_post' ("`study'") (`lo_effective_120') (`hi_effective_120') ///
+            (`lo_marginal_300') (`hi_marginal_300')
+    }
+    else post `study_post' ("`study'") (.) (.) (.) (.)
+}
+postclose `study_post'
+merge 1:1 study_id using `study_bounds', assert(master match)
+assert missing(scc_usd_2024) if _merge == 1
+drop _merge
+* The same price draws feed pooled log gaps and level-gap surfaces.
+preserve
+import delimited "outputs/models/stata/price_benchmark_draws.csv", varnames(1) asdouble clear
+tempfile prices
+save `prices'
+import delimited "outputs/models/stata/scc_meta_draws.csv", varnames(1) asdouble clear
+gen long draw = _n
+merge 1:1 draw using `prices', assert(match) nogen
+foreach suffix in effective_120 marginal_300 {
+    local rate = cond("`suffix'"=="effective_120",`tax_effective_dkk',`tax_marginal_dkk')
+    gen double gap_`suffix' = ln(1+(pooled_mean*`usd_dkk'-`rate')*`beef_kgco2_kg'/1000/price_draw)
+    assert gap_`suffix' < .
+    quietly centile gap_`suffix', centile(2.5 97.5)
+    local pooled_gap_low_`suffix' = r(c_1)
+    local pooled_gap_high_`suffix' = r(c_2)
+}
+export delimited "outputs/models/stata/scc_price_gap_draws.csv", replace
+restore
+
 export delimited using "outputs/models/stata/scc_literature_calibration.csv", replace
 
 tempfile literature_for_figure
@@ -157,7 +220,7 @@ gen double log_price_gap_high_effective_120 = `pooled_gap_high_effective_120'
 gen double log_price_gap_marginal_300 = `pooled_gap_marginal_300'
 gen double log_price_gap_low_marginal_300 = `pooled_gap_low_marginal_300'
 gen double log_price_gap_high_marginal_300 = `pooled_gap_high_marginal_300'
-gen str60 inference = "hierarchical paper bootstrap with source-range variation"
+gen str60 inference = "hierarchical SCC; price-bootstrap mapped gaps"
 export delimited using "outputs/models/stata/scc_meta_summary.csv", replace
 
 * Forest plot corresponding to the former panel B. Notes and sources are kept

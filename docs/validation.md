@@ -34,10 +34,22 @@ Calibration corrections include the 2022 price base of statutory rates, the Cai�
 
 This is validation in the stated local environment, not an independent clean-machine replication or a journal certification. Historical inputs are identified by hashes but lack a complete immutable public deposit. Source reuse rights, an original-code license, and author preservation/assistance declarations remain to be supplied for a journal deposit. No empirical inference is drawn from the deterministic fixture.
 
-## Combined SCC and coefficient uncertainty
+## Earlier revision: combined SCC and coefficient uncertainty
 
 Figure 4 now uses pointwise combined sensitivity intervals rather than coefficient-only confidence bounds. The original SCC simulation exports 10,000 draws; persistence analysis pairs these with independent beta_hat + HAC_SE*t(28) draws and exports the paired inputs. Price anchor, emissions intensity, FX, and tax rate remain fixed. The independence and reference-distribution assumptions are stated in the manuscript and calibration documentation.
 
 The complete updated `outputs` stage passed. An independent NumPy recomputation from the exported paired draws matched Stata's 2.5th/97.5th percentiles (Weibull sample-quantile convention) at a=0, .5, and 1. All 10,404 cells have ordered intervals; intervals shift by exactly the deterministic implementation amount, and SCC uncertainty remains at a=0. Bounds are stored in double precision. At a=f=lambda=1 the combined interval is 11.04–132.35 DKK/kg; the point remains 47.61. The old coefficient-only interval remains exported for comparison.
 
 The rebuilt 33-page PDF has no unresolved references or overfull/underfull boxes. Figure 4 and the affected surrounding pages were rendered and visually checked; all panels use the same zero-based vertical scale and the legend identifies combined sensitivity bounds.
+
+## Grocery-price uncertainty and intensity audit — 11 September 2026
+
+The updated pipeline `outputs` stage passed with Stata/MP 19.5, rebuilding price-bootstrap draws, SCC mappings, persistence grids, and Figures 2–4. Existing estimation inputs and the replication manifest were not changed; the full estimation master had already passed above. The new price routine is called by the SCC script within that master. All 27 Python unit tests passed, including the isolated offline fixture pipeline.
+
+Independent numerical checks of exported draws matched Stata percentiles using the Weibull sample-quantile convention. Checks covered both pooled log-gap mappings, all three price-block summaries, matched draw IDs, the announcement transformation, and preservation of the original SCC and coefficient draws. All 10,404 grid cells have ordered bounds; at a=0, price and coefficient variation disappear while SCC variation remains. Implementation shifts the quantiles by its deterministic amount. Point surfaces and the legacy coefficient-only intervals are unchanged. Theory-only and lower-bound entries retain missing simulated intervals.
+
+The main price-resampling interval is 146.97–178.28 DKK/kg. Updated pooled log-gap bounds are 0.143–0.631 (effective average burden) and 0.082–0.593 (marginal incentive). The full-response remaining gap is 47.61 [11.06,132.19] DKK/kg. One- and four-month price blocks give closely similar remaining-gap bounds. These remain conditional sensitivity intervals, with explicitly assumed independence across SCC, coefficient, and price draws and only eight pre-price months.
+
+The OECD chapter and Poore–Nemecek supplement/workbook were inspected. Their producer-distribution percentiles are not a confidence interval for the 59.6 benchmark; no intensity distribution was imputed. Source locators and fingerprints are in `emissions_intensity_audit.md`. The manuscript discusses the omitted intensity uncertainty, source coverage, dependence assumptions, and unchanged substantive conclusions.
+
+The updated 34-page PDF compiled successfully with no unresolved references, overfull/underfull boxes, or oversized floats. Figures 2, 3, and 4 were rendered and visually checked. Figure 4's caption was shortened to keep all notes clear of the footer while preserving the full-size panels.

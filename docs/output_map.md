@@ -36,5 +36,12 @@ The SDiD graphs show treated and unit-weighted donor levels. They retain pre-tre
 
 - Table 1 Panel C: `production_descriptive_statistics.csv`, from `production_descriptives.do`, using the exact main weight and head-count sample exports. All/Denmark/donor rows contain 810/30/780 country-months per outcome.
 - Table B2 (production): columns 1–3 weight, 4–6 counts; main/long-pre/June-omitted. ATT and SE from `production_estimates.csv`; the former horizontal results layout is replaced by specification columns.
-- Figure 4 (`fig:surfaces`): `outputs/figures/python/calibration_surfaces.png`, rendered by `scripts/render_calibration.py` from `calibration_surfaces.csv`. `persistence_analysis.do` calculates the four grids, holds f at .25/.50/.75/1, and combines the hierarchical SCC draws with independent coefficient draws using column 2's HAC standard error and t(28) reference distribution.
-- Updated remaining-gap prose: `calibration_scenarios.csv`. Preferred CPI DiD applied to the grocery price anchor; increment 10.80, damages 65.91, full-persistence/no-additional-response gap 55.11, full-response gap 47.61 [11.04,132.35] DKK/kg.
+- Figure 4 (`fig:surfaces`): `outputs/figures/python/calibration_surfaces.png`, rendered by `scripts/render_calibration.py` from `calibration_surfaces.csv`. `persistence_analysis.do` calculates the four grids, holds f at .25/.50/.75/1, and combines resampled grocery-price means and hierarchical SCC draws with independent coefficient draws using column 2's HAC standard error and t(28) reference distribution.
+- Updated remaining-gap prose: `calibration_scenarios.csv`. Preferred CPI DiD applied to the grocery price anchor; increment 10.80, damages 65.91, full-persistence/no-additional-response gap 55.11, full-response gap 47.61 [11.06,132.19] DKK/kg.
+
+
+- Price uncertainty underlying Figures 2–4: `price_benchmark_analysis.do`, called by `scc_meta_analysis.do`; `price_benchmark_draws.csv` and `price_benchmark_summary.csv`. Mean 162.44 [146.97,178.28] DKK/kg; eight months, 535 units, 1,638 observations.
+- Updated Figure 2 study bars: simulated SCC/price bounds in `scc_literature_calibration.csv`; original source ranges remain in Appendix Table B1 and separate audit columns.
+- Figures 2–3 pooled mapped intervals: `scc_price_gap_draws.csv` and `scc_meta_summary.csv`; average-burden 0.307 [0.143,0.631], marginal-incentive 0.255 [0.082,0.593]. ATT intervals remain the Table 2 intervals.
+- Figure 4 block-length check: `calibration_block_sensitivity.csv`; one/two/four months give 10.94–132.57 / 11.06–132.19 / 11.12–132.32 DKK/kg at a=f=lambda=1.
+- Intensity remains a fixed scenario input: `docs/emissions_intensity_audit.md` records why the producer-heterogeneity percentiles are not propagated as a confidence interval for the 59.6 benchmark.

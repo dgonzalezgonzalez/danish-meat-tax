@@ -76,8 +76,20 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 
 ## Preferred-estimate calibration grids
 
-`calibration_surfaces.csv` has 10,404 rows: `panel` identifies taxable shares 0.25, 0.50, 0.75, and 1; `x`/`persistence` and `y`/`incremental_pass_through` range from zero to one in .02 steps. `taxable_share` is constant within each panel. `beta`, `beta_low`, and `beta_high` preserve the preferred CPI DiD estimate and HAC interval. `pre_price_dkk_kg` anchors the proportional estimate to grocery levels. Damage, announcement, implementation, remaining-gap, and `conf_low`/`conf_high` fields are DKK/kg. The `conf_low`/`conf_high` fields retain the coefficient-only bounds. Figure 4 uses `sensitivity_low`/`sensitivity_high`, the combined SCC-and-coefficient pointwise percentile bounds in DKK/kg. `calibration_scenarios.csv` contains the full 27-row coarse parameter cube with matching amount and confidence fields.
+`calibration_surfaces.csv` has 10,404 rows: `panel` identifies taxable shares 0.25, 0.50, 0.75, and 1; `x`/`persistence` and `y`/`incremental_pass_through` range from zero to one in .02 steps. `taxable_share` is constant within each panel. `beta`, `beta_low`, and `beta_high` preserve the preferred CPI DiD estimate and HAC interval. `pre_price_dkk_kg` anchors the proportional estimate to grocery levels. Damage, announcement, implementation, remaining-gap, and `conf_low`/`conf_high` fields are DKK/kg. The `conf_low`/`conf_high` fields retain the coefficient-only bounds. Figure 4 uses `sensitivity_low`/`sensitivity_high`, the combined SCC, coefficient, and grocery-price pointwise percentile bounds in DKK/kg. `calibration_scenarios.csv` contains the full 27-row coarse parameter cube with matching amount and confidence fields.
 
 `production_descriptive_statistics.csv` records sample (`all`, `denmark`, `donors`), measure (`THS_T`, `THS_HD`), country-month observation count, mean, sample standard deviation, quartiles, and median from the exact main estimation samples.
 
 `calibration_joint_draws.csv` contains 10,000 paired draws: `draw`, `pooled_mean` (SCC in 2024 USD/tCO2), `beta_draw` (log-price effect), `damage_draw` and `announcement_draw` (DKK/kg). `scc_meta_draws.csv` preserves the SCC draws before independent coefficient variation is added.
+
+
+## Price resampling and joint calibration (September 2026)
+
+- `price_benchmark_draws.csv`: 10,000 rows keyed by `draw`; `price_draw` is the two-month-block resampled arithmetic grocery mean; `price_block1` and `price_block4` are alternative block lengths. All prices are DKK/kg.
+- `price_benchmark_summary.csv`: `block_months`, fixed original `point`, percentile `low`/`high`, draw `sd`, and original sample `observations`, `units`, and `months`.
+- `scc_price_gap_draws.csv`: paired `pooled_mean` SCC and all price-draw fields, plus `gap_effective_120` and `gap_marginal_300` in log-price units. Percentiles refer to combined SCC/price sensitivity.
+- `calibration_joint_draws.csv`: now also stores all three price-draw fields. `announcement_draw = price_draw*(exp(beta_draw)-1)`; the main two-month draw enters the surface bounds.
+- `calibration_block_sensitivity.csv`: `block_months`, `low`, `high` for the full a=f=lambda=1 level gap in DKK/kg, holding the SCC and coefficient draws identical across block choices.
+- `scc_literature_calibration.csv`: `source_gap_low/high_effective_120` and `source_gap_low/high_marginal_300` retain direct source-range mappings at the fixed central price. `log_price_gap_low/high_*` now contain simulated 2.5th–97.5th percentile SCC/price bounds, with missing bounds for the theory-only and lower-bound rows. Published `interval_low/high_usd_2024` retain their original definitions.
+
+All resulting bounds condition on fixed lifecycle intensity, FX, tax rates, and independent draws across the three uncertainty sources. Neither `f` nor intensity is assigned a probability distribution.

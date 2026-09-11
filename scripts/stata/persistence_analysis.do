@@ -21,6 +21,10 @@ local price = pre_treated_average[1]
 import delimited "outputs/models/stata/scc_meta_summary.csv", varnames(1) asdouble clear
 local damage = mean[1]*6.8953*59.6/1000
 local tax = tax_effective_2024_dkk[1]*59.6/1000
+* Preserve price draws to merge after independent coefficient draws.
+import delimited "outputs/models/stata/price_benchmark_draws.csv", varnames(1) asdouble clear
+tempfile price_draws
+save `price_draws'
 * Combine the original SCC hierarchical draws with independent coefficient draws.
 * Student t(28) matches the finite-df HAC interval used in the preferred model.
 import delimited "outputs/models/stata/scc_meta_draws.csv", varnames(1) asdouble clear
@@ -29,8 +33,24 @@ set seed 20260910
 gen long draw = _n
 gen double beta_draw = `beta' + `beta_se'*rt(`beta_df')
 gen double damage_draw = pooled_mean*6.8953*59.6/1000
-gen double announcement_draw = `price'*(exp(beta_draw)-1)
+merge 1:1 draw using `price_draws', assert(match) nogen
+gen double announcement_draw = price_draw*(exp(beta_draw)-1)
 export delimited "outputs/models/stata/calibration_joint_draws.csv", replace
+tempfile block_sensitivity
+tempname block_post
+postfile `block_post' byte block_months double low double high using `block_sensitivity', replace
+foreach L in 1 2 4 {
+    local v = cond(`L'==2,"price_draw","price_block`L'")
+    gen double full_gap = damage_draw-`v'*(exp(beta_draw)-1)-`tax'
+    quietly centile full_gap, centile(2.5 97.5)
+    post `block_post' (`L') (r(c_1)) (r(c_2))
+    drop full_gap
+}
+postclose `block_post'
+preserve
+use `block_sensitivity', clear
+export delimited "outputs/models/stata/calibration_block_sensitivity.csv", replace
+restore
 tempfile bounds
 tempname bounds_post
 postfile `bounds_post' int a_index double sensitivity_low double sensitivity_high using `bounds', replace
