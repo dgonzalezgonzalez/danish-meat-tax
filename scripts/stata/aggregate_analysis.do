@@ -119,10 +119,15 @@ rename sdid_series1 month
 rename sdid_series2 synthetic
 rename sdid_series3 treated
 format month %tm
+* Display only: align the pre-treatment means; retain raw donor levels.
+gen double display_gap = treated - synthetic
+quietly summarize display_gap if month < `event', meanonly
+gen double synthetic_aligned = synthetic + r(mean)
+drop display_gap
 export delimited using "outputs/models/stata/aggregate_sdid_series.csv", replace
 twoway ///
     (line treated month, lcolor(black) lwidth(medthick)) ///
-    (line synthetic month, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
+    (line synthetic_aligned month, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
     legend(order(1 "Beef and veal" 2 "Weighted donors") rows(1) position(6)) ///
     xline(`event', lcolor(gs9) lpattern(shortdash)) ///
     xtitle("") ytitle("Log consumer price index") graphregion(color(white)) plotregion(color(white))

@@ -69,6 +69,7 @@ foreach measure in THS_T THS_HD {
         format month %tm
         gen double gap = treated - synthetic
         quietly summarize gap if t <= `npre', meanonly
+        gen double synthetic_aligned = synthetic + r(mean)
         gen double centered_gap_sq = (gap - r(mean))^2 if t <= `npre'
         quietly summarize centered_gap_sq, meanonly
         local rmse = sqrt(r(mean))
@@ -76,7 +77,7 @@ foreach measure in THS_T THS_HD {
             (2*normal(-abs(`att'/`se'))) (`rmse') (`n') (`nu') (`npre') (15)
         export delimited using "outputs/models/stata/production_`measure'_`window'_series.csv", replace
         if "`window'" == "main" & "`measure'" == "THS_T" {
-            twoway (line treated month, lcolor(black)) (line synthetic month, lcolor(gs7) lpattern(dash)), ///
+            twoway (line treated month, lcolor(black)) (line synthetic_aligned month, lcolor(gs7) lpattern(dash)), ///
                 xline(774, lpattern(shortdash) lcolor(gs9)) ///
                 legend(order(1 "Denmark" 2 "Weighted donors") rows(1) position(6)) ///
                 xtitle("") ytitle("Log bovine slaughter output (1,000 tonnes)") ///

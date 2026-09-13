@@ -1,6 +1,7 @@
 param(
     [string]$InputPath = "data/raw/eu_beef_trade_data_en.csv",
-    [string]$OutputPath = "data/processed/eu_beef_trade_pair_month_panel.csv"
+    [string]$OutputPath = "data/processed/eu_beef_trade_pair_month_panel.csv",
+    [datetime]$WindowStart = [datetime]::new(2023, 4, 1)
 )
 
 $ErrorActionPreference = "Stop"
@@ -13,7 +14,6 @@ function Convert-ToInvariantDouble {
     return [double]::Parse($Value.Trim(), [Globalization.CultureInfo]::InvariantCulture)
 }
 
-$windowStart = [datetime]::new(2023, 4, 1)
 $windowEnd = [datetime]::new(2025, 9, 1)
 $months = for ($date = $windowStart; $date -le $windowEnd; $date = $date.AddMonths(1)) {
     $date.ToString("yyyy-MM")

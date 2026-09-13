@@ -51,5 +51,36 @@
       "source_updated": "2026-02-06T23:00:00+0100"
     }
   ],
-  "revision_note": "2026-09-11: replaced the obsolete carcass-price input with the newly retrieved historical Eurostat beef-and-veal HICP snapshot, following the authorized change of country-price outcome. All other input hashes are unchanged."
+  "revision_note": "2026-09-11: replaced the obsolete carcass-price input with the newly retrieved historical Eurostat beef-and-veal HICP snapshot, following the authorized change of country-price outcome. All other input hashes are unchanged.",
+  "window_audit_files": [
+    {
+      "path": "data/raw/eurostat_beef_hicp_2020m01_2025m09.json",
+      "bytes": 49644,
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?lang=EN&freq=M&unit=I15&coicop=CP01121&sinceTimePeriod=2020-01&untilTimePeriod=2025-09",
+      "retrieved_utc": "2026-09-11T14:16:22.440266+00:00",
+      "source_updated": "2026-02-06T23:00:00+0100",
+      "sha256": "8f724a36ae80459b32bd0eb2b4e9a8975ef70beff4987a8d2e7d092861171085",
+      "purpose": "Separate longer-pre-period SDiD audit; publication HICP snapshot unchanged."
+    }
+  ],
+  "max_history_files": [
+    {
+      "path": "data/raw/eurostat_hicp_full_to_2025m09.json",
+      "bytes": 108801,
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_midx?lang=EN&freq=M&unit=I15&coicop=CP01121&untilTimePeriod=2025-09",
+      "retrieved_utc": "2026-09-11T14:30:32.388962+00:00",
+      "source_updated": "2026-02-06T23:00:00+0100",
+      "sha256": "9f967f3384f182099048aa53ee147438fb7f6a8ca85afb5216933cfc2bac57ec",
+      "purpose": "Longest balanced history previews requested by author; publication inputs unchanged."
+    },
+    {
+      "path": "data/raw/eurostat_production_full_to_2025m09.json",
+      "bytes": 481226,
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/apro_mt_pwgtm?lang=EN&meat=B1000&untilTimePeriod=2025-09",
+      "retrieved_utc": "2026-09-11T14:30:34.388814+00:00",
+      "source_updated": "2026-09-09T23:00:00+0200",
+      "sha256": "6b6133dbdf80c0134bf09adb44dfe197414135dce1e0508bc05f97af31fbe919",
+      "purpose": "Longest balanced history previews requested by author; publication inputs unchanged."
+    }
+  ]
 }

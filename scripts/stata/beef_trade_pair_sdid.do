@@ -67,10 +67,15 @@ rename sdid_series2 synthetic
 rename sdid_series3 treated
 format month_id %tm
 gen byte post = month_id >= `event'
+* Display only: align the pre-treatment means; retain raw donor levels.
+gen double display_gap = treated - synthetic
+quietly summarize display_gap if !post, meanonly
+gen double synthetic_aligned = synthetic + r(mean)
+drop display_gap
 export delimited using "outputs/models/stata/beef_trade_pair_sdid_series.csv", replace
 twoway ///
     (line treated month_id, lcolor(black) lwidth(medthick)) ///
-    (line synthetic month_id, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
+    (line synthetic_aligned month_id, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
     legend(order(1 "Denmark-importer pairs" 2 "Weighted donors") rows(1) position(6)) ///
     xline(`event', lcolor(gs9) lpattern(shortdash)) ///
     xtitle("") ytitle("Log(1 + beef imports, carcase-weight tonnes)") ///

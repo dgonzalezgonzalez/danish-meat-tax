@@ -19,6 +19,7 @@ outputs/models/*
 !outputs/models/stata/
 !outputs/models/stata/*.csv
 outputs/models/stata/*.dta
+outputs/models/stata/sdid_max_*_sample.csv
 outputs/diagnostics/*
 !outputs/diagnostics/.gitkeep
 tmp_tests/

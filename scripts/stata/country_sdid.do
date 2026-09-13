@@ -91,7 +91,7 @@ twoway ///
     (line synthetic_aligned month_id, lcolor(gs7) lpattern(dash) lwidth(medthick)), ///
     legend(order(1 "Denmark (beef and veal HICP)" 2 "Weighted donors") rows(1) position(6)) ///
     xline(`event', lcolor(gs9) lpattern(shortdash)) ///
-    xtitle("") ytitle("Log beef and veal HICP (2015=100)") ///
+    xtitle("") ytitle("Log consumer price index") ///
     graphregion(color(white)) plotregion(color(white))
 graph export "outputs/figures/stata/country_sdid.png", width(2200) replace
 restore

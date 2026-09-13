@@ -1,6 +1,6 @@
 # Data and Code for: Before the Levy: Environmental Policy Announcements and Denmark's Beef Market
 
-**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 11 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
+**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 12 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
 
 ## Overview
 
@@ -62,6 +62,12 @@ python main.py outputs
 `estimate` prepares the grocery Stata file, EU panels, and Eurostat cells before all econometric do-files. `outputs` runs SCC harmonization, simulations, and calibration. After preprocessing, `do scripts/stata/master.do` runs the complete Stata sequence, including production, SCC, and calibration grids. To render the Python surface figure after a direct Stata master run, execute `python scripts/render_calibration.py`. The pipeline `outputs` stage calls this renderer automatically. Optional compilation calls pdfLaTeX, BibTeX, then pdfLaTeX twice. Paper tables contain formatted transcriptions from CSVs: reconcile them using the output map whenever inputs change before interpreting a newly compiled paper as updated results.
 
 ### Randomness and diagnostics
+
+The [appendix window diagnostic](docs/sdid_window_audit.md) compares 15, 24, 36, and 54 pre-treatment months using fixed donor membership and a common pre-treatment fit period. It preserves publication estimates and writes separate results. Its additional HICP snapshot is recorded under `window_audit_files` in the input manifest; `python scripts/verify_inputs.py --include-window-audit` verifies that snapshot together with the nine publication inputs. After the documented diagnostic preprocessing, `do scripts/stata/master.do audit` runs the complete publication analysis and the window comparison. The ordinary master does not require the additional snapshot.
+
+All four appendix SDiD figures align donor and treated pre-treatment means by a display-only constant, documented in their captions. Raw donor series remain in the CSVs. Figures B2 and B3 use the same generic consumer-price axis title, while their captions distinguish national CPI and HICP.
+
+The separate [maximum-history previews](docs/sdid_max_history.md) extend B1, B3 and B4 to their longest complete histories with the original donors: June 2014, December 2016 and January 2010, respectively. Full paths and recent-period zooms are available as `sdid_max_B1.png`, `sdid_max_B3.png` and `sdid_max_B4.png`. None improves the common-period fit. They remain review outputs; `master.do maxhistory` reproduces them after the documented preprocessing, and `verify_inputs.py --include-max-history` checks their two additional snapshots.
 
 Micro/aggregate/country and SCC use seed 20260827; trade uses 20260828; production uses 20260909. SDiD inference uses 200 replications; SCC uses 10,000. Combined calibration uncertainty pairs these SCC draws with independent coefficient draws using seed 20260910. Each analytical do-file clears Stata state and records a log under `outputs/diagnostics/stata/`. Root Windows batch logs are also checked for Stata `r(...)` failures even when the process returns zero. Changes to software, sorting, or inputs can affect simulated results.
 

@@ -2,6 +2,10 @@
 
 Table and figure numbers refer to the 9 September 2026 revision. Paths below are relative to the project root. All numerical results are calculated in Stata; TeX applies presentation rounding. The Stata master runs every producing do-file listed here.
 
+The supplementary [window diagnostic](sdid_window_audit.md) is reproduced with the optional `audit` argument to the master. `sdid_window_audit.do` exports 20 estimates and pre-treatment fit measures in `sdid_window_audit.csv`; `verify_sdid_revision.do` exports the all-outcome decision in `sdid_window_decision.csv`. The histories and result files are separate from the publication specifications.
+
+The author's [maximum-history previews](sdid_max_history.md) use `sdid_max_history_figures.do`, also callable through `master.do maxhistory`. Their `sdid_max_B1/B3/B4.png` files and `sdid_max_history_summary.csv` are review outputs, not replacements for the manuscript figures.
+
 | Paper output | Producing file under `scripts/stata/` | Result under `outputs/models/stata/` or `outputs/figures/stata/` | Inputs |
 |---|---|---|---|
 | Table 1: descriptive statistics | `microdata_analysis.do`, `aggregate_analysis.do`, `production_descriptives.do` | `descriptive_statistics.csv`, `aggregate_descriptive_statistics.csv`, `production_descriptive_statistics.csv` | Grocery panel; PRIS01; main Eurostat slaughter samples |
@@ -30,7 +34,7 @@ Table and figure numbers refer to the 9 September 2026 revision. Paths below are
 
 `denmark_cattle_production.csv` provides the ANI41 national-production series and Stata year-on-year growth; it is a descriptive cross-check and does not enter the SDiD table. All six production series/sample exports and trade placebo estimates remain available even where the paper displays only the main figure or bootstrap inference.
 
-The SDiD graphs show treated and unit-weighted donor levels. They retain pre-treatment level gaps; SDiD also uses time weighting when calculating ATT. A vertical level gap in these graphs is not itself the treatment effect.
+All four appendix SDiD graphs show treated and unit-weighted donor log outcomes, with the donor path shifted by the constant mean pre-treatment treated–donor gap. This display-only alignment preserves monthly changes and all estimates. CSVs retain the raw `synthetic` series and add `synthetic_aligned`. SDiD also uses time weights; the plotted post-treatment gap is not itself the ATT. Figures B2 and B3 both label the vertical axis "Log consumer price index"; their captions distinguish national CPI from HICP.
 
 ## Production descriptives and preferred-estimate surfaces
 

@@ -538,7 +538,7 @@ The main weight estimate is negative, but the interval allows a substantial decl
 \begin{figure}[htbp]\centering
 \caption{Danish bovine slaughter weight and synthetic-DiD comparison}\label{fig:production}
 \includegraphics[width=0.9\linewidth]{../outputs/figures/stata/production_sdid.png}
-\figurenotes{Eurostat, monthly bovine slaughter weight in thousand tonnes.}{The main sample covers April 2023--September 2025. The dashed vertical line marks July 2024. The donor line uses SDiD unit weights and retains the pre-treatment level difference. The ATT additionally uses time weights; the plotted level gap alone is not the estimated treatment effect. Production estimates and uncertainty appear in Table~\ref{tab:production}.}
+\figurenotes{Eurostat, monthly bovine slaughter weight in thousand tonnes.}{The main sample covers April 2023--September 2025. The dashed vertical line marks July 2024. For display, the donor series is shifted by a constant to match Denmark's pre-treatment mean; this does not change the SDiD estimate. The ATT additionally uses time weights; the plotted level gap alone is not the estimated treatment effect. Production estimates and uncertainty appear in Table~\ref{tab:production}.}
 \end{figure}
 
 \clearpage
@@ -546,7 +546,7 @@ The main weight estimate is negative, but the interval allows a substantial decl
 \begin{figure}[htbp]\centering
 \caption{Official-data synthetic DiD: beef and weighted donors}\label{fig:b_sdid}
 \includegraphics[width=0.9\linewidth]{../outputs/figures/stata/aggregate_sdid.png}
-\figurenotes{Statistics Denmark.}{Series are log CPI for beef and veal and the SDiD-weighted donor series over the symmetric 15-month pre/post window. The dashed vertical line marks July 2024, the first post-announcement month.}\end{figure}
+\figurenotes{Statistics Denmark.}{Series are log CPI for beef and veal and the SDiD-weighted donor series over the symmetric 15-month pre/post window. The dashed vertical line marks July 2024, the first post-announcement month. For display, the donor series is shifted by a constant to match the treated series' pre-treatment mean; this does not change the SDiD estimate.}\end{figure}
 
 \begin{figure}[htbp]\centering
 \caption{Country-level synthetic DiD: Danish beef-and-veal consumer prices}\label{fig:b_country_sdid}
@@ -556,5 +556,5 @@ The main weight estimate is negative, but the interval allows a substantial decl
 \begin{figure}[htbp]\centering
 \caption{Synthetic DiD: beef imports into Denmark}\label{fig:b_trade_sdid}
 \includegraphics[width=0.9\linewidth]{../outputs/figures/stata/beef_trade_pair_sdid.png}
-\figurenotes{European Commission, Beef Trade Data Explorer; Eurostat COMEXT.}{Series are mean log-one-plus monthly extra-EU beef imports, measured in carcass-weight tonnes, for Denmark--partner pairs and their SDiD-weighted donor series over the symmetric April 2023--September 2025 window. The dashed vertical line marks July 2024. The ATT is $-0.0801$ (unit-cluster bootstrap standard error 0.0782; $p=0.306$; 200 replications).}\end{figure}
+\figurenotes{European Commission, Beef Trade Data Explorer; Eurostat COMEXT.}{Series are mean log-one-plus monthly extra-EU beef imports, measured in carcass-weight tonnes, for Denmark--partner pairs and their SDiD-weighted donor series over the symmetric April 2023--September 2025 window. The dashed vertical line marks July 2024. The ATT is $-0.0801$ (unit-cluster bootstrap standard error 0.0782; $p=0.306$; 200 replications). For display, the donor series is shifted by a constant to match the treated series' pre-treatment mean; this does not change the SDiD estimate.}\end{figure}
 \end{document}
