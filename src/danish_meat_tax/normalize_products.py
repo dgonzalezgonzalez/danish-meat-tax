@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import date
+import csv
 import json
 from pathlib import Path
 import re
@@ -9,7 +10,25 @@ from typing import Any
 import pandas as pd
 
 from .data_sources.heissepreise import extract_records
-from .policy_taxonomy import classify_product
+from .policy_taxonomy import TreatmentAssignment, classify_product
+
+
+_BEEF_REVIEW = Path(__file__).resolve().parents[2] / "data/reference/grocery_beef_jev_audit.csv"
+_MANUAL_EXCLUSION_SNIPPETS = ("cup noodles", "oksebryst i skiver")
+
+
+def _accepted_beef_names() -> set[str]:
+    """Conservative reviewed beef set for the frozen change-history snapshot."""
+    if not _BEEF_REVIEW.exists():
+        return set()
+    with _BEEF_REVIEW.open(newline="", encoding="utf-8") as stream:
+        return {
+            row["product_name"]
+            for row in csv.DictReader(stream)
+            if row["jev_label"] == "core_beef"
+            and float(row["core_probability"]) >= 0.90
+            and not any(piece in row["product_name"].casefold() for piece in _MANUAL_EXCLUSION_SNIPPETS)
+        }
 
 
 def load_raw_records(raw_path: Path) -> list[dict[str, Any]]:
@@ -63,6 +82,16 @@ def _normalize_unit(unit: Any) -> str:
 
 def _parse_quantity_from_name(name: str) -> tuple[float | None, str]:
     text = name.casefold().replace(",", ".")
+    multipack = re.search(
+        r"(?P<count>\d+)\s*[x×]\s*(?P<qty>\d+(?:\.\d+)?)\s*"
+        r"(?P<unit>kg|kilo|kilogram|g|gram|l|liter|litre|ml|cl)\b",
+        text,
+    )
+    if multipack:
+        return (
+            float(multipack.group("count")) * float(multipack.group("qty")),
+            _normalize_unit(multipack.group("unit")),
+        )
     patterns = (
         r"(?P<qty>\d+(?:\.\d+)?)\s*(?P<unit>kg|kilo|kilogram)\b",
         r"(?P<qty>\d+(?:\.\d+)?)\s*(?P<unit>g|gram)\b",
@@ -102,6 +131,7 @@ def normalize_price(price: float, quantity: Any, unit: Any, product_name: str) -
 def normalize_records(records: list[dict[str, Any]]) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     assignment_cache: dict[tuple[str, str], Any] = {}
+    accepted_beef = _accepted_beef_names()
     for index, row in enumerate(records):
         name = _first(row, "product_name", "name", "title", "label")
         price = _first(row, "price", "current_price", "amount", "unit_price")
@@ -129,6 +159,11 @@ def normalize_records(records: list[dict[str, Any]]) -> pd.DataFrame:
         if assignment is None:
             assignment = classify_product(name_text, category_text)
             assignment_cache[cache_key] = assignment
+        if row.get("price_history_observation") and assignment.treatment_group == "beef" and name_text not in accepted_beef:
+            assignment = TreatmentAssignment(
+                "beef_candidate", True, "excluded_beef_review", "unverified_beef",
+                assignment.matched_terms, "food", "exclude_ambiguous",
+            )
         quantity = _first(row, "quantity", "amount_quantity", "size")
         raw_unit = _first(row, "unit", "package_size")
         normalized_price, normalized_unit, quantity_value, quantity_unit, normalization_status = normalize_price(
@@ -163,6 +198,8 @@ def normalize_records(records: list[dict[str, Any]]) -> pd.DataFrame:
                 "food_status": assignment.food_status,
                 "analysis_role": assignment.analysis_role,
                 "quality_flag": reason or "ok",
+                "history_change_event": bool(row.get("price_history_observation", False)),
+                "snapshot_unavailable": row.get("snapshot_unavailable"),
             }
         )
     frame = pd.DataFrame(rows)

@@ -1,0 +1,3 @@
+design,train,holdout,pseudo_att,full_att
+pre_news,2023m4-2023m9,2023m10-2023m12,-.0093824,.0156657
+pre_july,2023m4-2024m3,2024m4-2024m6,.0042264,.0156657

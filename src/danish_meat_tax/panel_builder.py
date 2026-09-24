@@ -46,6 +46,7 @@ def _filter_analysis_sample(
         data = data[data["food_status"] == "food"].copy()
     if exclude_unknown:
         data = data[(data["commodity"] != "unknown") & (data["treatment_group"] != "unknown")].copy()
+    data = data[data["analysis_role"] != "exclude_ambiguous"].copy()
     data = data[(data["normalization_status"] == "ok") & data["normalized_price"].notna() & (data["normalized_price"] > 0)].copy()
     if not include_dairy_as_treated:
         raise ValueError("Dairy is livestock-exposed and cannot be a beef control.")

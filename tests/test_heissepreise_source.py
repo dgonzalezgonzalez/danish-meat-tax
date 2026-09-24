@@ -37,6 +37,8 @@ class HeissepreiseSourceTest(unittest.TestCase):
         self.assertEqual(len(records), 2)
         self.assertEqual(records[0]["date"], "2024-06-20")
         self.assertEqual(records[1]["price"], 47)
+        self.assertTrue(records[0]["price_history_observation"])
+        self.assertIsNone(records[0]["snapshot_unavailable"])
 
     def test_download_uses_cache_manifest_when_available(self):
         tmp = Path.cwd() / "tmp_tests" / "heissepreise_cache"

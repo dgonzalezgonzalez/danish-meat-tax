@@ -1,0 +1,501 @@
+product_name,unit_count,jev_label,core_probability,confidence,model
+"3-Stjernet, Oksekebab 200g, Oksekebab",1,prepared_beef,0.02,0.74,jev-1.13.0
+"3-Stjernet, Roastbeef, Roastbeef i skiver m. knust peber",2,prepared_beef,0.14,0.82,jev-1.13.0
+"8in1 Delights, Beef Twisted Sticks 10 stk, Tyggepinde m. okse",1,animal_feed,0.01,0.84,jev-1.13.0
+"8in1 Delights, Beef Twisted Sticks 35 stk, Tyggepinde m. okse",1,animal_feed,0.0,0.93,jev-1.13.0
+"Angus entrecote, 360 g / frost",1,core_beef,1.0,1.0,jev-1.13.0
+"Asian Kitchen, Instant kopnudler m. oksekødssmag, Instant kopnudler m. oksekødssmag",1,mixed_food,0.0,0.99,jev-1.13.0
+"Asian Kitchen, Instant nudler m. oksekødssmag, Instant nudler m. oksekødssmag",1,mixed_food,0.0,0.98,jev-1.13.0
+"BEEF STICK, 20 GR. / ØKO. HANEGAL",1,animal_feed,0.13,0.54,jev-1.13.0
+"BOEUF ONGLET, 0.5 KG. / DANSK KALV",1,core_beef,0.95,0.93,jev-1.13.0
+"Ball tip (okse), 1,20-1,50 kg / Steak-Out - All American",1,core_beef,0.98,0.98,jev-1.13.0
+"Beauv. Spaghetti Bolognese, Hakket oksekød og spaghetti i tomatsauce med løg og krydderier
+
+Brutto vægt: 638 gram
+
+Netto vægt: 560 gram
+
+Beauvais' Spaghetti Bolognese er hakket oksekød og spaghetti i tomatsauce med løg og krydderier. Det italienske køkken er et af de mest populære i verden og er baseret på generationers opskrifter og traditioner. Beauvais Spaghetti Bolognese tilberedes med kvalitetsråvarer efter de originale opskrifter.",2,mixed_food,0.0,0.54,jev-1.13.0
+"Beef-Stick Oksekød, 12 GR",1,animal_feed,0.03,0.64,jev-1.13.0
+"Beef-Stick Vildt, 12 GR",1,animal_feed,0.02,0.79,jev-1.13.0
+"Beefeater Gin          40%, 70 CL",1,other,0.03,0.89,jev-1.13.0
+"Beefeater London Dry Gin, 70 CL",2,other,0.03,0.81,jev-1.13.0
+"Beefeater, London Dry Gin, London Dry gin",2,other,0.02,0.66,jev-1.13.0
+"Beefeater, London Pink, Gin m. jordbær",2,other,0.01,0.75,jev-1.13.0
+"Best Friend, Bilanx Økologisk Paté med oksekød, Paté m. okse kornfri øko",1,prepared_beef,0.01,0.34,jev-1.13.0
+"Best Friend, GO!, Godbidder m. okse",2,animal_feed,0.01,0.87,jev-1.13.0
+"Best Friend, Pure ComboBone S okse og gulerødder 3 stk, Tyggeben S m. okse og gulerødder",1,animal_feed,0.0,0.96,jev-1.13.0
+"Best Friend, Pure Tyggeben M okse 5 stk, Tyggeben M m. okse",1,animal_feed,0.0,1.0,jev-1.13.0
+"Best Friend, Pure Tyggerulle S okse 18 stk, Tyggeruller S m. okse",1,animal_feed,0.0,1.0,jev-1.13.0
+"Best Friend, Welldone Okse Bøfstang 3pak 36g, Tyggepinde m. okse",1,animal_feed,0.01,0.96,jev-1.13.0
+"Brit, Beef Filets for adult cats gravy 85 g, Vådfoder i sovs m. okse",1,animal_feed,0.0,0.98,jev-1.13.0
+"Brit, Brit premium bøf med tripe 400g, Paté m. okse",1,animal_feed,0.02,0.68,jev-1.13.0
+"Brodo, Øko. Bone Broth Okse 390g, Oksefond øko",2,prepared_beef,0.1,0.52,jev-1.13.0
+"Budget, Roastbeef i skiver 60g, Roastbeef i skiver",2,prepared_beef,0.12,0.85,jev-1.13.0
+"Burgerboost, Burgerboost
+
+Brutto vægt: 423 gram
+
+Netto vægt: 350 gram
+
+Drømmer du om at lave den ultimative burgerbøf derhjemme? Med Burger BOOST bøffer kan du løfte smagen til nye højder. Disse store og velformede bøffer er skabt til sande burgerentusiaster. De er lavet af det saftige og smagfulde brisket fra dansk kvæg, som er kendetegnet ved en relativ høj fedtprocent. Dette giver en uovertruffen smag og saftighed, som enhver burger fortjener og forvandler en almindelig burger til en ekstraordinær smagsoplevelse.",2,core_beef,0.73,0.67,jev-1.13.0
+"Bøffer af kalvemørbrad, 2 stk. / 190 g",1,core_beef,0.98,0.97,jev-1.13.0
+"Bøffer af kalvemørbrad, 2 stk. / 190 g / Bedst før: 07-01-2026",1,core_beef,0.94,0.93,jev-1.13.0
+"CULOTTE, 1.15 KG. / DANSK UNGKVÆG",1,core_beef,0.99,0.98,jev-1.13.0
+"CUPNUDLER OKSEKØD, 65 GR. / REMA 1000",1,mixed_food,0.19,0.58,jev-1.13.0
+"CUVETTE, 1.05 KG. / DANSK UNGKVÆG",1,core_beef,0.94,0.93,jev-1.13.0
+"Crave Protein Chunk Okse, 55 GR / Østrig",2,prepared_beef,0.21,0.28,jev-1.13.0
+"Crave, Protein Chunk Okse, Snackstænger m. oksekød",1,prepared_beef,0.04,0.38,jev-1.13.0
+"Cup Noodles 5 Spices Beef, 64 GR / Ungarn",1,mixed_food,0.06,0.84,jev-1.13.0
+"Cup Noodles 5 Spices Beef, Let krydret suppe med instant nudler, oksekødssmagIoksekjøttsmak asiatisk type
+
+Brutto vægt: 83,55 gram
+
+Netto vægt: 64 gram",2,core_beef,0.92,0.9,jev-1.13.0
+"CÔTE DE BOEUF, 500 GR. / DANSK KALV, 500-600 G",1,prepared_beef,0.16,0.65,jev-1.13.0
+"D.P. Cowboy-Toast, 2 Stk., Cowboytoast med oksekød og løg 290 g. Dybfrossen.
+
+Brutto vægt: 306 gram
+
+Netto vægt: 290 gram
+
+Cowboytoasten består i bund og grund af en god, gammeldaws hakkebøf med lækre bløde løg lagt imellem to stykker toastbrød. Lækker, hurtig og med ekstra yihaa!.",2,mixed_food,0.01,0.44,jev-1.13.0
+"Daloon, Classic Forårsruller, Forårsruller m. oksekød og grøntsager",4,mixed_food,0.0,0.52,jev-1.13.0
+"Daloon, Classic Miniruller, Forårsruller mini m. oksekød og grøntsager",2,prepared_beef,0.0,0.57,jev-1.13.0
+"Daloon, Forårsruller m. oksekød og grøntsager, Forårsruller m. oksekød og grøntsager",1,prepared_beef,0.0,0.55,jev-1.13.0
+"Daloon, Ovnruller med oksekød, Forårsruller m. oksekød og grøntsager",2,prepared_beef,0.0,0.74,jev-1.13.0
+"Danish Crown, Marvpibeben af okse, Marvpibeben af okse",1,prepared_beef,0.04,0.87,jev-1.13.0
+"Dogman, Dog Food Grain Free Beef/Liver 800 g, Vådfoder m. okse og lever kornfri",1,animal_feed,0.0,1.0,jev-1.13.0
+"Dogman, Dogman slices af okse 80g, Godbidder m. okse",1,animal_feed,0.0,0.98,jev-1.13.0
+"Dr. Oetker, Oksehusblas, Okse husblas",1,other,0.04,0.8,jev-1.13.0
+"Dreamies, Oksekød, Godbidder m. okse",2,animal_feed,0.0,0.98,jev-1.13.0
+"Egelykke, Oksebryst i skiver, Oksebryst i skiver",1,core_beef,0.7,0.63,jev-1.13.0
+"Egelykke, Roastbeef i skiver, Roastbeef i skiver",2,prepared_beef,0.13,0.84,jev-1.13.0
+"Entrecote øko., 2 stk. / 350 g / Friland",1,core_beef,0.98,0.97,jev-1.13.0
+"FERSK DANSK MØRBRAD, 1.9 KG. / DANSK UNGKVÆG",1,core_beef,0.97,0.96,jev-1.13.0
+"FROKOSTBØFFER M/STEAKPEBER, 300 GR. / REMA 1000, KALV",1,prepared_beef,0.23,0.52,jev-1.13.0
+"FROST BOKSE 1400 ML, 2 STK. / HELSINKI PLAST",1,other,0.05,0.78,jev-1.13.0
+"FROST BOKSE 300 ML, 4 STK. / HELSINKI PLAST",1,other,0.02,0.94,jev-1.13.0
+"FROST BOKSE 800 ML, 3 STK. / HELSINKI  PLAST",1,animal_feed,0.05,0.77,jev-1.13.0
+"Faunakram, Faunakram kød fyldt ben, Marvben m. okse",1,animal_feed,0.02,0.91,jev-1.13.0
+"Faunakram, Faunakram roasted beef ben 800g, Gnaveben",1,animal_feed,0.03,0.89,jev-1.13.0
+"First Price Cat Beef, 2 KG",1,animal_feed,0.04,0.9,jev-1.13.0
+"First Price Cat Beef, 2 KG / Danmark",1,animal_feed,0.04,0.91,jev-1.13.0
+"First Price Dog Beef, 4 KG",1,animal_feed,0.0,0.99,jev-1.13.0
+"First Price Dog Beef, 4 KG / Danmark",1,animal_feed,0.01,0.98,jev-1.13.0
+"Forårsruller Classic 8 Stk, Forårsruller til pande med hvidkål og oksekød
+
+Brutto vægt: 808 gram
+
+Netto vægt: 800 gram
+
+Classic med oksekød til pande fra Daloon er klassikeren over dem alle. Classic forårsruller til pande fra Daloon er det produkt som startede hele forårsrulle eventyret for grundlæggeren af Daloon, Sai-Chiu Van i starten af 1960’erne.
+
+Classic forårsruller til pande fra Daloon består af en knasende sprød dej fyldt med hvidkål, oksekød og varme krydderier. Forårsrullerne kan med fordel spises med en sprød nudelsalat og en lækker spicy dip.",3,mixed_food,0.0,0.71,jev-1.13.0
+"Forårsruller Classic Ovn, Forårsruller til ovn med hvidkål og oksekød
+
+Brutto vægt: 610 gram
+
+Netto vægt: 600 gram
+
+Den klassiske sprøde forårsrulle bare til ovnen. Forårsrullen som vi kender den, med samme gode smag af oksekød og hvidkål.  Classic forårsruller tilberedes helt enkelt i ovnen i stedet for på panden, og så skal den blot have 18 min. Mens forårsrullerne er i ovnen kan tiden bruges på at lave et sundt og lækkert tilbehør.",3,mixed_food,0.0,0.59,jev-1.13.0
+"Fp Hund Oksekød, 300 GR",3,animal_feed,0.0,0.99,jev-1.13.0
+"Frolic Chewy Chomps, Tyggepinde, Tyggestænger m. okse",2,animal_feed,0.0,0.98,jev-1.13.0
+"Frolic Chewy Chomps, Tyggestænger m. okse, Tyggestænger m. okse",1,animal_feed,0.0,0.91,jev-1.13.0
+"Frolic, Oksekød, gulerødder & korn, Tørfoder m. okse og gulerødder",1,animal_feed,0.0,0.97,jev-1.13.0
+"Frolic, Twistos, Tyggestænger m. okse",2,core_beef,0.55,0.47,jev-1.13.0
+"Fåddman, Smash Burger Pure Beef Ready to Smash 8*100g, Burgerbøffer",1,core_beef,0.89,0.87,jev-1.13.0
+"GRYDESTEG AF BOV, 800 GR. / DANSK KALV",1,core_beef,0.82,0.78,jev-1.13.0
+"GRYDESTEG AF TYKKAM, 800 GR. / DANSK KALV",1,mixed_food,0.01,0.34,jev-1.13.0
+"Geia Food First Love, Økologisk babymad Grøntsager/Okseragout 190g, Mos m. oksekød, kartoffel, gulerod og tomat fra 8 mdr øko",1,mixed_food,0.01,0.35,jev-1.13.0
+"Geia Food First Love, Økologisk babymad Spaghetti Bolognese 190g, Mos m. oksekød, gulerod og squash fra 6 mdr øko",1,core_beef,0.6,0.52,jev-1.13.0
+"Gestus Oksebryst, Oksebryst
+
+Brutto vægt: 106 gram
+
+Netto vægt: 80 gram",2,prepared_beef,0.13,0.82,jev-1.13.0
+"Gestus Roastbeef, 70 Gram",1,prepared_beef,0.12,0.67,jev-1.13.0
+"Gestus Roastbeef, Roastbeef
+
+Brutto vægt: 96 gram
+
+Netto vægt: 70 gram",2,animal_feed,0.09,0.38,jev-1.13.0
+"Godbidder m. oksekød, 4 stk. / 70 g / Pedigree - Rodeo",1,prepared_beef,0.14,0.75,jev-1.13.0
+"Godt Begyndt, Okse hvidløgsroast, Okseroast m. hvidløg",1,prepared_beef,0.06,0.88,jev-1.13.0
+"Godt Begyndt, Okseroast med hvidløg, Okseroast m. hvidløg",1,prepared_beef,0.06,0.89,jev-1.13.0
+"Grouw, Økse 910 g, Økse 910 g",1,core_beef,0.63,0.54,jev-1.13.0
+"HAKKET KØDKVÆG 8-12%, 250 GR. / DANSK",1,core_beef,0.99,0.99,jev-1.13.0
+"HG SALAMI SNACK OKSE ØKO, 25 GR / Danmark",1,prepared_beef,0.0,0.86,jev-1.13.0
+"HK. OKSE 8-12%, 400 GR. / FRILAND, ØKOLOGISK",1,core_beef,0.99,0.99,jev-1.13.0
+"HK. OKSEKØD 15-18%, 400 GR. / REMA 1000",1,core_beef,0.97,0.97,jev-1.13.0
+"HK. OKSEKØD 4-7%, 350 GR. / FRILAND, ØKOLOGISK",1,core_beef,1.0,0.99,jev-1.13.0
+"HK. OKSEKØD 4-7%, 350 GR. / REMA 1000",1,core_beef,1.0,1.0,jev-1.13.0
+"HK. OKSEKØD 8-12%, 400 GR. / REMA 1000",1,core_beef,1.0,0.99,jev-1.13.0
+"HK. OKSEKØD 8-12%, 800 GR. / REMA 1000",1,core_beef,0.99,0.98,jev-1.13.0
+"HUNDEGODBID M/OKSE, 200 GR. / REMA 1000",1,animal_feed,0.0,1.0,jev-1.13.0
+"HUNDEKIKS M/OKSE, 250 GR. / EXCELLENT PET",1,animal_feed,0.01,0.96,jev-1.13.0
+"HUNDESTICKS M/OKSE, 88 GR. / REMA 1000",1,animal_feed,0.0,0.98,jev-1.13.0
+"Hakket Kødkvæg 14-18%, 600 GR",2,core_beef,0.99,0.97,jev-1.13.0
+"Hakket Kødkvæg 8-14% Meny, 400 GR / Danmark",1,core_beef,0.99,0.98,jev-1.13.0
+"Hakket Oksekød 10-14%, 400 GR / Se opr.land på varen",3,core_beef,1.0,0.99,jev-1.13.0
+"Hakket Oksekød 14-18%, 400 GR / Se opr.land på varen",3,core_beef,0.99,0.99,jev-1.13.0
+"Hakket Oksekød 4-7 % M&S, 400 GR / Se opr.land på varen",1,core_beef,0.99,0.99,jev-1.13.0
+"Hakket Oksekød 4-7% Øko, 350 GR / Danmark",1,core_beef,0.99,0.98,jev-1.13.0
+"Hakket Oksekød 4-7%, 700 GR",1,core_beef,1.0,0.99,jev-1.13.0
+"Hakket Oksekød 4-7%, 700 GR / Se opr.land på varen",2,core_beef,1.0,1.0,jev-1.13.0
+"Hakket Oksekød 7-10%, 800 GR / Se opr.land på varen",2,core_beef,1.0,1.0,jev-1.13.0
+"Hakket Oksekød 7-10%, 800 g / Se opr.land på varen",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket Oksekød 8-12%, 500 GR / Se opr.land på varen",3,core_beef,1.0,1.0,jev-1.13.0
+"Hakket kalvekød 14-18%, 500 g / Danish Crown",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket kalvekød 14-18%, 500 g / Danish Crown / Bedst før: 26-09-2025",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket oksekød 14-18%, 500 g / Danish Crown",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket oksekød 4-7% øko., 400 g / Bedst før: 17-08-2025",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket oksekød 4-7% øko., 400 g / Friland",1,core_beef,1.0,0.99,jev-1.13.0
+"Hakket oksekød 4-7%, 1 kg / Bedst før: 06-01-2026",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket oksekød 4-7%, 1 kg / Danish Crown",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket oksekød 4-7%, 500 g / Danish Crown",1,core_beef,1.0,1.0,jev-1.13.0
+"Hakket oksekød 8-12% øko., 400 g / Bedst før: 03-06-2025",1,core_beef,1.0,0.99,jev-1.13.0
+"Hakket oksekød 8-12% øko., 400 g / Friland",1,core_beef,0.99,0.99,jev-1.13.0
+"Hakket oksekød 8-12%, 1 kg / Bedst før: 06-01-2026",1,core_beef,0.98,0.98,jev-1.13.0
+"Hakket oksekød 8-12%, 1 kg / Danish Crown",1,core_beef,0.99,0.98,jev-1.13.0
+"Hakket oksekød 8-12%, 500 g / Danish Crown",1,core_beef,0.95,0.94,jev-1.13.0
+"Hammel, Roastbeef i skiver 70g, Roastbeef i skiver",2,prepared_beef,0.39,0.5,jev-1.13.0
+"Hanegal, Beef Stick, Oksesalami snack øko",2,prepared_beef,0.06,0.81,jev-1.13.0
+"Hensyn, Hensyn restpålæg roastbeef, Roastbeef i skiver",1,prepared_beef,0.12,0.82,jev-1.13.0
+"Hk. Oksekød 8-12% M&S, 350 GR / Tyskland",1,core_beef,0.81,0.77,jev-1.13.0
+"Hund, Hundepaté m. oksekød, Hundepaté m. oksekød",1,animal_feed,0.0,1.0,jev-1.13.0
+"Hund, Hundetyggestrips m. oksekød, Hundetyggestrips m. oksekød",1,animal_feed,0.0,1.0,jev-1.13.0
+"Hund, Paté m. okse, Paté m. okse",1,animal_feed,0.01,0.95,jev-1.13.0
+"Hund, Vådfoder m. okse, Vådfoder m. okse",1,animal_feed,0.01,0.97,jev-1.13.0
+"Hundesnack m. oksekød, 150 g / Smart Pets",1,animal_feed,0.0,0.96,jev-1.13.0
+"HØJREBSBØFFER M/STEAKPEBER, 350 GR. / REMA 1000, KALV",1,prepared_beef,0.29,0.51,jev-1.13.0
+"HØJREBSBØFFER, 360 GR. / DANSK UNGKVÆG",1,core_beef,0.83,0.8,jev-1.13.0
+"HØJREBSFILET, 1.5 KG. / DANSK UNGKVÆG",1,core_beef,1.0,0.99,jev-1.13.0
+"HØJREBSFILET, 2000 GR. / AF DANSK KALV",1,core_beef,1.0,0.99,jev-1.13.0
+"Jack Link's, Beef Jerky Original, Beef jerky",2,prepared_beef,0.01,0.97,jev-1.13.0
+"Jack Link's, Beef Jerky Teriyaki, Beef jerky m. teriyaki",2,prepared_beef,0.01,0.96,jev-1.13.0
+"K-Salat Peberrodssalat, Peberrodssalat
+
+Brutto vægt: 120 gram
+
+Netto vægt: 100 gram
+
+Peberrodssalat er perfekt som topping på et stykke med oksebryst eller roastbeef. Eller prøv den på en helt anden måde: I en wrap med røget laks og lidt hjertesalat. 100 gram.",2,mixed_food,0.0,0.8,jev-1.13.0
+"K-Salat Pickles, Pickles
+
+Brutto vægt: 164 gram
+
+Netto vægt: 150 gram
+
+Pickles fra K-Salat er fyldt med sprøde grøntsager i en lækker krydret dressing. Spis den på et stykke med oksebryst og pynt med lidt revet peberrod eller brug den som base til din hjemmelavede remoulade.",2,mixed_food,0.05,0.46,jev-1.13.0
+"KALVE CULOTTE, 1.05 KG.",1,core_beef,0.87,0.84,jev-1.13.0
+"KALVE CUVETTE, 0.7 KG.",1,core_beef,0.92,0.89,jev-1.13.0
+"KALVE FLANKSTEAK, 0.45 KG. / M/BBQ",1,core_beef,0.87,0.84,jev-1.13.0
+"KALVE FLANKSTEAK, 0.45 KG. / M/HVIDLØG",1,core_beef,0.65,0.58,jev-1.13.0
+"KALVE FLATSTEAK M. BBQ, 0.27 KG. / REMA 1000",1,core_beef,0.56,0.46,jev-1.13.0
+"KALVE FLATSTEAKS M. HVIDLØG, 0.27 KG. / REMA 1000",1,core_beef,0.58,0.49,jev-1.13.0
+"KALVE GRILLSTICKS, 280 GR. / REMA 1000",1,prepared_beef,0.42,0.47,jev-1.13.0
+"KALVE OSSO BUCO, 575 GR. / DANSK",1,core_beef,0.65,0.58,jev-1.13.0
+"KALVE SCHNITZEL, 200 GR. / DANSK KALV",1,core_beef,0.64,0.56,jev-1.13.0
+"KALVE SNAPSTEAK, 200 GR. / MED KRYDDERURTER",1,core_beef,0.73,0.66,jev-1.13.0
+"KALVE SPIDSBRYST, 800 GR. / DANSK KALV",1,core_beef,1.0,0.99,jev-1.13.0
+"KALVEFILET, TILSKÅRET, 600 GR. / GRILL- OG OVNKLAR - DANSK",1,core_beef,0.99,0.99,jev-1.13.0
+"KALVEFRIKASSÉ, 400 GR. / REMA 1000",1,prepared_beef,0.1,0.82,jev-1.13.0
+"KALVEKØD I TERN, SKÆRT, 300 GR. / DANSK KØD",1,core_beef,0.96,0.96,jev-1.13.0
+"KALVELEVER, 300 GR. / DANSK",1,core_beef,0.68,0.62,jev-1.13.0
+"KALVEMØRBRAD, 1400 GR. / DANSK,  1400-2000G",1,core_beef,0.92,0.9,jev-1.13.0
+"KALVESTEAK M.URTER, 300 GR. / GRILL - DANSK",1,core_beef,0.81,0.77,jev-1.13.0
+"KALVESTEAKS, 125 GR. / MED STEAKPEBER",1,core_beef,0.63,0.55,jev-1.13.0
+"KALVETERN BBQ, 225 GR. / REMA 1000",1,prepared_beef,0.22,0.67,jev-1.13.0
+"KATTEFODER M/OKSE, 100 GR. / EXCELLENT PET",1,animal_feed,0.0,0.99,jev-1.13.0
+"KATTEFULDFODER, 2 KG. / REMA 1000, M/OKSE",1,animal_feed,0.0,0.99,jev-1.13.0
+"Kalve Cote De Boeuf, 400 GR / Danmark",1,core_beef,0.88,0.86,jev-1.13.0
+"Kalve Fond, 60 _ / Danmark",1,prepared_beef,0.13,0.24,jev-1.13.0
+"Kalveschnitzler Af Yderlår, 250 GR / Danmark",2,core_beef,0.51,0.4,jev-1.13.0
+"Kalvesylte, 330 g / Slagter Lund",1,prepared_beef,0.02,0.85,jev-1.13.0
+"Kat, Kattepaté m. oksekød, Kattepaté m. oksekød",1,animal_feed,0.01,0.68,jev-1.13.0
+"Kat, Tørfoder m. oksekød, Tørfoder m. oksekød",1,animal_feed,0.0,0.92,jev-1.13.0
+"Kitekat, Okse & Grøntsager, Tørfoder m. okse",2,animal_feed,0.0,1.0,jev-1.13.0
+"Knorr, Fond Du Chef Beef, Oksefond",2,mixed_food,0.0,0.76,jev-1.13.0
+"Knorr, Oksebouillon, Oksebouillon",3,mixed_food,0.01,0.65,jev-1.13.0
+"Let's Bite, Lets bite meat snacks beef&poultry 80 g, Godbidder m. okse og fjerkræ",1,animal_feed,0.0,0.68,jev-1.13.0
+"Ludvig, Angus oksemørbrad 1,3kg, Angus oksemørbrad",1,core_beef,1.0,1.0,jev-1.13.0
+"Ludvig, Benløse fugle af skært oksekød, Benløse fugle",1,core_beef,0.58,0.49,jev-1.13.0
+"Ludvig, Entrecote, Entrecote",2,core_beef,1.0,1.0,jev-1.13.0
+"Ludvig, Entrecotes af oksefilet, Entrecotes af filet",1,core_beef,0.99,0.99,jev-1.13.0
+"Ludvig, Grydesteg af kalv 0,9-1,2kg, Grydesteg af kalvetykkam",1,core_beef,0.99,0.99,jev-1.13.0
+"Ludvig, Gullaschkød af okse skært, Gullaschkød af okse",1,core_beef,0.9400000000000001,0.92,jev-1.13.0
+"Ludvig, Gullaschkød, Gullaschkød af okse",1,core_beef,0.9,0.86,jev-1.13.0
+"Ludvig, KALVE ENTRECOTES 600-625G, Kalve entrecote",1,core_beef,0.98,0.98,jev-1.13.0
+"Ludvig, Kalvebrisler, Kalvebrisler",1,core_beef,0.92,0.9,jev-1.13.0
+"Ludvig, Kalvecuvette, Kalvecuvette",2,core_beef,0.96,0.95,jev-1.13.0
+"Ludvig, Kalvenyretapper, Kalvenyretapper",1,core_beef,0.95,0.94,jev-1.13.0
+"Ludvig, Kalveribeyes, Kalve Ribeyes",1,core_beef,0.96,0.95,jev-1.13.0
+"Ludvig, Kalvetyndsteg, Kalvetyndsteg",2,core_beef,0.8,0.75,jev-1.13.0
+"Ludvig, Kalvewienerschnitzler, Kalvewienerschnitzler",1,core_beef,0.71,0.65,jev-1.13.0
+"Ludvig, Marmoreret oksefilet, Marmoreret oksefilet",1,core_beef,0.97,0.96,jev-1.13.0
+"Ludvig, Oksecuvette, Oksecuvette",1,core_beef,0.99,0.98,jev-1.13.0
+"Ludvig, Oksefilet m. fedt, Oksefilet m. fedt",1,core_beef,1.0,1.0,jev-1.13.0
+"Ludvig, Oksemørbrad, Oksemørbrad",2,core_beef,1.0,1.0,jev-1.13.0
+"Ludvig, Oksespidsbryst 800-1200 g, Oksespidsbryst",2,core_beef,1.0,1.0,jev-1.13.0
+"Ludvig, Peberbøffer af oksetyksteg, Peberbøffer af oksetyksteg",2,core_beef,0.5,0.39,jev-1.13.0
+"Ludvig, Ribeyes af kalv, Kalveribeyes",1,core_beef,1.0,1.0,jev-1.13.0
+"Ludvig, Roastbeef, Roastbeef",2,core_beef,0.77,0.72,jev-1.13.0
+"Ludvig, Tykstegsmedaljoner af kalv, Kalvetykstegsmedaljoner",1,core_beef,0.97,0.96,jev-1.13.0
+"Ludvig, Wienerschnitzler af kalv, Kalvewienerschnitzler",2,core_beef,0.61,0.53,jev-1.13.0
+"Ludvig, ludvig Okseculotte 1,3-1,7 kg, Okseculotte",1,core_beef,0.99,0.98,jev-1.13.0
+"Mama, Pho Bo, Instant risnudler m. oksekødssmag",1,mixed_food,0.0,0.92,jev-1.13.0
+"Mesterhakket, Hakket oksekød 16-22% fedt 800-900g, Hakket oksekød 16-22% fedt (OBS 1dags holdbarhed)",1,core_beef,0.88,0.86,jev-1.13.0
+"Mesterhakket, Hakket oksekød 16-22% fedt, Hakket oksekød 16-22% fedt (OBS! 1 dags holdbarhed)",1,core_beef,0.97,0.97,jev-1.13.0
+"Mesterhakket, Hakket oksekød 16-22%, Hakket oksekød 16-22% (OBS 1 dags holdbarhed)",1,core_beef,0.95,0.93,jev-1.13.0
+"Mesterhakket, Hakket oksekød 2-7% fedt 700-800g, Hakket oksekød 2-7% fedt (OBS 1 dags holdbarhed)",1,core_beef,0.73,0.67,jev-1.13.0
+"Mesterhakket, Hakket oksekød 9-15% fedt, Hakket oksekød 9-15% fedt (OBS 1 dags holdbarhed)",1,core_beef,0.57,0.48,jev-1.13.0
+"Michelangelo, Ravioli alla Carne, Ravioli m. oksekød",1,prepared_beef,0.07,0.37,jev-1.13.0
+"Minirulle M/Oksekød, Mini forårsruller med oksekød og grøntsager. Forstegt, dybfrossen.
+
+Brutto vægt: 427 gram
+
+Netto vægt: 400 gram
+
+Mini forårsruller med oksekød og grøntsager fra Daloon består af en knasende sprød dej med et smagfuldt fyld bestående af hvidkål, bønnespirer, porrer, gulerødder, rød peber og tørrede kinesiske svampe.
+
+Mini forårsruller med oksekød og grøntsager fra Daloon er et godt alternativ når der skal serveres snacks som appetizer eller som natmad da produktet kan tilberedes direkte fra frost og især går godt sammen spicy dips.",1,prepared_beef,0.01,0.57,jev-1.13.0
+"Mou Den Gode, Klar oksekødssuppe m. gulerødder, selleri og porrer, Klar oksekødssuppe m. gulerødder, selleri og porrer",1,prepared_beef,0.03,0.88,jev-1.13.0
+"Mou Den Gode, Oksekødssuppe, Klar oksekødssuppe m. gulerødder, selleri og porrer",2,prepared_beef,0.01,0.87,jev-1.13.0
+"Mou Gullashsuppe, Gullaschsuppe. Dybfrossen.
+
+Brutto vægt: 1007 gram
+
+Netto vægt: 1000 gram
+
+Gullasch har sin oprindelse i Ungarn, hvor maden traditionelt er både solid og krydret, så den har kraft og temperament. Mou Gullaschsuppe er lavet med respekt for de ungarske traditioner, og kan derfor genkendes på dets varme og styrke.
+
+Basen i Mou Gullaschsuppe er vores kraftfulde oksekødsfond, men selve sjælen i gullaschsuppen ligger i krydderierne – ikke mindst i paprikaen. Den fyldige og krydrede suppe har et fyld af oksekød og grøntsager, som giver struktur og mæthedsfornemmelse.",1,prepared_beef,0.0,0.85,jev-1.13.0
+"Mou Oksekødsuppe, Komplet, 800 GR / Danmark",2,prepared_beef,0.0,0.88,jev-1.13.0
+"Mou Oksekødsuppe, Oksekødsuppe. Dybfrossen.
+
+Brutto vægt: 1008 gram
+
+Netto vægt: 1000 gram
+
+Tænk på en dampende varm, klar oksekødsuppe, og du vil sikkert allerede fornemme styrken og mærke varmen brede sig i kroppen. Derfor er Mou Oksekødsuppe det perfekte valg til vinterdage og hyggeaftener. Suppens intense smag af oksekød er som et varmt kram i kulden.
+
+Oksekødsuppen kan være et måltid i sig selv eller en appetitvækker til en god middag. Det er derfor altid vigtigt, at suppen er fuld af kraft. Det er ikke blot varmen, der giver styrke, det er også smagen og næringen fra de gode råvarer.",3,prepared_beef,0.0,0.86,jev-1.13.0
+"NO BEEF, 102 GR. / DAVA",1,plant_product,0.0,0.67,jev-1.13.0
+"NO BEEF, 130 GR. / DAVA",1,plant_product,0.01,0.66,jev-1.13.0
+"Nissin Cup Noodles, Med 5 spices oksekød, Instant kopnudler m. oksekødssmag",2,mixed_food,0.0,0.99,jev-1.13.0
+"Nissin Demae Beef Nudler, Instant nudelsuppe med amag af oksekød. 100 g (500 ml færdig suppe)
+
+Brutto vægt: 103,23 gram
+
+Netto vægt: 100 gram",1,mixed_food,0.0,0.98,jev-1.13.0
+"Nissin Demae Ramen, Demae Ramen Beef, Instant nudler m. oksekødssmag",2,mixed_food,0.0,0.98,jev-1.13.0
+"Nissin Demae Ramen, Instant nudler m. oksekødssmag, Instant nudler m. oksekødssmag",1,mixed_food,0.0,0.98,jev-1.13.0
+"Nissin Soba, Nudler Beef, Instant kopnudler m. oksekødssmag",1,mixed_food,0.0,0.94,jev-1.13.0
+"No Beef Øko, 102 Gram",1,plant_product,0.01,0.83,jev-1.13.0
+"OKSE STRIPS, 100 GR. / EXCELLENT PET",1,animal_feed,0.04,0.92,jev-1.13.0
+"OKSEBEN, 200 GR. / EXCELLENT PET",1,animal_feed,0.06,0.9,jev-1.13.0
+"OKSEBOUILLON, 100 GR. / KNORR",1,mixed_food,0.07,0.54,jev-1.13.0
+"OKSEBOUILLON, 100 GR. / REMA 1000",1,prepared_beef,0.26,0.36,jev-1.13.0
+"OKSEFLANKSTEAK M. BBQ, 0.5 KG. / DANSK",1,prepared_beef,0.35,0.56,jev-1.13.0
+"OKSEFLANKSTEAK M/HVIDLØG, 0.5 KG. / DANSK",1,prepared_beef,0.39,0.52,jev-1.13.0
+"OKSEFLANKSTEAKS M. BBQ, 0.5 KG. / DANISH CROWN",1,core_beef,0.55,0.44,jev-1.13.0
+"OKSEFLANKSTEAKS M.HVIDLØG, 0.5 KG. / DANISH CROWN",1,core_beef,0.54,0.45,jev-1.13.0
+"OKSEFOND, 180 ML.",1,prepared_beef,0.23,0.54,jev-1.13.0
+"OKSEKØDSSUPPE, 1000 GR. / REMA 1000",1,prepared_beef,0.03,0.87,jev-1.13.0
+"OKSEKØDSUPPE, 1000 GR. / MOU",1,prepared_beef,0.0,0.47,jev-1.13.0
+"OKSEPASTRAMI, 60 GR. / TYNDSKÅRET, REMA 1000",1,prepared_beef,0.01,0.99,jev-1.13.0
+"OKSESPIDSBRYST, 0.5 KG. / FRILAND, ØKOLOGISK",1,core_beef,1.0,1.0,jev-1.13.0
+"OKSESPIDSBRYST, 1 KG. / DANSK",1,core_beef,1.0,1.0,jev-1.13.0
+"OKSESPIDSBRYST, 80 GR. / REMA 1000 MESTERPÅLÆG",1,core_beef,0.51,0.41,jev-1.13.0
+"Okse Fond, 60 _ / Danmark",1,mixed_food,0.11,0.51,jev-1.13.0
+"Okse Kebab, Okse kebab
+
+Brutto vægt: 420 gram
+
+Netto vægt: 400 gram
+
+Oksekød, med kebab krydderi, skåret i tynde skiver. Stegt. Dybfrossen.",2,prepared_beef,0.0,1.0,jev-1.13.0
+"Oksekebab, Oksekebab",1,prepared_beef,0.03,0.91,jev-1.13.0
+"Oksekød, Gullaschkød af okse, Gullaschkød af okse",1,core_beef,0.81,0.77,jev-1.13.0
+"Oksemørbrad 900-1300 G., 900 GR / New zealand",1,core_beef,0.99,0.98,jev-1.13.0
+"Oscar Kalvebouillon, 90 Gram",1,mixed_food,0.05,0.7,jev-1.13.0
+"Oscar Oksebouillon Øko, Økologisk oksebouillon granulat
+
+Brutto vægt: 92 gram
+
+Netto vægt: 80 gram
+
+OSCAR® Oksebouillon granulat Økologisk har en autentisk smag af okse og løg, det gør sig godt enten til at starte en ret op med, eller som tilsmagning til sidst i processen. Du kan med fordel tilsmage farsretter med Oksebouillon Økologisk. Prøv f.eks. næste gang du laver en farsret at erstatte 1/3 af kødet med grøntsager, og smag til med Oksebouillon granulat Økologisk.",1,mixed_food,0.01,0.86,jev-1.13.0
+"Oscar, Kalvebouillon, Kalvebouillon",2,mixed_food,0.15,0.27,jev-1.13.0
+"Oscar, Økologisk oksebouillon, Oksebouillon øko",2,mixed_food,0.1,0.58,jev-1.13.0
+"Oscar, Økologisk oksefond, Oksefond øko",2,prepared_beef,0.23,0.33,jev-1.13.0
+"PartyDeco, Gender reveal konfettirør 60 cm - blå, Konfettirør gender reveal 60 cm - blå",1,other,0.0,0.96,jev-1.13.0
+"PartyDeco, Gender reveal konfettirør 60 cm - pink, Konfettirør gender reveal 60 cm - pink",1,other,0.02,0.81,jev-1.13.0
+"Pate m. okse, 100 g / First Price",1,prepared_beef,0.07,0.84,jev-1.13.0
+"Pate m. oksekød, 300 g / First Price",1,prepared_beef,0.25,0.63,jev-1.13.0
+"Pebersteak Af Oksetyksteg, 300 GR / Danmark",2,core_beef,0.64,0.56,jev-1.13.0
+"Pedigree Adult Okse/Grønt, 3 KG / Tyskland",1,animal_feed,0.0,1.0,jev-1.13.0
+"Pedigree Can Beef, 400 GR",1,animal_feed,0.0,0.98,jev-1.13.0
+"Pedigree Can Beef, 400 GR / Tyskland",1,animal_feed,0.0,0.99,jev-1.13.0
+"Pedigree Jumbone, Medium, Tyggestænger m. okse",2,animal_feed,0.0,1.0,jev-1.13.0
+"Pedigree Jumbone, Mini, Tyggestænger m. okse",2,animal_feed,0.0,1.0,jev-1.13.0
+"Pedigree Ranchos Okse Slic, 60 GR / Ungarn",1,animal_feed,0.01,0.92,jev-1.13.0
+"Pedigree Rodeo, Tyggestænger med okse, Tyggestænger m. okse",2,animal_feed,0.0,1.0,jev-1.13.0
+"Pedigree Small Okse/Grønt, 2 KG",1,animal_feed,0.0,0.99,jev-1.13.0
+"Pedigree Small Okse/Grønt, 2 KG / Tyskland",1,animal_feed,0.0,0.99,jev-1.13.0
+"Pedigree, Adult Beef Veg 12kg, Tørfoder m. okse og grøntsager",1,animal_feed,0.0,0.99,jev-1.13.0
+"Pedigree, Adult Beef Veg 3kg, Tørfoder m. okse og grøntsager",2,animal_feed,0.0,0.99,jev-1.13.0
+"Pedigree, Adult Beef Veg 7 kg, Tørfoder m. okse og grøntsager",1,animal_feed,0.0,0.99,jev-1.13.0
+"Pedigree, Mini Okse 2kg, Tørfoder m. okse og grøntsager",2,animal_feed,0.0,0.99,jev-1.13.0
+"Pedigree, Pedigree Oksekød 12*400g, Vådfoder m. okse",1,animal_feed,0.0,0.95,jev-1.13.0
+"Pedigree, Pedigree Ranchos Okse Slices, Tyggepinde m. okse",1,animal_feed,0.0,0.98,jev-1.13.0
+"Pedigree, Tender Goodness Adult Okse, Tørfoder m. okse",2,animal_feed,0.0,0.98,jev-1.13.0
+"Pedigree, Tyggestænger m. okse, Tyggestænger m. okse",2,animal_feed,0.0,0.97,jev-1.13.0
+"Pedigree, Tørfoder m. okse og grøntsager, Tørfoder m. okse og grøntsager",1,animal_feed,0.0,0.94,jev-1.13.0
+"Plast1, Madopbevaringsbokse 2 stk., Arctic madopbevaringsboks (1,25L)",1,other,0.0,0.92,jev-1.13.0
+"Podravka, Oksekød Suppe 65g, Oksekødssuppe",1,prepared_beef,0.0,0.63,jev-1.13.0
+"Premieur, Entrecote m. marinade, Entrecote m. marinade",1,prepared_beef,0.32,0.59,jev-1.13.0
+"Premieur, Entrecote, Entrecote",1,core_beef,1.0,0.99,jev-1.13.0
+"Protein godbidder m. okse, 55 g / CRAVE",1,animal_feed,0.01,0.93,jev-1.13.0
+"Purina Adventuros, Sticks til små hunde Buffalo Wild Flavour, Godbidder m. okse",2,animal_feed,0.0,1.0,jev-1.13.0
+"Purina Gourmet, Gourmet Gold Paté Kalv/Grøntsager 85g, Vådfoder m. kalv og grøntsager",2,animal_feed,0.0,0.99,jev-1.13.0
+"Purina Gourmet, Perle Mini Filets i sovs Okse, Vådfoder m. okse i sovs",1,animal_feed,0.0,0.99,jev-1.13.0
+"Purina Latz, Latz AGAIL okse i géle, 85 g, Vådfoder i gelé m. okse",2,animal_feed,0.0,0.97,jev-1.13.0
+"Purina One, One Bifensis Sterilcat Okse 750g, Tørfoder m. okse steriliserede katte",2,animal_feed,0.0,1.0,jev-1.13.0
+"Purina, GOURMET GOLD okse, Vådfoder m. oksekød",1,animal_feed,0.02,0.95,jev-1.13.0
+"Pålægsmesteren Oksebryst, 80 GR / Danmark",1,prepared_beef,0.07,0.91,jev-1.13.0
+"Pålækker Roastbeef M/Peber, 60 Gram",2,prepared_beef,0.02,0.97,jev-1.13.0
+"RIB EYE, 1.35 KG. / REMA 1000, UNGKVÆG",1,core_beef,0.98,0.97,jev-1.13.0
+"RIBEYE STEAKS, 360 GR. / DANSK KALV",1,core_beef,0.99,0.98,jev-1.13.0
+"RIBEYE STEAKS, 360 GR. / DANSK UNGKVÆG",1,core_beef,0.98,0.97,jev-1.13.0
+"ROASTBEEF, 70 GR. / REMA 1000 MESTERPÅLÆG",1,prepared_beef,0.1,0.87,jev-1.13.0
+"ROASTBEEF, 700 GR. / DANSK KALV",1,prepared_beef,0.42,0.48,jev-1.13.0
+"ROASTBEEF, 700 GR. / DANSK UNGKVÆG",1,core_beef,0.52,0.42,jev-1.13.0
+"RUSTICA BEEF KEBAB, 610 GR / Tyskland",1,prepared_beef,0.06,0.88,jev-1.13.0
+"Raakraft, Kat menuboks med and og okse, Vådfoder m. and og okse",2,animal_feed,0.01,0.94,jev-1.13.0
+"Reduced, Kalvefond øko, Kalvefond øko",2,mixed_food,0.09,0.44,jev-1.13.0
+"Salling Princip, Kalve Bourgignon, Kalve Bourgignon",1,prepared_beef,0.19,0.72,jev-1.13.0
+"Salling Princip, Oksebryst i skiver, Oksebryst i skiver",1,core_beef,0.92,0.9,jev-1.13.0
+"Salling Princip, Roastbeef af okseinderlår, Roastbeef i skiver",1,prepared_beef,0.43,0.48,jev-1.13.0
+"Salling ØKO, Entrecotes øko, Entrecotes øko",1,core_beef,1.0,1.0,jev-1.13.0
+"Salling ØKO, Hakket oksekød 4-7% fedt, Hakket oksekød 4-7% fedt",1,core_beef,1.0,0.99,jev-1.13.0
+"Salling ØKO, Hakket oksekød 8-12% fedt økologisk, Hakket oksekød 8-12% fedt øko",1,core_beef,0.99,0.99,jev-1.13.0
+"Salling ØKO, Økologisk stegt roastbeef, Roastbeef i skiver øko",2,prepared_beef,0.05,0.93,jev-1.13.0
+"Salling, Beef rub, Rub krydderiblanding okse",1,mixed_food,0.01,0.64,jev-1.13.0
+"Salling, Instant kopnudler med oksekødsmag, Instant nudler m. oksekødsmag",1,mixed_food,0.0,0.97,jev-1.13.0
+"Salling, Instant kopnudler med oksekødssmag, Instant kopnudler m. oksekødssmag",1,mixed_food,0.0,0.99,jev-1.13.0
+"Salling, Kalve T-bone 250-350g, T-bone af kalv",1,core_beef,1.0,0.99,jev-1.13.0
+"Salling, Kebab, Kebab af oksekød",2,prepared_beef,0.04,0.93,jev-1.13.0
+"Salling, Klar oksekødssuppe med gulerødder, selleri og porrer, Klar oksekødssuppe m. gulerødder, selleri og porrer",2,prepared_beef,0.01,0.69,jev-1.13.0
+"Salling, Oksebouillon, Oksebouillon",2,prepared_beef,0.08,0.61,jev-1.13.0
+"Salling, Oksebryst i skiver, Oksebryst i skiver",2,core_beef,0.67,0.59,jev-1.13.0
+"Salling, Oksekødsboller med tomatsauce, Oksekødsboller m. tomatsauce",1,prepared_beef,0.01,0.93,jev-1.13.0
+"Salling, Paté med oksekød, Paté m. oksekød",2,prepared_beef,0.01,0.96,jev-1.13.0
+"Salling, Paté oksekød, Paté m. oksekød",2,prepared_beef,0.01,0.96,jev-1.13.0
+"Salling, Roastbeef, Roastbeef i skiver",1,prepared_beef,0.2,0.74,jev-1.13.0
+"Salling, Salling kat anthairball oske & malt 60 g, Godbidder m. oksekød og malt",2,animal_feed,0.0,0.98,jev-1.13.0
+"Salling, Salling kat okse i sovs 415g, Vådfoder i sovs m. oksekød",2,animal_feed,0.0,1.0,jev-1.13.0
+"Salling, Silkeskåret oksepastrami, Oksepastrami i skiver",1,prepared_beef,0.0,0.84,jev-1.13.0
+"Salling, Tørfoder kat m. oksekød 2 kg, Tørfoder m. okse",1,animal_feed,0.0,1.0,jev-1.13.0
+"Salling, Tørfoder m. okse, Tørfoder m. okse",1,animal_feed,0.0,0.98,jev-1.13.0
+"Semper, Mos m. kartoffel og oksekød fra 8 mdr., Mos m. kartoffel og oksekød fra 8 mdr.",2,animal_feed,0.0,0.67,jev-1.13.0
+"Sheba, Selection Oksekød, Vådfoder i sovs m. okse",2,animal_feed,0.0,1.0,jev-1.13.0
+"Slagteren Okse, Hakket oksekød 4-7% fedt, Hakket oksekød 4-7% fedt",2,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren Okse, Helt oksekraftben, Kraftben",1,core_beef,0.63,0.55,jev-1.13.0
+"Slagteren Okse, Oksecuvette, Oksecuvette",3,core_beef,1.0,0.99,jev-1.13.0
+"Slagteren Okse, Okseinderlår, Okseinderlår",2,core_beef,1.0,0.99,jev-1.13.0
+"Slagteren Okse, Okseklump, Okseklump",2,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren Okse, Oksemørbrad 1,2-1,6 kg, Oksemørbrad",1,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren, Entrecote 600-650g, Entrecote",1,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren, Entrecote striploin, Entrecote striploin",1,core_beef,0.98,0.96,jev-1.13.0
+"Slagteren, Entrecote, Entrecote",1,core_beef,0.99,0.98,jev-1.13.0
+"Slagteren, Frossen oksemørbrad, Oksemørbrad",1,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren, Hakket kalvekød 8-12% fedt, Hakket kalvekød 8-12% fedt",2,core_beef,0.97,0.97,jev-1.13.0
+"Slagteren, Hakket oksekød 14-18 % fedt 1000g, Hakket oksekød 14-18 % fedt",1,core_beef,1.0,0.99,jev-1.13.0
+"Slagteren, Hakket oksekød 14-18% fedt, Hakket oksekød 14-18% fedt",4,core_beef,0.99,0.98,jev-1.13.0
+"Slagteren, Hakket oksekød 4-7 % fedt 900g, Hakket oksekød 4-7 % fedt",1,core_beef,1.0,0.99,jev-1.13.0
+"Slagteren, Hakket oksekød 4-7% fedt 400g, Hakket oksekød 4-7% fedt",2,core_beef,1.0,1.0,jev-1.13.0
+"Slagteren, Hakket oksekød 4-7% fedt, Hakket oksekød 4-7% fedt",1,core_beef,1.0,1.0,jev-1.13.0
+"Slagteren, Hakket oksekød 8-12% fedt, Hakket oksekød 8-12% fedt",3,core_beef,1.0,1.0,jev-1.13.0
+"Slagteren, Kalveculotte 800-1300 g, Kalveculotte",1,core_beef,1.0,1.0,jev-1.13.0
+"Slagteren, Kalveculotte 800-1300g, Kalveculotte",1,core_beef,1.0,1.0,jev-1.13.0
+"Slagteren, Kalvecuvette, Kalvecuvette",1,core_beef,1.0,0.99,jev-1.13.0
+"Slagteren, Marmoreret oksefilet 2-3kg, Marmoreret oksefilet",1,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren, Okseculotte 1,2-1,9kg, Okseculotte",1,core_beef,1.0,1.0,jev-1.13.0
+"Slagteren, Okseculotte, Okseculotte",2,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren, Oksehaler, Oksehaler",1,core_beef,0.97,0.96,jev-1.13.0
+"Slagteren, Oksemørbrad 1,2-1,8 kg, Oksemørbrad",1,core_beef,0.99,0.99,jev-1.13.0
+"Slagteren, Oksemørbrad, Oksemørbrad",1,core_beef,0.98,0.98,jev-1.13.0
+"Slagteren, Oksestriploin, Oksestriploin",2,core_beef,0.98,0.97,jev-1.13.0
+"Spicefield Nudler Oksekød, 85 GR / Litauen",1,mixed_food,0.03,0.88,jev-1.13.0
+"Spring Rolls M/Oksekød, Sprøde forårsruller til ovn med oksekød og smagefulde grøntsager
+
+Brutto vægt: 610 gram
+
+Netto vægt: 600 gram
+
+De sprøde Spring Rolls med oksekød fra Daloon er fyldt med egenproducerede bønnespirer, hvidkål, gulerødder, porre og oksekød. Der er lagt stor vægt på den gode smag og kvalitet, der sikre dig en god oplevelse. Rullerne skal blot i ovnen i ca. 17 minutter, direkte fra fryseren, og den tid kan du bruge på et sundt og lækkert tilbehør.",1,mixed_food,0.01,0.59,jev-1.13.0
+"Spring Rolls Med Oksekød, Sprøde forårsruller til ovn med oksekød og smagefulde grøntsager
+
+Brutto vægt: 610 gram
+
+Netto vægt: 600 gram
+
+De sprøde Spring Rolls med oksekød fra Daloon er fyldt med egenproducerede bønnespirer, hvidkål, gulerødder, porre og oksekød. Der er lagt stor vægt på den gode smag og kvalitet, der sikre dig en god oplevelse. Rullerne skal blot i ovnen i ca. 17 minutter, direkte fra fryseren, og den tid kan du bruge på et sundt og lækkert tilbehør.",1,mixed_food,0.01,0.47,jev-1.13.0
+"Steff Houlberg, Roastbeef i skiver, Roastbeef i skiver",1,prepared_beef,0.13,0.82,jev-1.13.0
+"T-BONE STEAK, 350 GR. / DANSK KALV",1,prepared_beef,0.26,0.59,jev-1.13.0
+"TYKSTEGSBØFFER, 300 GR. / DANSK UNGKVÆG",1,core_beef,0.88,0.86,jev-1.13.0
+"Touch Of T Kalvefond Kk, 180 ML / Belgien",1,core_beef,0.42,0.3,jev-1.13.0
+"Touch Of T Oksefond Kk, 180 Milliliter",1,mixed_food,0.02,0.47,jev-1.13.0
+"Touch of Taste, Kalvefond, Kalvefond",2,prepared_beef,0.06,0.33,jev-1.13.0
+"Touch of Taste, Oksefond med rødvin, Oksefond m. rødvin",2,mixed_food,0.02,0.52,jev-1.13.0
+"Tulip Pålækker, Roastbeef med groft peber, Roastbeef i skiver m. peber",2,prepared_beef,0.12,0.83,jev-1.13.0
+"Tørfoder m. okse, 2,6 kg / Pedigree",1,animal_feed,0.0,1.0,jev-1.13.0
+"Tørfoder m. okse, 3,8 kg / Whiskas 1+",1,animal_feed,0.0,1.0,jev-1.13.0
+"Tørfoder m. okse, 4 kg / voksen hund / First Price",1,animal_feed,0.0,0.99,jev-1.13.0
+"Tørfoder m. oksekød og grønt, 2 kg / små racer / Pedigree",1,animal_feed,0.0,0.99,jev-1.13.0
+"Tørfoder m. oksekød og grønt, 3 kg / voksen hund / Pedigree",1,animal_feed,0.0,0.99,jev-1.13.0
+"Tørfoder m. oksekød, 750 g / sterilkat adult / Purina ONE",1,animal_feed,0.03,0.94,jev-1.13.0
+"UNGKVÆG I TERN, 300 GR. / DANSK UNGKVÆG",1,core_beef,0.93,0.92,jev-1.13.0
+"VIon, Hakekt oksekød 14-18% fedt, Hakekt oksekød 14-18% fedt",1,core_beef,0.97,0.97,jev-1.13.0
+"Velsmag, Entrecote, Entrecote",3,core_beef,0.91,0.88,jev-1.13.0
+"Velsmag, Hakket kalvekød 8-12% fedt, Hakket kalvekød 8-12% fedt",1,core_beef,0.97,0.96,jev-1.13.0
+"Velsmag, Hakket oksekød 14-18% fedt, Hakket oksekød 14-18% fedt",3,core_beef,0.99,0.99,jev-1.13.0
+"Velsmag, Hakket oksekød 4-7% fedt, Hakket oksekød 4-7% fedt",2,core_beef,0.99,0.99,jev-1.13.0
+"Velsmag, Hakket oksekød 8-12% fedt, Hakket oksekød 8-12% fedt",5,core_beef,0.98,0.97,jev-1.13.0
+"Velsmag, Kalvesteak, Kalvesteak",1,core_beef,0.83,0.79,jev-1.13.0
+"Velsmag, Marineret kalvesteak, Marineret kalvesteak",1,prepared_beef,0.32,0.61,jev-1.13.0
+"Velsmag, Oksecuvette, Oksecuvette",1,core_beef,0.8200000000000001,0.77,jev-1.13.0
+"Vifon, Beef, Instant kopnudler m. oksekødssmag mild",1,mixed_food,0.0,0.93,jev-1.13.0
+"Vifon, Hot Beef - Oksekød med sichuan peber 90g, Nudler m. oksekød",1,mixed_food,0.0,0.85,jev-1.13.0
+"Vitakraft, BeefStick Rustico 55g, Godbidder m. okse",1,animal_feed,0.0,0.98,jev-1.13.0
+"Vitakraft, BeefStick hjerte 12 g, Snackstang m. hjerte",1,animal_feed,0.0,0.99,jev-1.13.0
+"Vitakraft, BeefStick med grøntsager 12 g, Snackstang",2,animal_feed,0.0,0.95,jev-1.13.0
+"Vitakraft, Poésie + oksekod & gulerod III, Vådfoder m. oksekød og gulerod",1,animal_feed,0.0,0.99,jev-1.13.0
+"Vitakraft, Poésie 85g mousse +okse III, Vådfoder m. oksekød",1,animal_feed,0.0,0.99,jev-1.13.0
+"Vitakraft, Poésie DéliSauce + oksekød II 85g K, Vådfoder i sovs m. oksekød",1,animal_feed,0.0,0.98,jev-1.13.0
+"Vitakraft, Snackstang m. okse, Snackstang m. okse",1,animal_feed,0.0,0.97,jev-1.13.0
+"Vitakraft, Snackstang med okse, Snackstang m. okse",2,animal_feed,0.0,0.97,jev-1.13.0
+"Vitakraft, Vådfoder i sovs m. oksekød, Vådfoder i sovs m. oksekød",1,animal_feed,0.0,0.97,jev-1.13.0
+"Vådfoder classic terrine, 4 x 150 g / voksen hund / Cesar",1,animal_feed,0.0,0.91,jev-1.13.0
+"Vådfoder country stew, 4 x 150 g / voksen hund / Cesar",1,animal_feed,0.0,0.92,jev-1.13.0
+"Vådfoder m. oksekød, 1,24 kg / voksen hund / First Price",1,animal_feed,0.0,0.97,jev-1.13.0
+"Vådfoder m. oksekød, 415 g / First Price",1,animal_feed,0.0,0.95,jev-1.13.0
+"Whiskas 1+ Okse Tør, 1900 GR",1,animal_feed,0.0,0.98,jev-1.13.0
+"Whiskas 1+ Oksekød, 800 GR",1,animal_feed,0.0,0.95,jev-1.13.0
+"Whiskas 1+ Oksekød, 800 GR / Polen",2,animal_feed,0.0,0.96,jev-1.13.0
+"Whiskas, Tørfoder m. okse, Tørfoder m. okse",1,animal_feed,0.0,0.97,jev-1.13.0
+"Whiskas, Tørfoder med okse voksen, Tørfoder m. okse",2,animal_feed,0.0,0.99,jev-1.13.0
+"Whiskas, Whiskas 1+ Beef 3x3,8kg, Tørfoder m. okse",1,animal_feed,0.0,1.0,jev-1.13.0
+"Whiskas, Whiskas 1+ Okse, Tørfoder m. okse",1,animal_feed,0.0,1.0,jev-1.13.0
+"Yum Yum, Instant nudler med oksesmag, Instant nudler m. oksekødssmag",2,mixed_food,0.0,0.99,jev-1.13.0
+"Zooper, Fillet Okse 80g, Godbidder m. okse kornfri",1,animal_feed,0.0,1.0,jev-1.13.0
+"kat, Paté m. okse, Paté m. okse",1,animal_feed,0.0,0.92,jev-1.13.0
+"kat, Vådfoder m. okse, Vådfoder m. okse",1,animal_feed,0.0,0.98,jev-1.13.0
+"ØGO, Hakket oksekød 4-7% fedt øko, Hakket oksekød 4-7% fedt øko",1,core_beef,1.0,0.99,jev-1.13.0
+"ØGO, Hakket oksekød 8-12% fedt øko, Hakket oksekød 8-12% fedt øko",1,core_beef,1.0,0.99,jev-1.13.0
+"ØKO HAKKET OKSEKØD 4-7%, 350 GR / Danmark",1,core_beef,1.0,0.99,jev-1.13.0
+"Øko Entrecote, 400 GR / Danmark",1,core_beef,1.0,0.99,jev-1.13.0
+"Øko Unique Entrecote, 2 Styk",1,core_beef,0.97,0.96,jev-1.13.0
+"Øko.Oksehakke 9-15 %, 400 GR / Danmark",3,core_beef,1.0,0.99,jev-1.13.0

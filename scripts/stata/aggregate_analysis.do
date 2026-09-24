@@ -43,23 +43,8 @@ drop if excluded_livestock
 drop if missing(cpi, month)
 
 egen unit = group(product_code), label
-gen str3 category3 = substr(product_code, 1, 3)
-gen str4 category4 = substr(product_code, 1, 4)
-encode category3, gen(category3_id)
-encode category4, gen(category4_id)
 xtset unit month
 gen double ln_cpi = ln(cpi)
-tab category3_id, gen(category3_fe)
-local n3 = r(r)
-tab category4_id, gen(category4_fe)
-local n4 = r(r)
-local category_covariates
-forvalues j = 1/`=`n3'-1' {
-    local category_covariates `category_covariates' category3_fe`j'
-}
-forvalues j = 1/`=`n4'-1' {
-    local category_covariates `category_covariates' category4_fe`j'
-}
 keep if inrange(month, `window_start', `window_end')
 assert month < `event' if inrange(month, `window_start', `reference')
 assert month >= `event' if inrange(month, `event', `window_end')
@@ -164,43 +149,68 @@ local did_low = `did_att' - invttail(e(df_r), .025) * `did_se'
 local did_high = `did_att' + invttail(e(df_r), .025) * `did_se'
 local did_n = e(N)
 local did_r2 = e(r2)
+
+* A monthly gap is the unit of inference. Show sensitivity to plausible
+* truncation lags rather than treating the two-lag threshold as decisive.
+tempfile hac_results timing_results
+tempname hac_post timing_post
+postfile `hac_post' byte max_lag double estimate std_error p_value using `hac_results', replace
+foreach bandwidth in 2 3 4 6 {
+    quietly newey cpi_diff_bar post_hac, lag(`bandwidth')
+    local p = 2 * ttail(e(df_r), abs(_b[post_hac] / _se[post_hac]))
+    post `hac_post' (`bandwidth') (_b[post_hac]) (_se[post_hac]) (`p')
+}
+postclose `hac_post'
+quietly summarize cpi_diff_bar if month < `event', meanonly
+local pre_gap = r(mean)
+postfile `timing_post' str22 period int months double gap_vs_pre using `timing_results', replace
+quietly summarize cpi_diff_bar if inrange(month, tm(2024m7), tm(2024m12)), meanonly
+post `timing_post' ("2024m7-2024m12") (r(N)) (r(mean) - `pre_gap')
+quietly summarize cpi_diff_bar if inrange(month, tm(2025m1), tm(2025m9)), meanonly
+post `timing_post' ("2025m1-2025m9") (r(N)) (r(mean) - `pre_gap')
+quietly summarize cpi_diff_bar if month >= `event', meanonly
+post `timing_post' ("2024m7-2025m9") (r(N)) (r(mean) - `pre_gap')
+postclose `timing_post'
+tempfile cpi_gap
+save `cpi_gap'
+use `hac_results', clear
+export delimited using "outputs/models/stata/aggregate_hac_sensitivity.csv", replace
+use `timing_results', clear
+export delimited using "outputs/models/stata/aggregate_timing.csv", replace
+use `cpi_gap', clear
 restore
 
 * -------------------------------------------------------------------------
-* Aggregate event study, preserving the OECD covariate-adjusted setup while
-* using June 2024 as the omitted month immediately before treatment.
+* Descriptive monthly beef-minus-food gap, relative to June 2024.
+* A saturated treated-month regression has unit leverage for the lone treated
+* series; its generic robust intervals cannot measure national shocks.
 * -------------------------------------------------------------------------
-local adjustment_terms
-foreach covariate of local category_covariates {
-    quietly summarize `covariate' if beef, meanonly
-    gen double `covariate'_dm = `covariate' - r(mean)
-    local adjustment_terms `adjustment_terms' c.beef#ib(`reference').month#c.`covariate'_dm c.beef#c.`covariate'_dm
-}
-reg ln_cpi beef c.beef#ib(`reference').month `adjustment_terms' i.month i.category3_id i.category4_id, vce(robust)
-local event_n = e(N)
-tempfile event_results
-tempname event_post
-postfile `event_post' int month relative_time double estimate std_error conf_low conf_high using `event_results', replace
-forvalues current_month = `window_start'/`window_end' {
-    local relative_time = `current_month' - `event'
-    if `current_month' == `reference' {
-        post `event_post' (`current_month') (`relative_time') (0) (.) (.) (.)
-    }
-    else {
-        quietly lincom c.beef#`current_month'.month, level(95)
-        post `event_post' (`current_month') (`relative_time') (r(estimate)) (r(se)) (r(lb)) (r(ub))
-    }
-}
-postclose `event_post'
 preserve
-use `event_results', clear
+drop if beef
+collapse (mean) ln_cpi, by(month)
+rename ln_cpi donor_log_cpi
+tempfile event_donors
+save `event_donors'
+restore
+preserve
+keep if beef
+keep month ln_cpi
+merge 1:1 month using `event_donors', nogen assert(3)
+gen double price_gap = ln_cpi - donor_log_cpi
+quietly summarize price_gap if month == `reference', meanonly
+assert r(N) == 1
+gen double estimate = price_gap - r(mean)
+gen int relative_time = month - `event'
+gen double std_error = .
+gen double conf_low = .
+gen double conf_high = .
+keep month relative_time estimate std_error conf_low conf_high
 format month %tm
 export delimited using "outputs/models/stata/aggregate_event_study.csv", replace
-twoway ///
-    (rcap conf_low conf_high relative_time, lcolor(gs8) lwidth(thin)) ///
-    (scatter estimate relative_time, mcolor(black) msymbol(O) msize(small)), ///
+twoway scatter estimate relative_time, ///
+    mcolor(black) msymbol(O) msize(small) ///
     legend(off) yline(0, lcolor(gs6) lpattern(dash)) xline(-0.5, lcolor(gs9) lpattern(shortdash)) ///
-    xtitle("Months relative to the announcement") ytitle("Log CPI effect and 95% CI") ///
+    xtitle("Months relative to July 2024") ytitle("Beef-minus-food log CPI gap, relative to June") ///
     xlabel(-15(5)15) graphregion(color(white)) plotregion(color(white))
 graph export "outputs/figures/stata/aggregate_event_study.png", width(2200) replace
 restore

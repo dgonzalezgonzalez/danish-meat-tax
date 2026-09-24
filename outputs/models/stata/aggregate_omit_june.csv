@@ -1,0 +1,3 @@
+estimator,estimate,std_error,observations,pre_months,post_months
+aggregate_did,.0636192519871218,.0304543874994557,29,14,15
+aggregate_sdid,.0795092,.0479873,1479,14,15

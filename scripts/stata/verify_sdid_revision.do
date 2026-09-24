@@ -17,15 +17,15 @@ foreach file in aggregate_sdid country_sdid beef_trade_pair_sdid production_THS_
     assert abs(r(mean)) < 1e-10
 }
 
-* The decision uses only common-window pre-treatment fit, never ATT significance.
+* Report fit outcome by outcome. No cross-outcome veto or selection rule.
 import delimited "outputs/models/stata/sdid_window_audit.csv", asdouble clear
 isid exercise pre_months
 assert _N == 20
 bysort exercise: assert units == units[1] & treated_units == treated_units[1]
 preserve
 keep if pre_months > 15
-collapse (min) all_improve=fit_improves, by(pre_months)
-list, noobs
+keep exercise pre_months rmse_recent rmse_ratio fit_improves
+sort exercise pre_months
 export delimited "outputs/models/stata/sdid_window_decision.csv", replace
 restore
 list exercise pre_months att rmse_recent rmse_ratio, noobs sepby(exercise)

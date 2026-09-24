@@ -41,6 +41,12 @@ class PolicyTaxonomyTest(unittest.TestCase):
         self.assertEqual(assignment.food_status, "non_food")
         self.assertEqual(assignment.analysis_role, "exclude_non_food")
 
+    def test_vegan_beef_and_mixed_beef_are_not_core_beef(self):
+        for name in ("Vegan beef 400 g", "Beef pizza 400 g"):
+            assignment = classify_product(name)
+            self.assertEqual(assignment.treatment_group, "mixed_livestock")
+            self.assertEqual(assignment.analysis_role, "exclude_ambiguous")
+
 
 if __name__ == "__main__":
     unittest.main()

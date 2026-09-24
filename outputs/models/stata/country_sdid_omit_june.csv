@@ -1,0 +1,2 @@
+specification,estimate,std_error,conf_low,conf_high,observations,pre_months,post_months
+country_hicp_omit_june_2024,.0220469,.02822,-.0332632836437203,.0773570836437203,783,14,15

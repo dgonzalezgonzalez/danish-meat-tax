@@ -1,0 +1,2 @@
+outcome,estimate,std_error,conf_low,conf_high,observations,units
+log_mean_carcass_weight,-.0183922,.0258269,-.0690119938323175,.0322275938323175,810,27

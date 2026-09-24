@@ -247,19 +247,18 @@ twoway ///
     xsize(11) ysize(7)
 graph export "outputs/figures/stata/scc_meta_forest.png", width(3000) replace
 
-* Policy calibration: three econometric estimates and the meta-analytical gap band.
-import delimited using "outputs/models/stata/micro_estimates.csv", varnames(1) clear
-keep if estimator == "micro_did"
-tempfile micro_results
-save `micro_results'
+* Official price contrasts and the meta-analytical accounting band.
+import delimited using "outputs/models/stata/country_sdid_estimate.csv", varnames(1) clear
+tempfile country_results
+save `country_results'
 import delimited using "outputs/models/stata/aggregate_estimates.csv", varnames(1) clear
-append using `micro_results'
-keep if inlist(estimator, "micro_did", "aggregate_did", "aggregate_sdid")
+append using `country_results'
+keep if inlist(estimator, "aggregate_did", "aggregate_sdid", "country_sdid_HICP")
 gen double plot_position = .
 * Keep each econometric marker exactly on its integer y-axis tick.
-replace plot_position = 1 if estimator == "micro_did"
-replace plot_position = 2 if estimator == "aggregate_did"
-replace plot_position = 3 if estimator == "aggregate_sdid"
+replace plot_position = 1 if estimator == "aggregate_did"
+replace plot_position = 2 if estimator == "aggregate_sdid"
+replace plot_position = 3 if estimator == "country_sdid_HICP"
 sort plot_position
 gen double meta_gap_effective_120 = `pooled_gap_effective_120'
 gen double meta_gap_low_effective_120 = `pooled_gap_low_effective_120'
@@ -287,7 +286,7 @@ replace plot_point = `pooled_gap_marginal_300' in `second_extra'
 replace plot_low = `pooled_gap_low_marginal_300' in `second_extra'
 replace plot_high = `pooled_gap_high_marginal_300' in `second_extra'
 replace is_scc = 1 in `first_extra'/`second_extra'
-label define calibration_rows 1 "Microdata DiD" 2 "Aggregate DiD" 3 "Aggregate SDiD" ///
+label define calibration_rows 1 "Danish CPI DiD" 2 "Danish CPI SDiD" 3 "EU beef HICP SDiD" ///
     4 "SCC gap: DKK 120 average burden" 5 "SCC gap: DKK 300 marginal incentive"
 label values plot_position calibration_rows
 twoway ///

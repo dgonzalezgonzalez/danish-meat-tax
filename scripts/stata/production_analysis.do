@@ -90,6 +90,41 @@ postclose `results'
 use `estimates', clear
 export delimited using "outputs/models/stata/production_estimates.csv", replace
 list, noobs
+* Estimate the mean-carcass-weight response directly on common country-months.
+* Subtracting separately weighted SDiD weight and head-count ATTs would not
+* estimate this outcome because the two estimators can use different weights.
+use `source', clear
+keep if inrange(month, tm(2023m4), tm(2025m9))
+keep geo month measure value
+reshape wide value, i(geo month) j(measure) string
+egen unit = group(geo)
+gen byte denmark = geo == "DK"
+gen byte treatment = denmark * (month >= tm(2024m7))
+bysort unit: egen nvalid = total(valueTHS_T > 0 & valueTHS_T < . & valueTHS_HD > 0 & valueTHS_HD < .)
+keep if nvalid == 30
+isid unit month
+gen double ln_mean_carcass_weight = ln(valueTHS_T/valueTHS_HD)
+egen t = group(month)
+sdid ln_mean_carcass_weight unit t treatment, vce(placebo) reps(200) seed(20260909)
+local carcass_att = e(ATT)
+local carcass_se = e(se)
+local carcass_low = e(ATT_l)
+local carcass_high = e(ATT_r)
+quietly count
+local carcass_n = r(N)
+egen tag = tag(unit)
+quietly count if tag
+local carcass_units = r(N)
+clear
+set obs 1
+gen str36 outcome = "log_mean_carcass_weight"
+gen double estimate = `carcass_att'
+gen double std_error = `carcass_se'
+gen double conf_low = `carcass_low'
+gen double conf_high = `carcass_high'
+gen long observations = `carcass_n'
+gen long units = `carcass_units'
+export delimited "outputs/models/stata/production_carcass_weight_estimate.csv", replace
 * National source: production includes the slaughter-equivalent contribution
 * of live trade. Preserve its definition separately from Eurostat slaughterhouses.
 import delimited "data/raw/statbank_ani41.csv", delimiter(";") varnames(1) stringcols(_all) clear

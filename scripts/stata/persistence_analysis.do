@@ -14,7 +14,8 @@ local beta_df = periods[1]-2
 assert `beta_df' == 28
 local beta_low = conf_low[1]
 local beta_high = conf_high[1]
-* CPI has no DKK/kg units. Use the grocery mean as an explicit level anchor.
+* CPI has no DKK/kg units. The grocery event-quote mean is a provisional
+* level anchor: historical availability is not observed in this snapshot.
 import delimited "outputs/models/stata/micro_estimates.csv", varnames(1) asdouble clear
 keep if estimator == "micro_did"
 local price = pre_treated_average[1]
@@ -75,6 +76,7 @@ gen double beta_high = `beta_high'
 gen double pre_price_dkk_kg = `price'
 gen double damage_dkk_kg = `damage'
 gen double announcement_dkk_kg = persistence*`price'*(exp(`beta')-1)
+gen double attribution_share = 1
 gen double implementation_dkk_kg = incremental_pass_through*taxable_share*`tax'
 gen double remaining_gap_dkk_kg = damage_dkk_kg-announcement_dkk_kg-implementation_dkk_kg
 * R decreases in beta. Reverse endpoints; no delta-method approximation.
@@ -98,6 +100,7 @@ gen double taxable_share = floor(mod(_n-1,9)/3)/2
 gen double incremental_pass_through = mod(_n-1,3)/2
 gen double damage_dkk_kg = `damage'
 gen double announcement_dkk_kg = persistence*`price'*(exp(`beta')-1)
+gen double attribution_share = 1
 gen double implementation_dkk_kg = incremental_pass_through*taxable_share*`tax'
 gen double remaining_gap_dkk_kg = damage_dkk_kg-announcement_dkk_kg-implementation_dkk_kg
 gen double conf_low = damage_dkk_kg-persistence*`price'*(exp(`beta_high')-1)-implementation_dkk_kg
@@ -108,5 +111,18 @@ replace sensitivity_low = sensitivity_low-implementation_dkk_kg
 replace sensitivity_high = sensitivity_high-implementation_dkk_kg
 drop a_index
 export delimited "outputs/models/stata/calibration_scenarios.csv", replace
+* Separate causal attribution from persistence. The plotted surfaces above
+* condition on full attribution; this table also includes zero and half.
+clear
+set obs 12
+gen double attribution_share = mod(_n-1,3)/2
+gen double taxable_share = floor((_n-1)/3)/4 + .25
+gen double persistence = 1
+gen double incremental_pass_through = 1
+gen double damage_dkk_kg = `damage'
+gen double announcement_dkk_kg = attribution_share*`price'*(exp(`beta')-1)
+gen double implementation_dkk_kg = taxable_share*`tax'
+gen double remaining_gap_dkk_kg = damage_dkk_kg-announcement_dkk_kg-implementation_dkk_kg
+export delimited "outputs/models/stata/calibration_attribution_sensitivity.csv", replace
 list if persistence == 1 & taxable_share == 1, noobs
 log close

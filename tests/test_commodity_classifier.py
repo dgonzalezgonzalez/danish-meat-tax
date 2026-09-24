@@ -38,6 +38,25 @@ class CommodityClassifierTest(unittest.TestCase):
         self.assertEqual(quantity_unit, "g")
         self.assertAlmostEqual(normalized, 80)
 
+    def test_normalize_price_parses_multipack_total(self):
+        normalized, unit, quantity, quantity_unit, status = normalize_price(
+            64, 2, "stk", "Oksekoed 2 x 400 g"
+        )
+        self.assertEqual((unit, quantity, quantity_unit, status), ("dkk_per_kg", 800, "g", "ok"))
+        self.assertAlmostEqual(normalized, 80)
+
+    def test_change_history_requires_reviewed_beef_name(self):
+        rows = []
+        for index, name in enumerate(("Angus entrecote, 360 g / frost", "Beefeater London Dry Gin, 70 CL")):
+            rows.append({
+                "date": "2024-05-01", "store": "Netto", "product_id": str(index),
+                "product_name": name, "price": 40, "quantity": 360, "unit": "g",
+                "price_history_observation": True,
+            })
+        frame = normalize_records(rows)
+        self.assertEqual(frame.loc[0, "treatment_group"], "beef")
+        self.assertEqual(frame.loc[1, "analysis_role"], "exclude_ambiguous")
+
     def test_invalid_price_is_excluded(self):
         frame = normalize_records(
             [

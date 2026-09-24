@@ -60,11 +60,9 @@ local did_high = `did_att' + invttail(e(df_r), .025) * `did_se'
 local did_n = e(N)
 local did_r2 = e(r2)
 
-* Beef event study. June 2024 is excluded from the source panel and month -1
-* (May 2024) is the omitted reference period. July 2024, the first complete
-* post-announcement month, is displayed as event time zero.
+* Preserve calendar spacing: June 2024 is absent (event time zero), May is
+* the reference (-1), and July is the first complete post month (+1).
 gen int event_time = relative_time
-replace event_time = relative_time - 1 if relative_time > 0
 local event_variables
 local pretest_variables
 quietly levelsof event_time, local(relative_periods)
@@ -107,9 +105,9 @@ export delimited using "outputs/models/stata/micro_event_study.csv", replace
 twoway ///
     (rcap conf_low conf_high relative_time, lcolor(gs8) lwidth(thin)) ///
     (scatter estimate relative_time, mcolor(black) msymbol(O) msize(small)), ///
-    legend(off) yline(0, lcolor(gs6) lpattern(dash)) xline(0, lcolor(gs9) lpattern(shortdash)) ///
-    xtitle("Months relative to the announcement") ytitle("Log price effect and 95% CI") ///
-    xlabel(-8(4)12 14) graphregion(color(white)) plotregion(color(white))
+    legend(off) yline(0, lcolor(gs6) lpattern(dash)) xline(0.5, lcolor(gs9) lpattern(shortdash)) ///
+    xtitle("Calendar months relative to June 2024") ytitle("Log price effect and 95% CI") ///
+    xlabel(-8(4)12 15) graphregion(color(white)) plotregion(color(white))
 graph export "outputs/figures/stata/micro_event_study.png", width(2200) replace
 restore
 

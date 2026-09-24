@@ -45,7 +45,7 @@ Includes product columns above plus:
 | `event_date` | Main event date, `2024-06-24`. |
 | `frequency` | `daily`, `weekly`, `monthly`, or `quarterly`. |
 
-The real `dagligepriser.dk` source stores many product objects with a nested `priceHistory` array. Processing expands each `priceHistory` entry into a separate row before writing `products.csv`. The main panel excludes `non_food`, `unknown`, and rows without usable normalized prices.
+The real `dagligepriser.dk` source stores many product objects with a nested `priceHistory` array. Processing expands each recorded change into a row of `products.csv`; these rows are not daily posted-price spells. `history_change_event` marks this origin, and `snapshot_unavailable` preserves the current snapshot's flag without treating it as historical availability. The monthly panel averages recorded events only. The main panel excludes `non_food`, `unknown`, ambiguous mixed livestock products, and rows without usable normalized prices. Its screened beef names come from `data/reference/grocery_beef_jev_audit.csv`; see [the grocery audit](grocery_history_audit.md).
 
 ## Diagnostics
 
@@ -55,13 +55,22 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/diagnostics/panel_commodity_counts.csv` | Units/rows by commodity, treatment group, and treated status. |
 | `outputs/diagnostics/panel_period_support.csv` | Units/rows by relative period and treated status. |
 | `outputs/models/stata/micro_estimates.csv` | Scraped-data DiD summary. |
+| `outputs/models/stata/grocery_event_support.csv` | Recorded-event coverage between first and last observed month, not product availability. |
 | `outputs/models/stata/descriptive_statistics.csv` | Scraped-sample level-price and panel-support descriptives. |
 | `outputs/models/stata/aggregate_descriptive_statistics.csv` | Official CPI descriptives for beef and donor series. |
 | `outputs/models/stata/aggregate_estimates.csv` | Official DiD and SDiD summaries. |
+| `outputs/models/stata/aggregate_hac_sensitivity.csv` | CPI DiD estimates with HAC lags 2, 3, 4, and 6. |
+| `outputs/models/stata/aggregate_timing.csv` | CPI beef-minus-food gap by post-period segment. |
+| `outputs/models/stata/aggregate_omit_june.csv` | Official CPI DiD and SDiD sensitivities excluding June 2024. |
 | `outputs/models/stata/micro_event_study.csv` | Scraped-data beef event-study coefficients. |
 | `outputs/models/stata/aggregate_event_study.csv` | Official beef event-study coefficients. |
 | `outputs/models/stata/country_sdid_estimate.csv` | Country-level Danish beef-and-veal HICP SDiD estimate and inference. |
 | `outputs/models/stata/country_sdid_series.csv` | Danish and synthetic country-level log HICP series. |
+| `outputs/models/stata/country_sdid_unit_weights.csv` | Country donor weights, concentration HHI, effective donor count. |
+| `outputs/models/stata/country_sdid_time_weights.csv` | Month weights for the pre-treatment country-HICP comparison. |
+| `outputs/models/stata/country_sdid_leave_one_out.csv` | No-inference ATT after omitting each donor country. |
+| `outputs/models/stata/country_sdid_pre_holdout.csv` | Short pre-news and pre-July treated-outcome holdout gaps. |
+| `outputs/models/stata/country_sdid_omit_june.csv` | Country-HICP placebo-inference estimate excluding June 2024. |
 | `outputs/models/stata/beef_trade_pair_sdid_estimate.csv` | Denmark-importer beef-trade SDiD estimate with placebo inference. |
 | `outputs/models/stata/beef_trade_pair_sdid_bootstrap_estimate.csv` | Same beef-trade ATT with unit-cluster bootstrap inference. |
 | `outputs/models/stata/beef_trade_pair_sdid_series.csv` | Denmark-importer and synthetic beef-import series. |
@@ -72,7 +81,9 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 
 `eurostat_bovine_slaughter.csv` retains JSON-stat dimensions (`freq`, `meat`, `meatitem`, `unit`, `geo`, `time` as supplied), numeric `value`, and source `flag`. Missing source values remain blank. Stata selects B1000/SLAUGHT/M and THS_T or THS_HD. Production result fields are specification, measure, att, se, low, high, p_value, pre_rmse, observations, units, pre_months, post_months. Exact samples and treated/weighted-donor series are exported per specification.
 
-`calibration_scenarios.csv` stores persistence, taxable_share, incremental_pass_through, damage_dkk_kg, announcement_dkk_kg, implementation_dkk_kg, remaining_gap_dkk_kg, conf_low, conf_high, sensitivity_low, and sensitivity_high. SCC and tax inputs are recorded in `scc_meta_summary.csv`. All monetary levels use the common 2024-price approximation. `scc_leave_one_out.csv` records the excluded study and remaining mean. `scc_meta_summary.csv` also includes the directly dated 2030 subset and the Danish net-price conversion.
+`production_carcass_weight_estimate.csv` directly estimates log mean carcass weight from the ratio of the two source measures on common country-months. It is not constructed by subtracting separate slaughter-weight and head-count SDiD estimates, whose fitted weights can differ.
+
+`calibration_scenarios.csv` stores persistence, taxable_share, incremental_pass_through, damage_dkk_kg, announcement_dkk_kg, implementation_dkk_kg, remaining_gap_dkk_kg, conf_low, conf_high, sensitivity_low, and sensitivity_high. `calibration_attribution_sensitivity.csv` varies an assumed causal attribution share separately from persistence; it does not estimate attribution. SCC and tax inputs are recorded in `scc_meta_summary.csv`. All monetary levels use the common 2024-price approximation. `scc_leave_one_out.csv` records the excluded study and remaining mean. `scc_meta_summary.csv` also includes the directly dated 2030 subset and the Danish net-price conversion.
 
 ## Preferred-estimate calibration grids
 
@@ -107,4 +118,4 @@ All resulting bounds condition on fixed lifecycle intensity, FX, tax rates, and 
 
 Every appendix SDiD series export retains `synthetic` (raw weighted donors) and `treated`, and includes `synthetic_aligned`, equal to `synthetic` plus the unweighted mean pre-treatment treated–donor gap. Figures B1–B4 plot the aligned series. This constant is calculated only from pre-treatment observations; it does not alter estimation or monthly changes. CPI and HICP remain distinct indices despite their common generic axis label.
 
-`sdid_window_audit.csv` is a supplementary diagnostic with `exercise`, `pre_months`, `units`, `treated_units`, `att`, `rmse_recent` (centered gap, common April 2023–June 2024 months), `rmse_full` (centered gap over each entire pre-period), `rmse_ratio` (recent RMSE divided by the same outcome's 15-month value), and `fit_improves`. `sdid_window_decision.csv` reports `all_improve` by longer history. These files contain point estimates and fit diagnostics, not confidence intervals, and do not replace any publication estimate.
+`sdid_window_audit.csv` is a supplementary diagnostic with `exercise`, `pre_months`, `units`, `treated_units`, `att`, `rmse_recent` (centered gap, common April 2023–June 2024 months), `rmse_full` (centered gap over each entire pre-period), `rmse_ratio` (recent RMSE divided by the same outcome's 15-month value), and `fit_improves`. `sdid_window_decision.csv` reports outcome-specific common-period fit comparisons for longer histories. These files contain point estimates and fit diagnostics, not confidence intervals, and do not replace any publication estimate.

@@ -207,10 +207,12 @@ def extract_records(payload: Any) -> list[dict[str, Any]]:
                     item["quantity"] = entry.get("quantity", base.get("quantity"))
                     item["unit"] = entry.get("unit", base.get("unit"))
                     item["price_history_observation"] = True
+                    item["snapshot_unavailable"] = row.get("unavailable")
                     out.append(item)
             else:
                 item = dict(base)
                 item["price_history_observation"] = False
+                item["snapshot_unavailable"] = row.get("unavailable")
                 out.append(item)
         return out
 

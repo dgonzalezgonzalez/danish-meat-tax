@@ -4,9 +4,14 @@ set more off
 args window_audit
 local requested_window_audit "`window_audit'"
 
+do "scripts/stata/check_dependencies.do"
+
 do "scripts/stata/microdata_analysis.do"
+do "scripts/stata/grocery_history_audit.do"
 do "scripts/stata/aggregate_analysis.do"
+do "scripts/stata/aggregate_omit_june.do"
 do "scripts/stata/country_sdid.do"
+do "scripts/stata/country_sdid_diagnostics.do"
 do "scripts/stata/beef_trade_pair_sdid.do"
 do "scripts/stata/beef_trade_pair_sdid_bootstrap.do"
 do "scripts/stata/production_analysis.do"

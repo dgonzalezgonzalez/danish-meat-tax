@@ -131,8 +131,9 @@ def classify_product(name: str, category: str | None = None) -> TreatmentAssignm
         return TreatmentAssignment("unknown", False, "unknown", "unknown", (), "unknown", "exclude_unknown")
 
     treated_matches = [match for match in matches if match.treated]
-    if len(treated_matches) > 1:
+    plant_match = any(match.commodity == "plant_protein" for match in matches)
+    if treated_matches and (len(treated_matches) > 1 or mixed or plant_match):
         terms = tuple(term for match in treated_matches for term in match.matched_terms)
-        return TreatmentAssignment("mixed_meat", True, "mixed_livestock", "ambiguous_mixed", terms, "food", "treated_livestock_meat")
+        return TreatmentAssignment("mixed_meat", True, "mixed_livestock", "ambiguous_mixed", terms, "food", "exclude_ambiguous")
 
     return treated_matches[0] if treated_matches else matches[0]
