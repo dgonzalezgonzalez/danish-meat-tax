@@ -11,11 +11,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--include-window-audit", action="store_true")
     parser.add_argument("--include-max-history", action="store_true")
+    parser.add_argument("--official-only", action="store_true", help="Verify inputs for the official price and production replication target.")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     manifest = json.loads((root / "data/reference/replication_input_manifest.json").read_text())
     failures = []
     records = list(manifest["files"])
+    if args.official_only:
+        records = [record for record in records if Path(record["path"]).name not in {
+            "heissepreise_20260609T092146Z.json", "eu_beef_trade_data_en.csv", "statbank_pris04_total.csv",
+        }]
     if args.include_window_audit:
         records.extend(manifest["window_audit_files"])
     if args.include_max_history:

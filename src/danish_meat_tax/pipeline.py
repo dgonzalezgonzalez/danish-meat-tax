@@ -84,6 +84,8 @@ def run_stage(
             max_post_periods=max_post_periods,
             symmetric_window=symmetric_window,
             unit_level=unit_level,
+            analysis_start="2023-10-01" if frequency == "monthly" else None,
+            analysis_end="2025-09-01" if frequency == "monthly" else None,
         )
         print(f"panel: {result.diagnostics['rows']} rows -> {panel_path}")
     if stage in {"estimate", "all"}:
@@ -91,6 +93,7 @@ def run_stage(
         if fixture:
             print(f"estimate skipped for fixture: Stata input contract -> {stata_panel_path}")
         else:
+            run_stata(paths.root.resolve(), Path("scripts/stata/check_dependencies.do"))
             prepare_eu_robustness_panels(paths.root.resolve())
             prepare_production_panel(paths.root.resolve())
             run_stata(paths.root.resolve(), Path("scripts/stata/microdata_analysis.do"))
@@ -108,6 +111,7 @@ def run_stage(
             print("outputs skipped for fixture: analytical publication outputs require real data")
         else:
             run_stata(paths.root.resolve(), Path("scripts/stata/scc_meta_analysis.do"))
+            run_stata(paths.root.resolve(), Path("scripts/stata/model_magnitude_scenarios.do"))
             render_calibration_surfaces(paths.root.resolve())
             print(f"outputs: Stata figures and calibration -> {paths.figures_dir / 'stata'}")
 

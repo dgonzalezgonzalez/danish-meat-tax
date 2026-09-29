@@ -11,7 +11,7 @@ format month_id_numeric %tm
 egen unit_numeric = group(geo)
 isid geo month_id_numeric
 assert _N == 810
-tempfile panel donor_names
+tempfile panel donor_names time_weight_cells timing_results
 save `panel'
 preserve
 bysort unit_numeric: keep if _n == 1
@@ -24,6 +24,7 @@ sdid ln_price unit_numeric month_id_numeric treated_post, vce(noinference)
 local baseline_att = e(ATT)
 matrix unit_weights = e(omega)
 matrix time_weights = e(lambda)
+matrix diagnostic_series = e(series)
 
 preserve
 clear
@@ -52,8 +53,40 @@ assert _N == 15
 format month_id_numeric %tm
 egen double total_weight = total(weight)
 assert abs(total_weight-1) < 1e-7
+gen double squared_weight = weight^2
+egen double squared_weight_total = total(squared_weight)
+gen double inverse_squared_weight_sum = 1/squared_weight_total
+egen double may_june_weight = total(weight * inrange(month_id_numeric, tm(2024m5), tm(2024m6)))
+egen int positive_weight_months = total(weight > 1e-10)
 sort month_id_numeric
+save `time_weight_cells'
 export delimited "outputs/models/stata/country_sdid_time_weights.csv", replace
+restore
+
+* Timing uses the same full-sample synthetic and pre-period time weights.
+* These are descriptive segments of one fitted contrast, without new SEs.
+preserve
+clear
+svmat double diagnostic_series
+rename diagnostic_series1 month_id_numeric
+rename diagnostic_series2 synthetic
+rename diagnostic_series3 treated
+merge 1:1 month_id_numeric using `time_weight_cells', keep(match master) nogen
+gen double gap = treated-synthetic
+gen double pre_contribution = gap*weight if month_id_numeric < tm(2024m7)
+quietly summarize pre_contribution, meanonly
+local weighted_pre_gap = r(sum)
+tempname timing_post
+postfile `timing_post' str20 period byte months double gap_vs_weighted_pre using `timing_results', replace
+quietly summarize gap if inrange(month_id_numeric, tm(2024m7), tm(2024m12)), meanonly
+post `timing_post' ("2024m7-2024m12") (r(N)) (r(mean)-`weighted_pre_gap')
+quietly summarize gap if inrange(month_id_numeric, tm(2025m1), tm(2025m9)), meanonly
+post `timing_post' ("2025m1-2025m9") (r(N)) (r(mean)-`weighted_pre_gap')
+quietly summarize gap if month_id_numeric >= tm(2024m7), meanonly
+post `timing_post' ("2024m7-2025m9") (r(N)) (r(mean)-`weighted_pre_gap')
+postclose `timing_post'
+use `timing_results', clear
+export delimited "outputs/models/stata/country_sdid_timing.csv", replace
 restore
 
 * Leave out each donor in turn. These are point sensitivities without new SEs.

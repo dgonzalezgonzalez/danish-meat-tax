@@ -1,12 +1,12 @@
-# Data and Code for: Before the Levy: Environmental Policy Announcements and Denmark's Beef Market
+# Data and Code for: Before the Levy: Beef Prices During Denmark's Cattle-Policy Transition
 
-**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 12 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
+**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 29 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
 
 ## Overview
 
 This package studies beef-market outcomes during Denmark's 2024 cattle-policy transition. It prepares official consumer-price, slaughter and extra-EU trade panels, estimates difference-in-differences and synthetic difference-in-differences models, and constructs conditional carbon-damage accounting scenarios. A grocery price-change history supplies an exploratory diagnostic and a provisional level-price anchor; it does not identify monthly posted prices without historical availability records. The April/July cattle nitrate-derogation change overlaps the tax announcement, so the estimates do not isolate the future levy. Estimation, analytical descriptive statistics, simulations, and calibration grids are produced in Stata. Python renders the four-panel calibration surface figure from Stata outputs; the remaining figures are produced in Stata. Python and PowerShell also handle acquisition, classification, normalization, reshaping, and orchestration.
 
-The revision excludes poultry and eggs as well as other livestock-exposed products from beef controls. Grocery DiD is 0.0278 (SE 0.0144); official CPI DiD is 0.0644 (SE 0.0305). Country-level beef-and-veal HICP SDiD is 0.0157 (SE 0.0293), using the other 26 EU countries as donors; its interval includes zero. Main slaughter-weight SDiD is -0.0661 (SE 0.0811), with estimates close to zero under longer pre-treatment support. The concurrent end of the cattle nitrate derogation prevents isolating the tax announcement from all other cattle regulation.
+The revision excludes poultry and eggs as well as other livestock-exposed products from beef controls. Grocery change-event DiD is 0.102 (SE 0.013); official CPI DiD is 0.064 (SE 0.030). Country-level beef-and-veal HICP SDiD is 0.016 (SE 0.029), using the other 26 EU countries as donors; its interval includes zero. The same-product European contrast is the principal descriptive benchmark, while the domestic CPI contrast uses a different counterfactual. Main slaughter-weight SDiD is -0.066 (SE 0.081), with estimates close to zero under longer pre-treatment support. The concurrent end of the cattle nitrate derogation prevents isolating the tax announcement from all other cattle regulation.
 
 ## Data availability and provenance
 
@@ -42,14 +42,21 @@ Run from the repository root. Keep fixture outputs in a separate directory.
 1. Install software. Acquire the Commission trade input using the linked instructions. Obtain the named grocery snapshot for exact replication.
 2. With `PYTHONPATH=src`, run `python main.py download`. This downloads or reuses grocery data, PRIS01, Eurostat beef-and-veal HICP, production, and PRIS04. Avoid `--refresh` for an existing snapshot.
 3. Run `python scripts/verify_inputs.py`. Investigate mismatches; do not silently relabel new downloads as the research snapshot.
-4. Run the wrapper below to verify inputs, rebuild panels, run every Stata analysis, and optionally compile the paper.
+4. Run the wrapper below to verify inputs, rebuild panels, run every Stata analysis, check transcribed paper numbers, and optionally compile the paper.
 
 ```powershell
 $env:PYTHONPATH = 'src'
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/replicate.ps1 -Python python -CompilePaper
 ```
 
-The wrapper uses the June 2026 grocery snapshot and does not modify raw inputs. To deliberately analyze another snapshot, supply `-RawPath` and `-AllowUpdatedInputs`; published numbers may change. Acquisition is the separate `download` stage. The underlying sequence is:
+The wrapper uses the June 2026 grocery snapshot and does not modify raw inputs. To deliberately analyze another snapshot, supply `-RawPath` and `-AllowUpdatedInputs`; published numbers may change and the paper-number gate will stop until its transcriptions are updated. Acquisition is the separate `download` stage. The underlying sequence is:
+
+For the core official-price and production evidence without grocery, Commission trade, or SCC inputs, use the separate target below. It verifies the relevant frozen official snapshots and rebuilds the PRIS01, country-HICP, and bovine-slaughter analyses in Stata. It does not reproduce the grocery, trade, or conditional accounting outputs.
+
+```powershell
+$env:PYTHONPATH = 'src'
+python scripts/replicate_official.py
+```
 
 ```powershell
 $env:PYTHONPATH = 'src'
@@ -65,9 +72,9 @@ python main.py outputs
 
 The [appendix window diagnostic](docs/sdid_window_audit.md) compares 15, 24, 36, and 54 pre-treatment months using fixed donor membership and a common pre-treatment fit period. It preserves publication estimates and writes separate results. Its additional HICP snapshot is recorded under `window_audit_files` in the input manifest; `python scripts/verify_inputs.py --include-window-audit` verifies that snapshot together with the nine publication inputs. After the documented diagnostic preprocessing, `do scripts/stata/master.do audit` runs the complete publication analysis and the window comparison. The ordinary master does not require the additional snapshot.
 
-All four appendix SDiD figures align donor and treated pre-treatment means by a display-only constant, documented in their captions. Raw donor series remain in the CSVs. Figures B2 and B3 use the same generic consumer-price axis title, while their captions distinguish national CPI and HICP.
+The main country-HICP Figure 1A and appendix SDiD comparison figures align donor and treated pre-treatment means by a display-only constant, documented in their captions. Raw donor series remain in the CSVs. Figure 1B is a line plot of the domestic beef-minus-food CPI gap. Appendix Figure B3 instead displays the grocery change-event diagnostic.
 
-The separate [maximum-history previews](docs/sdid_max_history.md) extend B1, B3 and B4 to their longest complete histories with the original donors: June 2014, December 2016 and January 2010, respectively. Full paths and recent-period zooms are available as `sdid_max_B1.png`, `sdid_max_B3.png` and `sdid_max_B4.png`. None improves the common-period fit. They remain review outputs; `master.do maxhistory` reproduces them after the documented preprocessing, and `verify_inputs.py --include-max-history` checks their two additional snapshots.
+The separate [maximum-history previews](docs/sdid_max_history.md) extend the production, country-HICP and trade comparisons (legacy B1/B3/B4 filenames) to their longest complete histories with the original donors: June 2014, December 2016 and January 2010, respectively. Full paths and recent-period zooms are available as `sdid_max_B1.png`, `sdid_max_B3.png` and `sdid_max_B4.png`. None improves the common-period fit. They remain review outputs; `master.do maxhistory` reproduces them after the documented preprocessing, and `verify_inputs.py --include-max-history` checks their two additional snapshots.
 
 Micro/aggregate/country and SCC use seed 20260827; trade uses 20260828; production uses 20260909. SDiD inference uses 200 replications; SCC uses 10,000. Combined calibration uncertainty pairs these SCC draws with independent coefficient draws using seed 20260910. Each analytical do-file clears Stata state and records a log under `outputs/diagnostics/stata/`. Root Windows batch logs are also checked for Stata `r(...)` failures even when the process returns zero. Changes to software, sorting, or inputs can affect simulated results.
 
@@ -90,6 +97,8 @@ python -m unittest discover -s tests
 | `data_sources/hicp.py`, `scripts/prepare_country_hicp_panel.py` | Eurostat HICP download and JSON-stat reshaping; integrated into `download` and `estimate`. |
 | `scripts/prepare_beef_trade_pair_panel.ps1` | Commission trade-source reshaping, called by `estimate`. |
 | `scripts/stata/master.do` | Complete publication analysis in dependency order. |
+| `scripts/replicate_official.py` | Official-price and production replication using frozen official inputs; skips grocery/trade/calibration. |
+| `scripts/stata/model_magnitude_scenarios.do` | Common-anchor national and country price mappings and two-date model bound. |
 | `scripts/stata/production_analysis.do` | Six EU27 slaughter specifications, direct mean-carcass-weight estimate, and ANI41 descriptive series. |
 | `scripts/stata/grocery_history_audit.do` | Observed change-event support, without inferring product availability. |
 | `scripts/stata/country_sdid_diagnostics.do`, `aggregate_omit_june.do` | Country donor/time weights, donor exclusion and holdout checks, and June-omission price sensitivities. |
@@ -102,7 +111,7 @@ python -m unittest discover -s tests
 | `outputs/models/stata/`, `outputs/figures/stata/` | Machine-readable results and publication PNGs. |
 | `paper/main.tex`, `paper/references.bib`, `paper/main.pdf` | Manuscript, bibliography, compiled paper. |
 
-[output_map.md](docs/output_map.md) maps every paper table and figure and otherwise unmapped in-text numbers to inputs and scripts. [referee_response.md](docs/referee_response.md) maps the review to changes and data-dependent limits. [grocery_history_audit.md](docs/grocery_history_audit.md), [production_analysis.md](docs/production_analysis.md), [methodology.md](docs/methodology.md), and [beef_carbon_price_calibration.md](docs/beef_carbon_price_calibration.md) explain design and interpretation. Historical `docs/plans/` notes are not the current replication specification. Unintegrated world-price experiments are outside the publication master.
+[output_map.md](docs/output_map.md) maps every paper table and figure and otherwise unmapped in-text numbers to inputs and scripts. [referee_response.md](docs/referee_response.md) and [referee_round2_response.md](docs/referee_round2_response.md) map both review rounds to changes and data-dependent limits. [grocery_history_audit.md](docs/grocery_history_audit.md), [production_analysis.md](docs/production_analysis.md), [methodology.md](docs/methodology.md), and [beef_carbon_price_calibration.md](docs/beef_carbon_price_calibration.md) explain design and interpretation. Historical `docs/plans/` notes are not the current replication specification. Unintegrated world-price experiments are outside the publication master.
 
 
-The calibration intervals in Figures 2–4 include resampling of the grocery pre-announcement mean (seed 20260911, with one-, two-, and four-month block checks); study-level mapped intervals use seed 20260912. Figure 4 additionally uses the preferred CPI coefficient's uncertainty. These are conditional sensitivity intervals, with independent simulation draws across uncertainty sources. The 59.6 lifecycle benchmark remains fixed because the inspected sources do not supply a compatible sampling interval; [the emissions source audit](docs/emissions_intensity_audit.md) distinguishes producer heterogeneity from uncertainty in this benchmark. Full methods and numerical checks are in [the calibration note](docs/beef_carbon_price_calibration.md).
+The calibration intervals in Appendix Figures C1–C3 include resampling of the grocery pre-announcement mean (seed 20260911, with one-, two-, and four-month block checks); study-level mapped intervals use seed 20260912. Appendix Figure C3 additionally uses the preferred CPI coefficient's uncertainty. These are conditional sensitivity intervals, with independent simulation draws across uncertainty sources. The 59.6 lifecycle benchmark remains fixed because the inspected sources do not supply a compatible sampling interval; [the emissions source audit](docs/emissions_intensity_audit.md) distinguishes producer heterogeneity from uncertainty in this benchmark. Full methods and numerical checks are in [the calibration note](docs/beef_carbon_price_calibration.md).

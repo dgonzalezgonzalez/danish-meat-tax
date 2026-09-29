@@ -54,6 +54,7 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/diagnostics/panel_balance.csv` | Main panel dimensions and filter settings. |
 | `outputs/diagnostics/panel_commodity_counts.csv` | Units/rows by commodity, treatment group, and treated status. |
 | `outputs/diagnostics/panel_period_support.csv` | Units/rows by relative period and treated status. |
+| `outputs/diagnostics/panel_eligibility_reconciliation.csv` | Full-history versus within-publication-window event support and unit exclusion reasons. |
 | `outputs/models/stata/micro_estimates.csv` | Scraped-data DiD summary. |
 | `outputs/models/stata/grocery_event_support.csv` | Recorded-event coverage between first and last observed month, not product availability. |
 | `outputs/models/stata/descriptive_statistics.csv` | Scraped-sample level-price and panel-support descriptives. |
@@ -68,9 +69,11 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 | `outputs/models/stata/country_sdid_series.csv` | Danish and synthetic country-level log HICP series. |
 | `outputs/models/stata/country_sdid_unit_weights.csv` | Country donor weights, concentration HHI, effective donor count. |
 | `outputs/models/stata/country_sdid_time_weights.csv` | Month weights for the pre-treatment country-HICP comparison. |
+| `outputs/models/stata/country_sdid_timing.csv` | Fixed-weight 2024/2025 post-period contrasts against the weighted pre-period. |
 | `outputs/models/stata/country_sdid_leave_one_out.csv` | No-inference ATT after omitting each donor country. |
 | `outputs/models/stata/country_sdid_pre_holdout.csv` | Short pre-news and pre-July treated-outcome holdout gaps. |
 | `outputs/models/stata/country_sdid_omit_june.csv` | Country-HICP placebo-inference estimate excluding June 2024. |
+| `outputs/models/stata/model_magnitude_scenarios.csv` | Common DKK/kg anchors applied to national CPI and country HICP contrasts, plus two-date model bound. |
 | `outputs/models/stata/beef_trade_pair_sdid_estimate.csv` | Denmark-importer beef-trade SDiD estimate with placebo inference. |
 | `outputs/models/stata/beef_trade_pair_sdid_bootstrap_estimate.csv` | Same beef-trade ATT with unit-cluster bootstrap inference. |
 | `outputs/models/stata/beef_trade_pair_sdid_series.csv` | Denmark-importer and synthetic beef-import series. |
@@ -87,7 +90,7 @@ The real `dagligepriser.dk` source stores many product objects with a nested `pr
 
 ## Preferred-estimate calibration grids
 
-`calibration_surfaces.csv` has 10,404 rows: `panel` identifies taxable shares 0.25, 0.50, 0.75, and 1; `x`/`persistence` and `y`/`incremental_pass_through` range from zero to one in .02 steps. `taxable_share` is constant within each panel. `beta`, `beta_low`, and `beta_high` preserve the preferred CPI DiD estimate and HAC interval. `pre_price_dkk_kg` anchors the proportional estimate to grocery levels. Damage, announcement, implementation, remaining-gap, and `conf_low`/`conf_high` fields are DKK/kg. The `conf_low`/`conf_high` fields retain the coefficient-only bounds. Figure 4 uses `sensitivity_low`/`sensitivity_high`, the combined SCC, coefficient, and grocery-price pointwise percentile bounds in DKK/kg. `calibration_scenarios.csv` contains the full 27-row coarse parameter cube with matching amount and confidence fields.
+`calibration_surfaces.csv` has 10,404 rows: `panel` identifies taxable shares 0.25, 0.50, 0.75, and 1; `x`/`persistence` and `y`/`incremental_pass_through` range from zero to one in .02 steps. `taxable_share` is constant within each panel. `beta`, `beta_low`, and `beta_high` preserve the preferred CPI DiD estimate and HAC interval. `pre_price_dkk_kg` anchors the proportional estimate to grocery levels. Damage, announcement, implementation, remaining-gap, and `conf_low`/`conf_high` fields are DKK/kg. The `conf_low`/`conf_high` fields retain the coefficient-only bounds. Appendix Figure C3 uses `sensitivity_low`/`sensitivity_high`, the combined SCC, coefficient, and grocery-price pointwise percentile bounds in DKK/kg. `calibration_scenarios.csv` contains the full 27-row coarse parameter cube with matching amount and confidence fields.
 
 `production_descriptive_statistics.csv` records sample (`all`, `denmark`, `donors`), measure (`THS_T`, `THS_HD`), country-month observation count, mean, sample standard deviation, quartiles, and median from the exact main estimation samples.
 

@@ -52,6 +52,29 @@ class PanelBuilderTest(unittest.TestCase):
         result = build_balanced_panel(partial, frequency="daily", require_complete_units=False, unit_level="product_store")
         self.assertIn("Netto::netto_milk", set(result.panel["unit_id"]))
 
+    def test_publication_window_precedes_unit_eligibility(self):
+        products = normalize_records(_fixture_records())
+        beef = products.loc[products["treatment_group"] == "beef"].iloc[[0]].copy()
+        control = products.loc[products["analysis_role"] == "control_food"].iloc[[0]].copy()
+        base = pd.concat(
+            [beef.assign(unit_id="beef_in_window", date=pd.Timestamp(date)) for date in ("2024-05-01", "2024-07-01")]
+            + [control.assign(unit_id="control_in_window", date=pd.Timestamp(date)) for date in ("2024-05-01", "2024-07-01")],
+            ignore_index=True,
+        )
+        outside = pd.concat(
+            [beef.assign(unit_id="outside_window", date=pd.Timestamp("2024-05-01")),
+             beef.assign(unit_id="outside_window", date=pd.Timestamp("2026-01-01"))],
+            ignore_index=True,
+        )
+        expanded = pd.concat([base, outside], ignore_index=True)
+        result = build_balanced_panel(
+            expanded, frequency="monthly", unit_level="product_store",
+            analysis_start="2023-10-01", analysis_end="2025-09-01",
+        )
+        self.assertNotIn("outside_window", set(result.panel["unit_id"]))
+        reason = result.reconciliation.set_index("unit_id").loc["outside_window", "reason"]
+        self.assertEqual(reason, "support_outside_window")
+
     def test_insufficient_coverage_errors(self):
         products = pd.DataFrame(
             [

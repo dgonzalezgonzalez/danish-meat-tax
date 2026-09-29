@@ -1,6 +1,6 @@
 # Country-level beef-and-veal consumer-price SDiD
 
-This robustness check compares Denmark with other EU countries in the same consumer-price category. It tests the choice of control group. Denmark's HICP is compiled by Statistics Denmark, so it does not independently validate Danish price collection. It replaces the earlier carcass-price analysis in the existing Figure B3; trade analysis is unchanged.
+This same-product comparison puts Denmark beside other EU countries in the beef-and-veal consumer-price category. It is the main descriptive benchmark for common European beef-price movements and appears in Figure 1A. Denmark's HICP is compiled by Statistics Denmark, so it does not independently validate Danish price collection. It replaces the earlier carcass-price analysis; trade analysis is unchanged.
 
 ## Source and sample
 
@@ -20,18 +20,19 @@ With `PYTHONPATH=src`, run `python scripts/prepare_country_hicp_panel.py` from t
 
 Run `do scripts/stata/country_sdid.do` in Stata/MP 19.5, or run the full `scripts/stata/master.do`. The specification is `sdid ln_price unit month_id treated_post, vce(placebo) reps(200) seed(20260827)`, using sdid 2.0.2. The outcome is log HICP. With one treated country, the package's unit-cluster bootstrap is unavailable; placebo inference relies on comparability of residual variation across countries and is not a randomized-assignment test. The reported p-value is the two-sided normal approximation from the placebo standard error.
 
-`country_sdid_diagnostics.do`, called by the master after the estimate, exports all donor and pre-period weights, 26 leave-one-donor-out point estimates, two short treated-outcome holdouts, and a June-2024-omission estimate with 200 placebo replications. The main unit weights have a Herfindahl sum of squares of 0.124 (effective donor count 8.1); Finland, the Netherlands, and Czechia carry 54.1% together. June 2024 receives 64.8% of the pre-period time weight despite the 24 June agreement. Omitting June gives 0.0220 (placebo SE 0.0282), compared with 0.0157 (0.0293) in the main specification. Donor omissions give point ATTs from 0.0061 to 0.0257. The October–December 2023 holdout yields -0.0094 after April–September training; an April–June 2024 holdout gives 0.0042 but already contains expert-tax and nitrate-policy news. These in-sample and short holdout diagnostics cannot establish the July–September 2025 counterfactual.
+`country_sdid_diagnostics.do`, called by the master after the estimate, exports all donor and pre-period weights, 26 leave-one-donor-out point estimates, two short treated-outcome holdouts, a June-2024-omission estimate with 200 placebo replications, and a fixed-weight timing decomposition. The main unit weights have a Herfindahl sum of squares of 0.124 (effective donor count 8.1); Finland, the Netherlands, and Czechia carry 54.1% together. Only four pre-period months receive positive time weights; May and June 2024 jointly receive 78.5%, of which June receives 64.8%. Their inverse sum of squared weights is 2.16, a concentration diagnostic rather than an inferential sample size. The July–December 2024 contrast relative to the weighted pre-period is 0.004 and the January–September 2025 contrast is 0.024, without separate uncertainty estimates. Omitting June gives 0.022 (placebo SE 0.028), compared with 0.016 (0.029) in the main specification. Donor omissions give point ATTs from 0.006 to 0.026. The October–December 2023 holdout yields -0.009 after April–September training; an April–June 2024 holdout gives 0.004 but already contains expert-tax and nitrate-policy news. These in-sample and short holdout diagnostics cannot establish the July–September 2025 counterfactual.
 
 ## Results and outputs
 
-ATT = 0.0156655, placebo SE = 0.0292872, p = 0.59272426, and 95% interval [-0.041736357, 0.07306736]. The point estimate corresponds to about 1.6%. This smaller, statistically insignificant estimate qualifies the magnitude of the main within-Denmark finding; it does not establish zero effect, and its interval includes the preferred CPI estimate. Common international beef shocks and spillovers remain identification concerns.
+ATT = 0.016, placebo SE = 0.029, p = 0.593, and 95% interval [-0.042, 0.073]. The point estimate corresponds to about 1.6%. This imprecise country estimate qualifies the magnitude of the within-Denmark finding; it does not establish zero effect, and its interval includes the preferred CPI estimate. Common international beef shocks and spillovers remain identification concerns.
 
-The pre-treatment centered-gap RMSE is 0.0099884672 log points. For display, the weighted donor series is shifted by the constant pre-treatment mean treated–donor gap. This aligns the paths in level while preserving all monthly changes; synthetic DiD permits an intercept, and the plotting adjustment does not change the estimate. The raw weighted series is retained for audit.
+The pre-treatment centered-gap RMSE is 0.010 log points. For display, the weighted donor series is shifted by the constant pre-treatment mean treated–donor gap. This aligns the paths in level while preserving all monthly changes; synthetic DiD permits an intercept, and the plotting adjustment does not change the estimate. The raw weighted series is retained for audit.
 
 - `country_sdid_estimate.csv`: estimate, inference, sample dimensions, pre-treatment Danish index mean, and centered pre-fit RMSE.
 - `country_sdid_series.csv`: raw treated and synthetic log indices, their gap, post indicator, and display-only `synthetic_aligned`.
 - `country_hicp_coverage.csv`: country inclusion and valid-month counts.
 - `country_hicp_estimation_sample.csv`: exact source values and flags used in Stata.
-- `outputs/figures/stata/country_sdid.png`: the replacement Figure B3.
+- `country_sdid_timing.csv`: fixed-weight 2024/2025 post-period contrasts relative to the pre-period synthetic weights.
+- `outputs/figures/stata/country_sdid.png`: Figure 1A.
 
 All CSV outputs are under `outputs/models/stata/`. The obsolete carcass-price preprocessing script and input requirement are removed from the publication workflow; historical versions remain in Git history. No additional appendix price figure is introduced.

@@ -22,6 +22,8 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Stata estimation failed." }
     & $Python main.py outputs
     if ($LASTEXITCODE -ne 0) { throw "Calibration failed." }
+    & $Python scripts/verify_paper_numbers.py
+    if ($LASTEXITCODE -ne 0) { throw "Manuscript transcription verification failed." }
     if ($CompilePaper) {
         Push-Location paper
         try {

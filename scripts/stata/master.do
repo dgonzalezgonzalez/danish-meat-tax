@@ -16,6 +16,7 @@ do "scripts/stata/beef_trade_pair_sdid.do"
 do "scripts/stata/beef_trade_pair_sdid_bootstrap.do"
 do "scripts/stata/production_analysis.do"
 do "scripts/stata/scc_meta_analysis.do"
+do "scripts/stata/model_magnitude_scenarios.do"
 
 * Optional diagnostic; prepare its separate histories as documented first.
 if "`requested_window_audit'" == "audit" {

@@ -207,8 +207,8 @@ gen double conf_high = .
 keep month relative_time estimate std_error conf_low conf_high
 format month %tm
 export delimited using "outputs/models/stata/aggregate_event_study.csv", replace
-twoway scatter estimate relative_time, ///
-    mcolor(black) msymbol(O) msize(small) ///
+twoway line estimate relative_time, sort ///
+    lcolor(black) lwidth(medthick) ///
     legend(off) yline(0, lcolor(gs6) lpattern(dash)) xline(-0.5, lcolor(gs9) lpattern(shortdash)) ///
     xtitle("Months relative to July 2024") ytitle("Beef-minus-food log CPI gap, relative to June") ///
     xlabel(-15(5)15) graphregion(color(white)) plotregion(color(white))
@@ -219,12 +219,12 @@ restore
 tempfile estimates
 tempname estimates_post
 postfile `estimates_post' str20 estimator double estimate std_error p_value conf_low conf_high ///
-    long observations units periods double pre_treated_average r_squared ///
-    str24 time_window str3 lags_only str3 covariates str20 inference using `estimates', replace
+    long observations underlying_series_months units periods double pre_treated_average r_squared ///
+    str24 time_window byte hac_max_lag str3 covariates str20 inference using `estimates', replace
 post `estimates_post' ("aggregate_did") (`did_att') (`did_se') (`did_p') (`did_low') (`did_high') ///
-    (`panel_observations') (`panel_units') (30) (`pre_beef_cpi') (`did_r2') ("2023m4-2025m9") ("Yes") ("No") ("HAC Newey-West lag 2")
+    (`did_n') (`panel_observations') (`panel_units') (30) (`pre_beef_cpi') (`did_r2') ("2023m4-2025m9") (2) ("No") ("HAC Newey-West lag 2")
 post `estimates_post' ("aggregate_sdid") (`sdid_att') (`sdid_se') (`sdid_p') (`sdid_low') (`sdid_high') ///
-    (`panel_observations') (`panel_units') (30) (`pre_beef_cpi') (.) ("2023m4-2025m9") ("No") ("No") ("placebo")
+    (`panel_observations') (`panel_observations') (`panel_units') (30) (`pre_beef_cpi') (.) ("2023m4-2025m9") (.) ("No") ("placebo")
 postclose `estimates_post'
 use `estimates', clear
 export delimited using "outputs/models/stata/aggregate_estimates.csv", replace

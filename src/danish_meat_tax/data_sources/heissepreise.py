@@ -40,10 +40,10 @@ def _fixture_records() -> list[dict[str, Any]]:
         ("milk", "Fotex", "Letmaelk 1 liter", "dairy", 13.0, 1.00, 1, "l"),
         ("bread", "Fotex", "Rugbroed 500 g", "bread", 19.0, 1.00, 500, "g"),
     ]
-    start = date(2024, 6, 10)
+    start = date(2024, 5, 27)
     event = date(2024, 6, 24)
     rows: list[dict[str, Any]] = []
-    for offset in range(29):
+    for offset in range(57):
         current = start + timedelta(days=offset)
         if current == event:
             continue

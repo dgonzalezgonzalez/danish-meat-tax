@@ -1,5 +1,17 @@
 # Validation record
 
+## Second-round referee revision — 29 September 2026
+
+The dated sections below preserve checks and numbers from earlier revisions. This section describes the current publication artifacts.
+
+- Rebuilt the frozen grocery panel after imposing the October 2023–September 2025 publication window before unit eligibility. The Stata estimation sample and separate support audit now agree at 151 beef product–store units and 1,105 beef event-months; the price-level benchmark uses 405 pre-period event observations from 151 units and is DKK 147.77/kg. The reconciliation CSV records full-history and within-window support and exclusion reasons. The event-price object remains conditional on recorded changes and historical availability remains unknown.
+- Ran `scripts/stata/master.do` after preprocessing through its final `model_magnitude_scenarios.do` output. The complete publication price, grocery, trade, production, SCC, and model-magnitude analyses completed without a Stata error. Figure 1B was regenerated as a line. The official-only `scripts/replicate_official.py` target also completed, after verifying its six relevant frozen inputs; the full input verifier matched all nine publication inputs against the unchanged SHA-256 manifest.
+- The country timing CSV gives 0.004 for July–December 2024 and 0.024 for January–September 2025 relative to the synthetic weighted pre-period. Four pre-months have positive time weights, with 78.5% on May and June. The common-anchor magnitude CSV gives DKK 9.83/kg for domestic CPI and DKK 2.33/kg for country HICP at the DKK 147.77/kg provisional anchor; DKK 100 and 200 scenarios are also exported.
+- `scripts/verify_paper_numbers.py` passes keyed table-cell and placement checks, including the four estimator columns, observation counts, and magnitude scenarios. A unit test demonstrates that swapping official coefficient and standard-error columns fails. It also rejects four-decimal manuscript results. The aggregate DiD CSV now distinguishes 30 regression observations from 1,530 underlying series–months and stores HAC maximum lag two.
+- All **35 unit tests** passed outside the Windows sandbox restriction on Python-created temporary directories. The explicit offline monthly fixture smoke test also passed: 784 synthetic source records, 28 panel rows, and a valid Stata input contract without analytical estimates. The fixture now spans May through July 2024 so the monthly pre/post contract is meaningful.
+- Compiled the 39-page PDF with pdfLaTeX, BibTeX, and two resolving pdfLaTeX passes. The final log has no undefined references or citations, overfull or underfull boxes, or other TeX warnings. Rendered and visually checked the main results table, Figure 1 with its continuous Panel B line, and the model-magnitude table. `git diff --check` passed.
+- The public historical grocery snapshot and complete price-spell/availability information remain unavailable as a durable public archive. No independent human classification adjudication or clean-machine replication was performed. The manuscript and response note state these limits; the appendix SCC exercise remains conditional accounting, not a causal estimate.
+
 ## Referee revision — 24 September 2026
 
 The sections below this one retain dated historical checks and their then-current numbers. This section describes the revised publication artifacts.

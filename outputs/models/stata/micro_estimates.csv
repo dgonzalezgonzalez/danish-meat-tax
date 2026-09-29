@@ -1,2 +1,2 @@
 estimator,estimate,std_error,p_value,conf_low,conf_high,observations,units,periods,pre_treated_average,r_squared,time_window,lags_only,covariates,inference,pretrend_p_value
-micro_did,.1015474525417287,.013249505,1.9074318e-14,.075576827,.12751807,135889,15179,23,147.2494728167993,.96309072,2023m10-2025m9,No,No,clustered by product-store,.842445828908126
+micro_did,.1016230968664348,.013190768,1.4064854e-14,.075767413,.12747878,134121,13905,23,147.7699026624669,.9626947,2023m10-2025m9,No,No,clustered by product-store,.8460671646644788

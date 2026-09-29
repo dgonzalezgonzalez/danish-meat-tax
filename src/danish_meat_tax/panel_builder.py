@@ -11,6 +11,7 @@ import pandas as pd
 class PanelResult:
     panel: pd.DataFrame
     diagnostics: dict[str, int | str]
+    reconciliation: pd.DataFrame
 
 
 def _relative_time(period: pd.Timestamp, event_period: pd.Timestamp, frequency: str) -> int:
@@ -141,10 +142,18 @@ def build_balanced_panel(
     max_post_periods: int | None = None,
     symmetric_window: bool = False,
     unit_level: str = "commodity_store",
+    analysis_start: str | None = None,
+    analysis_end: str | None = None,
 ) -> PanelResult:
     event = pd.Timestamp(event_date)
     filtered = _filter_analysis_sample(products, food_only, exclude_unknown, include_dairy_as_treated)
-    data = _aggregate_unit_level(_aggregate(filtered, frequency, event), unit_level)
+    full_data = _aggregate_unit_level(_aggregate(filtered, frequency, event), unit_level)
+    data = full_data
+    if analysis_start is not None:
+        data = data[data["period"] >= pd.Timestamp(analysis_start)]
+    if analysis_end is not None:
+        data = data[data["period"] <= pd.Timestamp(analysis_end)]
+    data = data.copy()
     if data.empty:
         raise ValueError("No food/control treatment sample remains after filters.")
     periods = sorted(pd.to_datetime(data["period"].unique()))
@@ -175,6 +184,37 @@ def build_balanced_panel(
             .index
         )
     selected = selected[selected["unit_id"].isin(valid_units)].copy()
+    def support_counts(frame: pd.DataFrame, suffix: str) -> pd.DataFrame:
+        counts = frame.assign(
+            pre=frame["period"] < event_period,
+            post=frame["period"] > event_period,
+        ).groupby("unit_id").agg(pre=("pre", "sum"), post=("post", "sum"))
+        return counts.rename(columns={"pre": f"pre_{suffix}", "post": f"post_{suffix}"})
+
+    reconciliation = (
+        full_data.groupby("unit_id").agg(
+            treated=("treated", "first"),
+            treatment_group=("treatment_group", "first"),
+            commodity=("commodity", "first"),
+        )
+        .join(support_counts(full_data, "full"))
+        .join(support_counts(data, "window"))
+        .fillna(0)
+        .reset_index()
+    )
+    reconciliation["included"] = reconciliation["unit_id"].isin(valid_units)
+    reconciliation["reason"] = np.select(
+        [
+            reconciliation["included"],
+            (reconciliation["pre_full"] >= min_pre_periods)
+            & (reconciliation["post_full"] >= min_post_periods)
+            & ((reconciliation["pre_window"] < min_pre_periods) | (reconciliation["post_window"] < min_post_periods)),
+            reconciliation["pre_window"] < min_pre_periods,
+            reconciliation["post_window"] < min_post_periods,
+        ],
+        ["included", "support_outside_window", "insufficient_pre", "insufficient_post"],
+        default="incomplete_selected_periods",
+    )
     if selected["unit_id"].nunique() < min_units:
         raise ValueError("Insufficient balanced units after applying symmetric window.")
     if not selected["treated"].astype(bool).any():
@@ -207,8 +247,11 @@ def build_balanced_panel(
         "control_units": int(selected.loc[~selected["treated"], "unit_id"].nunique()),
         "commodities": int(selected["commodity"].nunique()),
         "stores": int(selected["store"].nunique()),
+        "analysis_start": analysis_start or "unrestricted",
+        "analysis_end": analysis_end or "unrestricted",
+        "excluded_support_outside_window": int((reconciliation["reason"] == "support_outside_window").sum()),
     }
-    return PanelResult(selected.sort_values(["unit_id", "period"]).reset_index(drop=True), diagnostics)
+    return PanelResult(selected.sort_values(["unit_id", "period"]).reset_index(drop=True), diagnostics, reconciliation)
 
 
 def write_panel(products_path: Path, panel_path: Path, diagnostics_path: Path, **kwargs: object) -> PanelResult:
@@ -219,6 +262,7 @@ def write_panel(products_path: Path, panel_path: Path, diagnostics_path: Path, *
     result.panel.to_csv(panel_path, index=False)
     pd.DataFrame([result.diagnostics]).to_csv(diagnostics_path, index=False)
     diagnostics_dir = diagnostics_path.parent
+    result.reconciliation.to_csv(diagnostics_dir / "panel_eligibility_reconciliation.csv", index=False)
     result.panel.groupby(["commodity", "treatment_group", "treated"], as_index=False).agg(
         units=("unit_id", "nunique"),
         rows=("unit_id", "size"),
