@@ -1,0 +1,7 @@
+{
+  "url": "https://github.com/dgonzalezgonzalez/danish-meat-tax/releases/download/official-inputs-2026-09-30/official_inputs_20260930.zip",
+  "bytes": 739186,
+  "sha256": "fa07cff8d1de661fc32975f134d3173a0efd2e31757683160cb328ba7fe7df7b",
+  "source_manifest": "data/reference/replication_input_manifest.json",
+  "note": "Versioned deposit of six unchanged official-source snapshots. Source members retain the hashes in the original research-input manifest. ZIP timestamp is a packaging date, not a source retrieval timestamp."
+}

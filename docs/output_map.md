@@ -1,6 +1,6 @@
 # Paper output and numerical-claim map
 
-Table and figure numbers refer to the 29 September 2026 revision. Paths below are relative to the project root. All numerical results are calculated in Stata; TeX applies presentation rounding. The Stata master runs every producing do-file listed here. The grocery result is an event-record diagnostic, not an independent posted-price estimate.
+Table and figure numbers refer to the 30 September 2026 revision. Paths below are relative to the project root. All numerical results are calculated in Stata; TeX applies presentation rounding. The Stata master runs every producing do-file listed here. The grocery result is an event-record diagnostic, not an independent posted-price estimate.
 
 The supplementary [window diagnostic](sdid_window_audit.md) is reproduced with the optional `audit` argument to the master. `sdid_window_audit.do` exports 20 estimates and pre-treatment fit measures in `sdid_window_audit.csv`; `verify_sdid_revision.do` exports outcome-specific fit checks in `sdid_window_decision.csv`. The histories and result files are separate from the publication specifications. Appendix Table on pre-period support reports the diagnostic point estimates without new inference.
 
@@ -14,9 +14,9 @@ The author's [maximum-history previews](sdid_max_history.md) use `sdid_max_histo
 | Figure 1 A/B: same-product EU comparison and domestic gap | `country_sdid.do`, `aggregate_analysis.do` | `country_sdid.png`, `aggregate_event_study.png`; corresponding CSVs | Eurostat country beef HICP; PRIS01 |
 | Appendix Figure C1: SCC forest | `scc_meta_analysis.do` | `scc_meta_forest.png`, `scc_literature_calibration.csv` | SCC inventory, PRIS04, micro pre-price |
 | Appendix Figure C2: price calibration | `scc_meta_analysis.do` | `beef_policy_calibration.png`, `beef_policy_calibration.csv`, `scc_meta_summary.csv` | Main estimates and SCC inputs |
-| Table B1: preferred SCC values | `scc_meta_analysis.do` | `scc_literature_calibration.csv`; descriptive source columns from inventory | SCC inventory |
-| Table B2: production specifications | `production_analysis.do` | `production_estimates.csv` | Eurostat B1000 source cells |
-| Appendix pre-period support table | `sdid_window_audit.do` (optional audit) | `sdid_window_audit.csv` | Five outcome panels, fixed donors, 15/24/36/54 pre-months |
+| Table C1: preferred SCC values | `scc_meta_analysis.do` | `scc_literature_calibration.csv`; descriptive source columns from inventory | SCC inventory |
+| Table B1: production specifications | `production_analysis.do` | `production_estimates.csv` | Eurostat B1000 source cells |
+| Table B2: pre-period support sensitivity | `sdid_window_audit.do` (optional audit) | `sdid_window_audit.csv` | Five outcome panels, fixed donors, 15/24/36/54 pre-months |
 | Figure B1: production | `production_analysis.do` | `production_sdid.png`, `production_THS_T_main_series.csv` | Same |
 | Figure B2: official SDiD comparison | `aggregate_analysis.do` | `aggregate_sdid.png`, `aggregate_sdid_series.csv` | PRIS01 |
 | Figure B3: grocery change-event diagnostic | `microdata_analysis.do` | `micro_event_study.png`, `micro_event_study.csv` | Grocery price-change events |
@@ -51,7 +51,7 @@ The main country-HICP Figure 1A and the appendix SDiD comparison graphs show tre
 
 
 - Price sensitivity underlying Appendix Figures C1–C3: `price_benchmark_analysis.do`, called by `scc_meta_analysis.do`; `price_benchmark_draws.csv` and `price_benchmark_summary.csv`. Provisional mean 147.77 [131.46,166.28] DKK/kg; eight months, 151 units, 405 observed change-event months. Resampling cannot address missing availability.
-- Updated Appendix Figure C1 study bars: simulated SCC/price bounds in `scc_literature_calibration.csv`; original source ranges remain in Appendix Table B1 and separate audit columns.
+- Updated Appendix Figure C1 study bars: simulated SCC/price bounds in `scc_literature_calibration.csv`; original source ranges remain in Appendix Table C1 and separate audit columns.
 - Appendix Figures C1–C2 pooled mapped sensitivity ranges: `scc_price_gap_draws.csv` and `scc_meta_summary.csv`; average burden 0.333 [0.154,0.679], marginal incentive 0.277 [0.089,0.639]. ATT intervals remain the Table 2 intervals.
 - Appendix Figure C3 block-length check: `calibration_block_sensitivity.csv`; one/two/four months give 12.59–133.35 / 12.53–133.79 / 12.29–133.49 DKK/kg at q=a=f=lambda=1.
 - Intensity remains a fixed scenario input: `docs/emissions_intensity_audit.md` records why the producer-heterogeneity percentiles are not propagated as a confidence interval for the 59.6 benchmark.

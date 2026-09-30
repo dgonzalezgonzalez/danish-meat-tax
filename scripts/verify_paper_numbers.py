@@ -76,8 +76,13 @@ def verify_main_table(tex: str) -> None:
         raise AssertionError("Table 2 needs one ATT (descriptive contrast) row")
     index = att_lines[0]
     att, se = cells(lines[index]), cells(lines[index + 1])
-    expect_cells([item.replace("*", "") for item in att[1:]],
-                 [formatted(item["estimate"], 3) for item in estimates], "Table 2 ATT columns")
+    def stars(p_value: str) -> str:
+        p = float(p_value)
+        return "***" if p < .01 else "**" if p < .05 else "*" if p < .10 else ""
+
+    expect_cells(att[1:],
+                 [formatted(item["estimate"], 3) + stars(item["p_value"]) for item in estimates],
+                 "Table 2 ATT columns and significance stars")
     expect_cells(se[1:], [f"({formatted(item['std_error'], 3)})" for item in estimates],
                  "Table 2 standard-error columns")
     expect_cells(row(main, "Regression observations", 5)[1:],
@@ -112,6 +117,9 @@ def verify_descriptive_table(tex: str) -> None:
 
 def verify_magnitude_table(tex: str) -> None:
     magnitude = table(tex, "tab:model_magnitude")
+    expect_cells(row(magnitude, "Level-price scenario", 4),
+                 ["Level-price scenario", "Anchor, DKK/kg", "Domestic CPI DiD", "Country beef HICP SDiD"],
+                 "Table 3 estimator headings")
     for key, label in (
         ("illustrative_100", "Illustrative low level"),
         ("provisional_event_mean", "Provisional grocery event mean"),
@@ -122,6 +130,34 @@ def verify_magnitude_table(tex: str) -> None:
                      [formatted(result[field]) for field in
                       ("anchor_dkk_kg", "national_cpi_dkk_kg", "country_hicp_dkk_kg")],
                      f"Table 3 {key}")
+
+
+def verify_window_table(tex: str) -> None:
+    """Bind every appendix sensitivity estimate and fit measure to its cell."""
+    sensitivity = table(tex, "tab:window_sensitivity")
+    expect_cells(row(sensitivity, "Pre-treatment months", 5),
+                 ["Pre-treatment months", "15", "24", "36", "54"],
+                 "Appendix window headings")
+    panel_a, panel_b = sensitivity.split(r"\multicolumn{5}{l}{\textit{Panel B.", 1)
+    sources = (
+        ("Danish beef versus food CPI", "cpi"),
+        ("Denmark versus EU beef HICP", "hicp"),
+        ("Slaughter weight", "production_weight"),
+        ("Slaughter heads", "production_heads"),
+        ("Extra-EU bilateral imports", "trade"),
+    )
+    for label, exercise in sources:
+        rows = [one("sdid_window_audit.csv", exercise=exercise, pre_months=str(months))
+                for months in (15, 24, 36, 54)]
+        for panel, field, name in ((panel_a, "att", "ATT"), (panel_b, "rmse_recent", "RMSE")):
+            actual = [item.replace("$", "") for item in row(panel, label, 5)[1:]]
+            expect_cells(actual, [formatted(result[field], 3) for result in rows],
+                         f"Appendix window {name}: {label}")
+    hicp = [one("sdid_window_audit.csv", exercise="hicp", pre_months=str(months))
+            for months in (15, 24, 36, 54)]
+    expect_cells(row(panel_b, "HICP RMSE / 15-month RMSE", 5)[1:],
+                 [formatted(result["rmse_ratio"], 3) for result in hicp],
+                 "Appendix HICP RMSE ratios")
 
 
 def require_in(text: str, value: str, context: str) -> None:
@@ -138,6 +174,7 @@ def main() -> None:
     verify_main_table(tex)
     verify_descriptive_table(tex)
     verify_magnitude_table(tex)
+    verify_window_table(tex)
     results = tex.split(r"\section{Results}\label{sec:results}", 1)[1].split(r"\section{Discussion of the Results}", 1)[0]
     for key in ("2024m7-2024m12", "2025m1-2025m9"):
         country = one("country_sdid_timing.csv", period=key)
@@ -165,7 +202,7 @@ def main() -> None:
     for field in ("announcement_dkk_kg", "remaining_gap_dkk_kg"):
         require_in(calibration, formatted(scenario[field]), f"full scenario {field}")
     require_in(readme, "Before the Levy: Beef Prices During Denmark's Cattle-Policy Transition", "README title")
-    require_in(readme, "Revision:** 29 September 2026", "README revision")
+    require_in(readme, "Revision:** 30 September 2026", "README revision")
     grocery = one("micro_estimates.csv", estimator="micro_did")
     require_in(readme, f"Grocery change-event DiD is {formatted(grocery['estimate'], 3)} "
                        f"(SE {formatted(grocery['std_error'], 3)})", "README grocery summary")

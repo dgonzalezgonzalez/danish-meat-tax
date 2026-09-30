@@ -8,6 +8,9 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+data/reference/frozen_official/*.csv
+data/reference/frozen_official/*.json
+!data/reference/frozen_official/archive_manifest.json
 outputs/figures/*
 !outputs/figures/.gitkeep
 !outputs/figures/stata/

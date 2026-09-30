@@ -10,13 +10,13 @@
 \newcommand{\figurenotes}[2]{\begin{minipage}{0.96\linewidth}\small\textit{Source:} #1\par\textit{Notes:} #2\end{minipage}}
 \title{Before the Levy: Beef Prices During Denmark's Cattle-Policy Transition}
 \author{Diego Gonz\'alez-Gonz\'alez}
-\date{29 September 2026}
+\date{30 September 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-How distinctive was Denmark's beef-price movement during its 2024 cattle-policy transition? Comparing Danish beef-and-veal consumer prices with the same product in the other EU countries gives a post-June contrast of 0.016 log points (placebo standard error 0.029). With the full-sample synthetic weights held fixed, the contrast is 0.004 in the second half of 2024 and 0.024 in the first nine months of 2025. Beef instead rose by 0.064 log points relative to other Danish foods; that domestic contrast is concentrated in 2025 and its conventional significance depends on the serial-correlation bandwidth. Slaughter responses are imprecise. A model of costly adjustment of production plans gives a possible anticipatory mechanism and a conditional magnitude bound, but neither comparison isolates it. The country estimate is a post-June contrast conditional on an earlier path that already includes policy news; the concurrent nitrate-regulation change also prevents attribution to the future emissions tax alone. Grocery histories record price changes without a historical availability panel and cannot validate a monthly posted-price effect. The contribution is a same-product European benchmark and a timing account that substantially narrow, but do not identify, the Danish-specific price movement.
+How distinctive was Denmark's beef-price movement during its 2024 cattle-policy transition? Comparing Danish beef-and-veal consumer prices with the same product in the other EU countries gives a post-June contrast of 0.016 log points (placebo standard error 0.029). With the full-sample synthetic weights held fixed, the contrast is 0.004 in the second half of 2024 and 0.024 in the first nine months of 2025. Beef instead rose by 0.064 log points relative to other Danish foods; that domestic contrast is concentrated in 2025 and its conventional significance depends on the serial-correlation bandwidth. Slaughter responses are imprecise. A model of costly adjustment of production plans gives a possible anticipatory mechanism and a conditional magnitude bound, but neither comparison isolates it. The country estimate is a post-June contrast conditional on an earlier path that already includes policy news; the concurrent nitrate-regulation change also prevents attribution to the future emissions tax alone. Grocery histories record price changes without a historical availability panel and cannot validate a monthly posted-price effect. The same-product comparison gives a smaller point contrast than the domestic food comparison, while its uncertainty leaves economically relevant Danish-specific movements compatible with the evidence.
 \end{abstract}
 \noindent\textbf{JEL codes:} H23, Q18, Q54, Q58.\par
 \noindent\textbf{Keywords:} Environmental taxation; policy announcements; anticipation; beef prices; livestock production; synthetic difference-in-differences.
@@ -156,7 +156,7 @@ The grocery source is the historical catalog assembled by dagligepriser.dk. Its 
 
 Prices are converted to DKK per kilogram for mass units and DKK per litre for volume units. Reported package quantities take precedence. When quantity or unit fields are absent, the procedure searches the product description for a number followed by kg, g, litre, ml, or cl. Grams, millilitres, and centilitres are converted to their base units before dividing price by quantity. Items measured only per piece and observations with missing, non-positive, or unsupported quantities are excluded. Because normalized prices remain right-skewed, estimation uses their natural logarithm and Table~\ref{tab:descriptives} reports medians and quartiles as well as means.
 
-Candidate beef names are initially found with Danish and English meat terms, then screened against the public product descriptions using a six-category Jev classification and a conservative core-beef probability threshold. I inspected the retained names and excluded evident false positives such as beef-flavored noodles and sliced prepared beef. This is a reproducible screening rule, not an externally validated measure of classifier precision. Prepared dishes, plant substitutes, pet food, mixed livestock products, and uncertain candidate names are excluded. Livestock-exposed food products, including poultry, eggs, and dairy, are excluded from the control group. Package parsing now recognizes multipacks such as two 400 g units; reported mass or volume remains the first source for normalization. A classification audit cannot repair the absence of historical price spells or availability.
+Candidate beef names are initially found with Danish and English meat terms, then screened against the public product descriptions using a six-category Jev classification and a conservative core-beef probability threshold. A text-only assistant review of the retained names excluded evident false positives such as beef-flavored noodles and sliced prepared beef. This is a reproducible screening rule, not independent human validation of classification accuracy, package contents, or historical availability. Prepared dishes, plant substitutes, pet food, mixed livestock products, and uncertain candidate names are excluded. Livestock-exposed food products, including poultry, eggs, and dairy, are excluded from the control group. Package parsing now recognizes multipacks such as two 400 g units; reported mass or volume remains the first source for normalization. A classification audit cannot repair the absence of historical price spells or availability.
 
 The event month, June 2024, is excluded from the grocery pre- and post-periods. The window is October 2023--September 2025, excluding June, and calendar event time retains an empty slot at zero; May is $-1$ and July is $+1$. The end date precedes the officially dated October 2025 bovine viral diarrhoea outbreak, although surveillance detected an affected dairy herd in September \citep{dvfaBVD,dvt2025}. That endpoint does not rule out earlier market responses to the disease.
 
@@ -279,7 +279,7 @@ Figure~\ref{fig:event} places the same-product European comparison beside the do
 \figurenotes{Eurostat HICP and national statistical institutes (Panel A); Statistics Denmark (Panel B).}{Panel A compares Danish log beef-and-veal HICP with the SDiD-weighted other-EU series; the donor level is shifted to Denmark's pre-period mean for display only. Panel B displays the log beef-minus-food CPI gap relative to June 2024 without pointwise inference bars. Both have July 2024 as the first post month and end in September 2025. The country estimator uses synthetic pre-period time weights; the plotted paths alone do not give its contrast. Appendix Figure~\ref{fig:b_grocery} shows the separate grocery change-event diagnostic.}
 \end{figure}
 
-The grocery change-event regression in Table~\ref{tab:main}, column 1, gives 0.102 (product--store clustered standard error 0.013) after a conservative beef-name screen and publication-window eligibility check. Its 151 beef product--store units contribute 1,105 recorded event-months. Because the dependent variable averages price changes and inclusion depends on repricing, neither the point estimate nor its small clustered standard error validates a monthly national posted-price effect. Appendix Figure~\ref{fig:b_grocery} documents its event path. The extra-EU bilateral-import diagnostic gives $-0.080$ (pair-bootstrap standard error 0.078). Its bilateral pairs are not independent Danish policy episodes, and it cannot bound total foreign substitution (Appendix Figure~\ref{fig:b_trade_sdid}).
+The grocery change-event regression in Table~\ref{tab:main}, column 1, gives 0.102 (product--store clustered standard error 0.013) after a conservative beef-name screen and publication-window eligibility check. Its 151 beef product--store units contribute 1,105 recorded event-months. Because the dependent variable averages price levels recorded at change events and inclusion depends on repricing, neither the point estimate nor its small clustered standard error validates a monthly national posted-price effect. Appendix Figure~\ref{fig:b_grocery} documents its event path. The extra-EU bilateral-import diagnostic gives $-0.080$ (pair-bootstrap standard error 0.078). Its bilateral pairs are not independent Danish policy episodes, and it cannot bound total foreign substitution (Appendix Figure~\ref{fig:b_trade_sdid}).
 
 The production analysis yields a main slaughter-weight ATT of $-0.066$ (placebo standard error 0.081), or a point estimate of about a 6.4 percent decline. Its 95 percent interval, $[-0.225,0.093]$, includes zero. With a longer, pre-treatment seasonally adjusted panel, the estimate is $-0.006$. Slaughter counts show similarly uncertain responses. Direct estimation of log mean carcass weight on common country--months gives $-0.018$ (placebo standard error 0.026), with an interval spanning zero. Subtracting the separate weight and head-count ATTs would not estimate this outcome because their synthetic weights can differ. Appendix Table~\ref{tab:production} presents the slaughter estimates and June-omission check, and Table~\ref{tab:window_sensitivity} displays raw-log 15-, 24-, 36-, and 54-month estimates for every outcome. Production evidence does not establish the quantity contraction implied by the model, and the sensitivity across windows is relevant to interpreting the price results.
 
@@ -306,7 +306,7 @@ Illustrative high level & 200.00 & 13.30 & 3.16 \\\bottomrule
 \paragraph{Environmental-price scenarios.} Appendix~\ref{sec:calibration} retains the conditional SCC arithmetic and its source inventory. It assumes rather than identifies the cattle-policy share of either price contrast, taxable intensity, persistence, and later pass-through. The attributed share and persistence enter that arithmetic only as a product; restricting either to $[0,1]$ is a scenario choice, not an identified causal bound. The exercise has no role in selecting the empirical counterfactual or establishing a welfare effect.
 
 \section{Discussion of the Results}\label{sec:discussion}
-The most direct descriptive comparison for common European beef-market movements puts Denmark beside other countries' prices for the same product. It yields a small, imprecise post-June divergence, larger in 2025 than in late 2024. The within-Denmark beef-versus-food contrast is larger and also concentrated in 2025, but it does not control for a common European beef shock. This contrast between two defensible benchmarks is the paper's central empirical result. It constrains a claim of a large uniquely Danish increase without proving a null effect. The grocery change-event regression cannot resolve that uncertainty.
+The most direct descriptive comparison for common European beef-market movements puts Denmark beside other countries' prices for the same product. It yields a smaller, imprecise post-June point divergence, larger in 2025 than in late 2024. The within-Denmark beef-versus-food contrast is larger and also concentrated in 2025, but it does not control for a common European beef shock. This contrast between two defensible benchmarks is the paper's central empirical result. The country interval remains compatible with economically relevant Danish-specific movements, so the smaller point estimate is not a statistical bound on them. The grocery change-event regression cannot resolve that uncertainty. More generally, a domestic broad-food benchmark can mix a local policy episode with an international shock to the product itself; a same-product external benchmark changes which movement is being described, even when it cannot identify the local policy component.
 
 The production results help assess this interpretation. A contraction in Danish slaughter output relative to other EU countries would support one observable implication of the planned-supply model. The main estimate has that sign, but its uncertainty is substantial and the longer-pre-period estimate is close to zero. The evidence therefore does not confirm the joint prediction of higher prices and lower output. It also does not exclude that prediction. Slaughterhouse activity measures only one stage of production, while herd composition, live-animal trade, emissions intensity, and procurement arrangements may adjust on different horizons.
 
@@ -322,7 +322,7 @@ Several measurement issues remain relevant. The grocery history selectively reco
 
 \clearpage
 \section{Conclusion}\label{sec:conclusion}
-This paper quantifies beef-price contrasts during a Danish cattle-policy transition. Relative to the same product in other EU countries, Denmark's post-June beef-and-veal HICP contrast is small and imprecise, with more of the fitted divergence in 2025 than in late 2024. The domestic beef-versus-food CPI contrast is larger and concentrated in 2025, but its significance depends on the HAC bandwidth. The difference between these benchmarks is economically material; neither identifies the isolated emissions-tax announcement. The grocery change-event history does not supply an independent monthly posted-price check, and the slaughter estimates do not establish a corresponding contraction.
+This paper quantifies beef-price contrasts during a Danish cattle-policy transition. Relative to the same product in other EU countries, Denmark's post-June beef-and-veal HICP point contrast is smaller than the domestic beef-versus-food CPI contrast, with more of the fitted divergence in 2025 than in late 2024. Its interval includes zero and economically relevant Danish-specific increases. The domestic contrast is concentrated in 2025, but its significance depends on the HAC bandwidth. The difference between these benchmarks shows why the comparator matters when a product faces international price pressure; neither identifies the isolated emissions-tax announcement. The grocery change-event history does not supply an independent monthly posted-price check, and the slaughter estimates do not establish a corresponding contraction.
 
 The April nitrate announcement and later implementation overlap the episode, European beef-price pressure was present in 2025, and the pre-July synthetic baseline already includes policy news. The two-date model supplies sign alternatives and a conditional magnitude bound, but the different official price mappings do not support a single calibrated interpretation. The appendix accounting exercises are hypothetical. Distinguishing mechanisms requires farm-level variation in expected tax and nitrate exposure, herd and producer-price measures, and complete trade flows.
 
@@ -459,30 +459,7 @@ A future tax therefore accelerates slaughter when fixed stock cannot adjust, opp
 \setcounter{table}{0}
 \setcounter{figure}{0}
 \setcounter{equation}{0}
-\begin{landscape}
 \section{Additional Results}
-\begin{table}[htbp]\centering\caption{Preferred SCC benchmarks and pooling status}\label{tab:scc}
-\small
-\begin{tabular}{lllrrrl}\toprule
-Study & Method & Reference year & 2024 USD/tCO2 & Low & High & Pool status \\\midrule
-Cai et al. (2016) & Stochastic IAM & 2010 & 166.9 & --- & --- & Included \\
-Nordhaus (2017) & DICE IAM & 2030 & 74.2 & --- & --- & Included \\
-Ricke et al. (2018) & Spatial IAM & 2020 & 599.9 & 254.6 & 1,158.0 & Included \\
-Cai--Lontzek (2019) & Stochastic IAM & 2005 & 54.3 & --- & --- & Included \\
-Pindyck (2019) & Expert elicitation & Undated & 107.0 & --- & --- & Included \\
-H\"ansel et al. (2020) & Updated DICE & 2020 & 133.7 & 22.5 & 688.2 & Included \\
-van den Bremer--van der Ploeg (2021) & Asset-pricing IAM & 2015 & 52.7 & --- & --- & Included \\
-Dietz et al. (2021) & Meta-analytic IAM & 2020 & 78.5 & --- & --- & Included \\
-Rennert et al. (2022) & Modular IAM & 2020 & 224.2 & 53.3 & 500.6 & Included \\
-Barrage--Nordhaus (2024) & DICE-2023 & 2030 & 112.5 & --- & --- & Included \\
-Carleton et al. (2022) & Mortality damages & 2020 & 21.0 & $-30.3$ & 65.8 & Partial; external \\
-Moore et al. (2024) & Literature synthesis & 2020 & 343.0 & 38.8 & 1,059.3 & Double-count risk; external \\
-Bilal--K\"anzig (2026) & Macro empirical & 2024 & $>1,200$ & --- & --- & Lower bound; external \\\bottomrule
-\end{tabular}
-\begin{minipage}{0.98\linewidth}\small
-\textit{Source:} The studies listed in the first column.\par
-\textit{Notes:} Values are converted to 2024 US dollars per ton of CO2. One preferred global total-SCC estimate enters per eligible paper. Values at dates other than 2030 are held constant as an explicit sensitivity assumption. Pindyck estimates an average SCC; excluding it gives a mean of USD 166.32/tCO2. Barrage--Nordhaus is log-interpolated to 2030. Low and high retain their source-specific interpretation. The pooled mean gives equal weight to each included paper; partial estimates, a literature synthesis, and a lower bound are external comparisons.
-\end{minipage}\end{table}\end{landscape}
 
 \subsection{Cattle slaughter and production}\label{app:production}
 The model's production prediction is examined using Eurostat's monthly slaughterhouse statistics for bovine meat. The primary outcome is the log of carcass weight in thousand tonnes; the second outcome is the log of slaughtered animals in thousand heads. Denmark is the treated unit and the other 26 EU Member States are donors. No other Danish meat category enters the comparison. The statistics measure activity in slaughterhouses \citep{eurostatslaughter2026}.
@@ -529,7 +506,7 @@ Table~\ref{tab:window_sensitivity} varies the number of pre-treatment months whi
 \begin{tabular}{lrrrr}\toprule
 Pre-treatment months & 15 & 24 & 36 & 54 \\\midrule
 \multicolumn{5}{l}{\textit{Panel A. Point ATT}} \\
-Danish beef versus food CPI & 0.076 & 0.043 & 0.062 & 0.060 \\
+Danish beef versus food CPI & 0.076 & 0.043 & 0.061 & 0.060 \\
 Denmark versus EU beef HICP & 0.016 & 0.028 & 0.023 & 0.022 \\
 Slaughter weight & $-0.066$ & $-0.078$ & $-0.021$ & $-0.014$ \\
 Slaughter heads & $-0.035$ & $-0.053$ & $-0.009$ & $-0.009$ \\
@@ -537,11 +514,12 @@ Extra-EU bilateral imports & $-0.080$ & $-0.077$ & $-0.079$ & $-0.084$ \\\addlin
 \multicolumn{5}{l}{\textit{Panel B. Centered pre-gap RMSE on common 15 months}} \\
 Danish beef versus food CPI & 0.005 & 0.010 & 0.012 & 0.011 \\
 Denmark versus EU beef HICP & 0.010 & 0.010 & 0.010 & 0.010 \\
+HICP RMSE / 15-month RMSE & 1.000 & 1.023 & 0.960 & 0.971 \\
 Slaughter weight & 0.056 & 0.060 & 0.062 & 0.063 \\
 Slaughter heads & 0.056 & 0.061 & 0.063 & 0.064 \\
 Extra-EU bilateral imports & 0.065 & 0.080 & 0.086 & 0.096 \\\bottomrule
 \end{tabular}
-\figurenotes{Statistics Denmark, Eurostat, and European Commission data.}{All specifications retain their respective published donor sets. The 15-, 24-, 36-, and 54-month pre-periods all end in June 2024. ATT values are Stata no-inference diagnostics; Panel B evaluates every fit on the same April 2023--June 2024 months and permits a constant gap. Slaughter entries do not remove seasonality. The extra-EU outcome is log(1+tonnes), not total imports.}
+\figurenotes{Statistics Denmark, Eurostat, and European Commission data.}{All specifications retain their respective published donor sets. The 15-, 24-, 36-, and 54-month pre-periods all end in June 2024. ATT values are Stata no-inference diagnostics; Panel B evaluates every fit on the same April 2023--June 2024 months and permits a constant gap. The HICP ratio row divides each unrounded RMSE by the 15-month RMSE, preserving the small improvements hidden by three-decimal rounding. Slaughter entries do not remove seasonality. The extra-EU outcome is log(1+tonnes), not total imports.}
 \end{table}
 
 \clearpage
@@ -562,13 +540,38 @@ Extra-EU bilateral imports & 0.065 & 0.080 & 0.086 & 0.096 \\\bottomrule
 \figurenotes{European Commission, Beef Trade Data Explorer; Eurostat COMEXT.}{Series are mean log-one-plus monthly extra-EU beef imports, measured in carcass-weight tonnes, for Denmark--partner pairs and their SDiD-weighted donor series over the symmetric April 2023--September 2025 window. The dashed vertical line marks July 2024. The ATT is $-0.080$ (unit-cluster bootstrap standard error 0.078; $p=0.306$; 200 replications). For display, the donor series is shifted by a constant to match the treated series' pre-treatment mean; this does not change the SDiD estimate.}\end{figure}
 
 \clearpage
+\renewcommand{\thetable}{C\arabic{table}}
 \renewcommand{\thefigure}{C\arabic{figure}}
 \renewcommand{\theequation}{C\arabic{equation}}
-\setcounter{figure}{0}\setcounter{equation}{0}
+\setcounter{table}{0}\setcounter{figure}{0}\setcounter{equation}{0}
 \section{Conditional Environmental-Price Accounting}\label{sec:calibration}
 The price estimates do not measure how much climate damage consumers internalize. I instead ask how a hypothesized policy-attributable price increment compares, in DKK/kg, with a selected environmental-damage benchmark. The exercise requires separate assumptions about causal attribution, persistence until 2030, additional price adjustment at implementation, and the taxable emissions base. I construct a literature benchmark, express it in beef-price units, and keep the announcement and implementation components distinct. This is conditional arithmetic, not a welfare estimate or an estimate of optimal retail pricing.
 
 The benchmark gives equal weight to one selected estimate from each of ten studies \citep{cai2016,nordhaus2017,ricke2018,cailontzek2019,pindyck2019,hansel2020,vandenbremer2021,dietz2021,rennert2022,barrage2024}. This is a documented selection of the literature rather than an exhaustive systematic review. The studies differ in discounting, damage functions, risk, and the object valued. In particular, \citet{pindyck2019} estimates an average cost of avoiding catastrophic outcomes, which differs from the marginal SCC in the other studies. Excluding that estimate raises the pooled benchmark to USD 166.32/tCO2. Appendix Table~\ref{tab:scc} records the chosen estimates and the external comparisons.
+
+\begin{landscape}
+\begin{table}[htbp]\centering\caption{Preferred SCC benchmarks and pooling status}\label{tab:scc}
+\small
+\begin{tabular}{lllrrrl}\toprule
+Study & Method & Reference year & 2024 USD/tCO2 & Low & High & Pool status \\\midrule
+Cai et al. (2016) & Stochastic IAM & 2010 & 166.9 & --- & --- & Included \\
+Nordhaus (2017) & DICE IAM & 2030 & 74.2 & --- & --- & Included \\
+Ricke et al. (2018) & Spatial IAM & 2020 & 599.9 & 254.6 & 1,158.0 & Included \\
+Cai--Lontzek (2019) & Stochastic IAM & 2005 & 54.3 & --- & --- & Included \\
+Pindyck (2019) & Expert elicitation & Undated & 107.0 & --- & --- & Included \\
+H\"ansel et al. (2020) & Updated DICE & 2020 & 133.7 & 22.5 & 688.2 & Included \\
+van den Bremer--van der Ploeg (2021) & Asset-pricing IAM & 2015 & 52.7 & --- & --- & Included \\
+Dietz et al. (2021) & Meta-analytic IAM & 2020 & 78.5 & --- & --- & Included \\
+Rennert et al. (2022) & Modular IAM & 2020 & 224.2 & 53.3 & 500.6 & Included \\
+Barrage--Nordhaus (2024) & DICE-2023 & 2030 & 112.5 & --- & --- & Included \\
+Carleton et al. (2022) & Mortality damages & 2020 & 21.0 & $-30.3$ & 65.8 & Partial; external \\
+Moore et al. (2024) & Literature synthesis & 2020 & 343.0 & 38.8 & 1,059.3 & Double-count risk; external \\
+Bilal--K\"anzig (2026) & Macro empirical & 2024 & $>1,200$ & --- & --- & Lower bound; external \\\bottomrule
+\end{tabular}
+\begin{minipage}{0.98\linewidth}\small
+\textit{Source:} The studies listed in the first column.\par
+\textit{Notes:} Values are converted to 2024 US dollars per ton of CO2. One preferred global total-SCC estimate enters per eligible paper. Values at dates other than 2030 are held constant as an explicit sensitivity assumption. Pindyck estimates an average SCC; excluding it gives a mean of USD 166.32/tCO2. Barrage--Nordhaus is log-interpolated to 2030. Low and high retain their source-specific interpretation. The pooled mean gives equal weight to each included paper; partial estimates, a literature synthesis, and a lower bound are external comparisons.
+\end{minipage}\end{table}\end{landscape}
 
 Cai et al. (2016) reports both its initial SCC and monetary values for 2010. The inventory treats Pindyck's monetary base as 2017, an explicit valuation-date assumption; its exclusion sensitivity addresses this additional comparability issue. I inflate dollar values to 2024 US dollars and multiply values per ton of carbon by $12/44$ to obtain values per ton of CO2. The Cai--Lontzek input is the combined economic-and-climate-risk value of USD 124/tC for 2005 in their Table 9, with intertemporal elasticity 1.5 and risk aversion 10. The Barrage--Nordhaus 2030 value is log-interpolated between published 2025 and 2050 points. Only this value and Nordhaus's reported 2030 estimate refer directly to 2030; their two-study mean is USD 93.36/tCO2. The remaining values are held constant for the calibration. This is an imposed sensitivity assumption even when a study supplies a rising or stochastic future path. The ten-study mean should therefore be interpreted as a constant-value benchmark used in a 2030 exercise, rather than a pooled forecast for that year.
 

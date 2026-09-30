@@ -7,6 +7,19 @@ import json
 from pathlib import Path
 
 
+NON_CORE_INPUTS = {
+    "heissepreise_20260609T092146Z.json",
+    "eu_beef_trade_data_en.csv",
+    "statbank_pris04_total.csv",
+}
+
+
+def official_records(manifest: dict) -> list[dict]:
+    """Return the frozen source files needed for official price and slaughter results."""
+    return [record for record in manifest["files"]
+            if Path(record["path"]).name not in NON_CORE_INPUTS]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--include-window-audit", action="store_true")
@@ -18,9 +31,7 @@ def main() -> None:
     failures = []
     records = list(manifest["files"])
     if args.official_only:
-        records = [record for record in records if Path(record["path"]).name not in {
-            "heissepreise_20260609T092146Z.json", "eu_beef_trade_data_en.csv", "statbank_pris04_total.csv",
-        }]
+        records = official_records(manifest)
     if args.include_window_audit:
         records.extend(manifest["window_audit_files"])
     if args.include_max_history:

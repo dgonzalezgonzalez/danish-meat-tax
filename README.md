@@ -1,6 +1,6 @@
 # Data and Code for: Before the Levy: Beef Prices During Denmark's Cattle-Policy Transition
 
-**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 29 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
+**Author:** Diego González-González. The manuscript gives no affiliation; this README follows its author line. **Revision:** 30 September 2026. **Contact:** the author through the [project repository](https://github.com/dgonzalezgonzalez/danish-meat-tax).
 
 ## Overview
 
@@ -12,7 +12,7 @@ The revision excludes poultry and eggs as well as other livestock-exposed produc
 
 All inputs were obtained from public websites or published research. No confidential individual or administrative records are required. Raw and large processed datasets are excluded from Git; selected results and figures are included. **Public access does not establish permission to redistribute data.** This repository does not claim ownership of third-party data or grant a new license over them.
 
-[replication_input_manifest.json](data/reference/replication_input_manifest.json) identifies the exact research inputs by byte counts and SHA-256 hashes. Its audit date is not an original retrieval timestamp. These sources are revision-prone. An immutable public deposit of the complete input snapshot has not yet been established. A fresh clone with current downloads provides a reproducible workflow but is not guaranteed to reproduce the paper's numbers exactly; exact replication requires the matching snapshots.
+[replication_input_manifest.json](data/reference/replication_input_manifest.json) identifies the exact research inputs by byte counts and SHA-256 hashes. Its audit date is not an original retrieval timestamp. The six official price and production source files are preserved byte-for-byte in a [versioned GitHub release deposit](data/reference/frozen_official/README.md), with provider attribution and reuse terms. The official-only target downloads and verifies this deposit when needed, then restores missing working copies automatically. The complete input snapshot is not deposited: grocery and Commission trade histories remain separate, and current downloads can differ from their research snapshots. Exact full-package replication requires those matching ancillary files.
 
 | Dataset and provider | Required file(s) under `data/raw/` | Access and provenance | Role |
 |---|---|---|---|
@@ -51,7 +51,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/replicate.ps1 -Pytho
 
 The wrapper uses the June 2026 grocery snapshot and does not modify raw inputs. To deliberately analyze another snapshot, supply `-RawPath` and `-AllowUpdatedInputs`; published numbers may change and the paper-number gate will stop until its transcriptions are updated. Acquisition is the separate `download` stage. The underlying sequence is:
 
-For the core official-price and production evidence without grocery, Commission trade, or SCC inputs, use the separate target below. It verifies the relevant frozen official snapshots and rebuilds the PRIS01, country-HICP, and bovine-slaughter analyses in Stata. It does not reproduce the grocery, trade, or conditional accounting outputs.
+For the core official-price and production evidence without grocery, Commission trade, or SCC inputs, use the separate target below. It retrieves the versioned official deposit if its local cache is incomplete, verifies ZIP and source hashes, restores missing copies under `data/raw/`, then rebuilds the PRIS01, country-HICP, and bovine-slaughter analyses in Stata. It does not reproduce the grocery, trade, or conditional accounting outputs. Stata/MP 19.5 and `sdid` 2.0.2 remain required; the `check_dependencies.do` gate verifies the installed package before estimation.
 
 ```powershell
 $env:PYTHONPATH = 'src'
@@ -111,7 +111,7 @@ python -m unittest discover -s tests
 | `outputs/models/stata/`, `outputs/figures/stata/` | Machine-readable results and publication PNGs. |
 | `paper/main.tex`, `paper/references.bib`, `paper/main.pdf` | Manuscript, bibliography, compiled paper. |
 
-[output_map.md](docs/output_map.md) maps every paper table and figure and otherwise unmapped in-text numbers to inputs and scripts. [referee_response.md](docs/referee_response.md) and [referee_round2_response.md](docs/referee_round2_response.md) map both review rounds to changes and data-dependent limits. [grocery_history_audit.md](docs/grocery_history_audit.md), [production_analysis.md](docs/production_analysis.md), [methodology.md](docs/methodology.md), and [beef_carbon_price_calibration.md](docs/beef_carbon_price_calibration.md) explain design and interpretation. Historical `docs/plans/` notes are not the current replication specification. Unintegrated world-price experiments are outside the publication master.
+[output_map.md](docs/output_map.md) maps every paper table and figure and otherwise unmapped in-text numbers to inputs and scripts. [referee_response.md](docs/referee_response.md), [referee_round2_response.md](docs/referee_round2_response.md), and [referee_round3_response.md](docs/referee_round3_response.md) map the review rounds to changes and data-dependent limits. [grocery_history_audit.md](docs/grocery_history_audit.md), [production_analysis.md](docs/production_analysis.md), [methodology.md](docs/methodology.md), and [beef_carbon_price_calibration.md](docs/beef_carbon_price_calibration.md) explain design and interpretation. Historical `docs/plans/` notes are not the current replication specification. Unintegrated world-price experiments are outside the publication master.
 
 
 The calibration intervals in Appendix Figures C1–C3 include resampling of the grocery pre-announcement mean (seed 20260911, with one-, two-, and four-month block checks); study-level mapped intervals use seed 20260912. Appendix Figure C3 additionally uses the preferred CPI coefficient's uncertainty. These are conditional sensitivity intervals, with independent simulation draws across uncertainty sources. The 59.6 lifecycle benchmark remains fixed because the inspected sources do not supply a compatible sampling interval; [the emissions source audit](docs/emissions_intensity_audit.md) distinguishes producer heterogeneity from uncertainty in this benchmark. Full methods and numerical checks are in [the calibration note](docs/beef_carbon_price_calibration.md).
