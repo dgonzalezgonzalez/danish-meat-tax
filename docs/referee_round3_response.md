@@ -18,4 +18,6 @@ The complete 45,637-unit grocery eligibility reconciliation ledger is committed 
 
 ## Remaining scope
 
+The official deposit was downloaded into an empty cache and all six original hashes matched. A clean tracked-tree export of commit `05c1976`, containing no raw inputs or source cache, then completed `scripts/replicate_official.py` against that public deposit. All 33 CSVs saved by the official Stata logs match the publication outputs byte-for-byte. This validates the core route from preserved sources on the documented host; it does not test a new Stata installation on another machine. The full publication master, 39 unit tests, number checker, and rendered-PDF inspection are recorded in `docs/validation.md`.
+
 The official coefficients retain their reported uncertainty and are not re-estimated by these textual and preservation changes. The grocery screen remains assistant-assisted rather than independently human validated. The official source archive and eligibility ledger improve reproducibility; they do not make the optional grocery, trade, and SCC stages exactly reproducible from a fresh clone. The country and domestic indices use different comparators, and their point-estimate difference is not a formal decomposition of European and Danish shocks.
