@@ -1,5 +1,9 @@
 # Validation record
 
+## Fourth-round referee closure — 30 September 2026
+
+The Pro referee reviewed commit `0be68fd268f86f1454d0ddd0e4382d194152f60f` and recommended acceptance on the stated descriptive contribution, closing the substantive third-round conditions. Its independent checks and execution limits are recorded in [referee_round4_outcome.md](referee_round4_outcome.md). It reported seven passing synthetic restoration scenarios and rejection of all 48 deliberately incorrect table variants. It did not repeat the real-input Stata run or manuscript visual inspection; the executed author-side checks below remain distinct from the referee's targeted audit. Recording the outcome changes documentation only.
+
 ## Third-round referee revision — 30 September 2026
 
 - Packaged the six official-source snapshots into the versioned `official_inputs_20260930.zip` release asset without changing `replication_input_manifest.json`; raw files remain excluded from Git. Every ZIP member matches its original source hash. The committed archive manifest records the deposit URL, 739,186-byte size, and SHA-256 `fa07cff8d1de661fc32975f134d3173a0efd2e31757683160cb328ba7fe7df7b`. The official-only target verified each local archived copy against the manifest, completed its Stata rebuild, and left existing working files untouched. The full input verifier then matched all nine publication inputs to their frozen hashes. Provider reuse and attribution terms are linked in the archive README. The commercial Stata runtime and `sdid` package remain external requirements.
